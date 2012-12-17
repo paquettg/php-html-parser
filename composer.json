@@ -21,6 +21,5 @@
     },
     "autoload": {
         "classmap": ["Src/", "simple_html_dom.php"]
-    },
-    "target-dir": "Sunra/SimpleHtmlDomParserPhp"
+    }    
 }
