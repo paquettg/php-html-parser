@@ -20,6 +20,6 @@
         "php":        ">=5.2"        
     },    
     "autoload": {
-        "classmap": ["Src/simple_html_dom.php"],        
+        "classmap": ["Src/simple_html_dom.php"]        
     }    
 }
