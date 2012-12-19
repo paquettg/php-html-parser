@@ -1,6 +1,6 @@
 ﻿<?php
 namespace Sunra\PhpSimple;
-// use Sunra\PhpSimple\HtmlDomParser
+
 
 require 'simplehtmldom_1_5'.DIRECTORY_SEPARATOR.'simple_html_dom.php';
 
