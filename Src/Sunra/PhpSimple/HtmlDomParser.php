@@ -1,6 +1,7 @@
 ﻿<?php
-namespace Sunra\PhpSimple;
+// say me who add "О╩©" into start of file?
 
+namespace Sunra\PhpSimple;
 
 require 'simplehtmldom_1_5'.DIRECTORY_SEPARATOR.'simple_html_dom.php';
 
