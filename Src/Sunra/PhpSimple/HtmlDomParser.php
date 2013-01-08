@@ -1,5 +1,7 @@
-﻿<?php
+<?php
 // say me who add "О╩©" into start of file?
+// Becouse of this 3 symbol before <?php - php get error
+// i think it Sublime Text
 
 namespace Sunra\PhpSimple;
 
