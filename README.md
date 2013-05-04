@@ -17,8 +17,9 @@ http://simplehtmldom.sourceforge.net/
 Install
 -------
 
- composer.phar require
-  - package name: "sunra/php-simple-html-dom-parser": "dev-master"
+ composer.phar 
+     require
+         "sunra/php-simple-html-dom-parser": "v1.5.0"
 
 
 Usage
