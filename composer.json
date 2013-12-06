@@ -29,6 +29,6 @@
         "psr-0": { 
         	"Paquettg": "src/"
        	}
-    }
+    },
     "minimum-stability": "dev"
 }
