@@ -1,14 +1,16 @@
 {
-    "name": "sunra/php-simple-html-dom-parser",
+    "name": "paquettg/php-html-parser",
     "type": "library",
-    "description": "Composer adaptation of: A HTML DOM parser written in PHP5+ let you manipulate HTML in a very easy way! Require PHP 5+. Supports invalid HTML. Find tags on an HTML page with selectors just like jQuery. Extract contents from HTML in a single line.",
-    "version": "1.5.0",
+    "description": "An HTML DOM parser. It allows you to manipulate HTML. Find tags on an HTML page with selectors just like jQuery.",
+    "version": "1.5.1",
     "keywords": ["html", "dom", "parser"],
-    "homepage": "https://github.com/sunra/php-simple-html-dom-parser",
+    "homepage": "https://github.com/paquettg/php-html-parser",
     "license": "MIT",
     "authors": [
-        {            
-            "homepage": "http://sourceforge.net/projects/simplehtmldom/"
+        {
+            "name": "Gilles Paquette",
+            "email": "paquettg@gmail.com",
+            "homepage": "http://gillespaquette.ca"
         },
         {
             "name": "Sunra",
@@ -17,9 +19,16 @@
         }   
     ],
     "require": {
-        "php": ">=5.3.2"        
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "mockery/mockery": "dev-master",
+        "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
-        "psr-0": { "Sunra\\PhpSimple\\HtmlDomParser": "Src/" }
-    }    
+        "psr-0": { 
+        	"Paquettg": "src/"
+       	}
+    }
+    "minimum-stability": "dev"
 }
