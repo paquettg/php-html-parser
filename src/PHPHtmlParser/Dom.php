@@ -1,5 +1,5 @@
 <?php
-namespace Paquettg;
+namespace PHPHtmlParser;
 
 /**
  * simple html dom parser

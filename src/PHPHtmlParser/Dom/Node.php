@@ -1,225 +1,315 @@
 <?php
-namespace Paquettg\Dom;
+namespace PHPHtmlParser\Dom;
+
+use PHPHtmlParser\Dom;
 
 /**
- * simple html dom node
- * PaperG - added ability for "find" routine to lowercase the value of the selector.
- * PaperG - added $tag_start to track the start position of the tag in the total byte index
- *
- * @package PlaceLocalInclude
+ * Dom node object.
  */
 class Node {
-    public $nodetype = HDOM_TYPE_TEXT;
-    public $tag = 'text';
-    public $attr = array();
-    public $children = array();
-    public $nodes = array();
-    public $parent = null;
-    // The "info" array - see HDOM_INFO_... for what each element contains.
-    public $_ = array();
-    public $tag_start = 0;
-    private $dom = null;
 
-    function __construct($dom)
-    {
-        $this->dom = $dom;
-        $dom->nodes[] = $this;
-    }
+	/**
+	 * Contains the tag name/type
+	 *
+	 * @var string
+	 */
+	protected $tag;
 
-    function __destruct()
+	/**
+	 * Contains a list of attributes on this tag.
+	 *
+	 * @var array
+	 */
+	protected $attr = [];
+
+	/**
+	 * An array of all the children.
+	 *
+	 * @var array
+	 */
+    protected $children = [];
+
+    /**
+     * Contains the parent Node.
+     *
+     * @var Node
+     */
+    protected $parent = null;
+
+    /**
+     * Not sure what this is for yet.
+     */
+    protected $tag_start = 0;
+   
+    /**
+     * Contains the dom object that this node belongs to.
+     *
+     * @var Dom
+     */
+   	protected $dom = null;
+
+	/**
+	 * The unique id of the class. Given by PHP.
+	 *
+	 * @string
+	 */
+   	protected $id;
+
+	public function __construct()
+	{
+		$this->id = spl_object_hash($this);
+	}
+
+	/**
+	 * Sets the dom object.
+	 *
+	 * @param Dom $dom
+	 * @chainable
+	 */
+	public function setDom(Dom $dom)
+	{
+		$this->dom = $dom;
+
+		return $this;
+	}
+
+	/**
+	 * @todo Remove the need for this to be called.
+	 */
+    public function __destruct()
     {
         $this->clear();
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->outertext();
     }
 
-    // clean up memory due to php5 circular references memory leak...
-    function clear()
+	/**
+	 * Returns the id of this object.
+	 */
+    public function id()
     {
-        $this->dom = null;
-        $this->nodes = null;
-        $this->parent = null;
-        $this->children = null;
+    	return $this->id;
     }
 
-    // dump node's tree
-    function dump($show_attr=true, $deep=0)
+	/**
+     * Returns the parent of node.
+     *
+     * @return Node
+     */
+    public function getParent()
     {
-        $lead = str_repeat('    ', $deep);
+    	return $this->parent;
+   	}
 
-        echo $lead.$this->tag;
-        if ($show_attr && count($this->attr)>0)
-        {
-            echo '(';
-            foreach ($this->attr as $k=>$v)
-                echo "[$k]=>\"".$this->$k.'", ';
-            echo ')';
-        }
-        echo "\n";
+	/**
+	 * Sets the parent node.
+	 *
+	 * @param Node $parent
+	 * @chainable
+	 */
+   	public function setParent(Node $parent)
+   	{
+   		// remove from old parent
+   		if ( ! is_null($this->parent))
+   		{
+   			if ($this->parent->id() == $parent->id())
+   			{
+   				// already the parent
+   				return $this;
+   			}
 
-        if ($this->nodes)
-        {
-            foreach ($this->nodes as $c)
-            {
-                $c->dump($show_attr, $deep+1);
-            }
-        }
+   			$this->parent->removeChild($this->id);
+   		}
+
+        $this->parent = $parent;
+
+        // assign child to parent
+        $this->parent->addChild($this);
+
+        return $this;
     }
 
-
-    // Debugging function to dump a single dom node with a bunch of information about it.
-    function dump_node($echo=true)
+	/**
+	 * Checks if this node has children.
+	 *
+	 * @return bool
+	 */
+    public function hasChildren()
     {
-
-        $string = $this->tag;
-        if (count($this->attr)>0)
-        {
-            $string .= '(';
-            foreach ($this->attr as $k=>$v)
-            {
-                $string .= "[$k]=>\"".$this->$k.'", ';
-            }
-            $string .= ')';
-        }
-        if (count($this->_)>0)
-        {
-            $string .= ' $_ (';
-            foreach ($this->_ as $k=>$v)
-            {
-                if (is_array($v))
-                {
-                    $string .= "[$k]=>(";
-                    foreach ($v as $k2=>$v2)
-                    {
-                        $string .= "[$k2]=>\"".$v2.'", ';
-                    }
-                    $string .= ")";
-                } else {
-                    $string .= "[$k]=>\"".$v.'", ';
-                }
-            }
-            $string .= ")";
-        }
-
-        if (isset($this->text))
-        {
-            $string .= " text: (" . $this->text . ")";
-        }
-
-        $string .= " HDOM_INNER_INFO: '";
-        if (isset($node->_[HDOM_INFO_INNER]))
-        {
-            $string .= $node->_[HDOM_INFO_INNER] . "'";
-        }
-        else
-        {
-            $string .= ' NULL ';
-        }
-
-        $string .= " children: " . count($this->children);
-        $string .= " nodes: " . count($this->nodes);
-        $string .= " tag_start: " . $this->tag_start;
-        $string .= "\n";
-
-        if ($echo)
-        {
-            echo $string;
-            return;
-        }
-        else
-        {
-            return $string;
-        }
+        return ! empty($this->children);
     }
 
-    // returns the parent of node
-    // If a node is passed in, it will reset the parent of the current node to that one.
-    function parent($parent=null)
+    /**
+     * Returns the child by id.
+     *
+     * @param int $id
+     * @return Node
+     * @throw Exception
+     */
+    public function getChild($id)
     {
-        // I am SURE that this doesn't work properly.
-        // It fails to unset the current node from it's current parents nodes or children list first.
-        if ($parent !== null)
-        {
-            $this->parent = $parent;
-            $this->parent->nodes[] = $this;
-            $this->parent->children[] = $this;
-        }
+    	if ( ! isset($this->children[$id]))
+    	{
+    		throw new Exception('Child "'.$id.'" not found in this node.');
+    	}
 
-        return $this->parent;
+        return $this->children[$id]['node'];
     }
 
-    // verify that node has children
-    function has_child()
+	/**
+	 * Adds a child node to this node and returns the id of the child for this
+	 * parent.
+	 * 
+	 * @param Node $child
+	 * @return bool
+	 */
+    public function addChild(Node $child)
     {
-        return !empty($this->children);
+    	$key     = null;
+    	$newKey  = 0;
+    	if ($this->hasChildren())
+    	{
+    		if (isset($this->children[$child->id()]))
+    		{
+    			// we already have this child
+    			return false;
+    		}
+    		$sibling = $this->lastChild();
+    		$key     = $sibling->id();
+    		$this->children[$key]['next'] = $child->id();
+    	}
+
+		// add the child
+    	$this->children[$child->id()] = [
+    		'node' => $child,
+    		'next' => null,
+    		'prev' => $key,
+    	];
+
+    	// tell child I am the new parent
+    	$child->setParent($this);
+
+    	return true;
     }
 
-    // returns children of node
-    function children($idx=-1)
+	/**
+	 * Removes the child by id.
+	 *
+	 * @param int $id
+	 * @chainable
+	 */
+	public function removeChild($id)
+	{
+		if ( ! isset($this->children[$id]))
+			return $this;
+
+		// handle moving next and previous assignments.
+		$next = $this->children[$id]['next'];
+		$prev = $this->children[$id]['prev'];
+		if ( ! is_null($next))
+		{
+			$this->children[$next]['prev'] = $prev;
+		}
+		if ( ! is_null($prev))
+		{
+			$this->children[$prev]['next'] = $next;
+		}
+		
+		// remove the child
+		unset($this->children[$id]);
+
+		return $this;
+	}
+
+	/**
+	 * Attempts to get the next child.
+	 *
+	 * @param int $id
+	 * @return Node
+	 * @uses $this->getChild()
+ 	 */
+	public function nextChild($id)
+	{
+		$child = $this->getChild($id);
+		$next  = $this->children[$child->id()]['next'];
+		return $this->getChild($next);
+	}
+
+	/**
+	 * Attempts to get the previous child.
+	 *
+	 * @param int $id
+	 * @return Node
+	 * @uses $this->getChild()
+	 */
+	public function previousChild($id)
+	{
+		$child = $this->getchild($id);
+		$next  = $this->children[$child->id()]['prev'];
+		return $this->getChild($next);
+	}
+
+    /**
+     * Shortcut to return the first child.
+     *
+     * @return Node
+     * @uses $this->getChild()
+     */
+    public function firstChild()
     {
-        if ($idx===-1)
-        {
-            return $this->children;
-        }
-        if (isset($this->children[$idx])) return $this->children[$idx];
-        return null;
+    	reset($this->children);
+    	$key = key($this->children);
+    	return $this->getChild($key);
     }
 
-    // returns the first child of node
-    function first_child()
+    /**
+     * Attempts to get the last child.
+     *
+     * @return Node
+     */
+    public function lastChild()
     {
-        if (count($this->children)>0)
-        {
-            return $this->children[0];
-        }
-        return null;
+    	end($this->children);
+    	$key = key($this->children);
+    	return $this->getChild($key);
     }
 
-    // returns the last child of node
-    function last_child()
+    /**
+     * Attempts to get the next sibling.
+     *
+     * @return Node
+     * @throws Exception
+     */
+    public function nextSibling()
     {
-        if (($count=count($this->children))>0)
-        {
-            return $this->children[$count-1];
-        }
-        return null;
+    	if (is_null($this->parent))
+    	{
+    		throw new Exception('Parent is not set for this node.');
+    	}
+
+    	return $this->parent->nextChild($this->id);
     }
 
-    // returns the next sibling of node
-    function next_sibling()
+	/**
+	 * Attempts to get the previous sibling
+	 *
+	 * @return Node
+	 * @throw Exception
+	 */
+    public function previousSibling()
     {
-        if ($this->parent===null)
-        {
-            return null;
-        }
+    	if (is_null($this->parent))
+    	{
+    		throw new Exception('Parent is not set for this node.');
+    	}
 
-        $idx = 0;
-        $count = count($this->parent->children);
-        while ($idx<$count && $this!==$this->parent->children[$idx])
-        {
-            ++$idx;
-        }
-        if (++$idx>=$count)
-        {
-            return null;
-        }
-        return $this->parent->children[$idx];
+    	return $this->parent->previousChild($this->id);
     }
 
-    // returns the previous sibling of node
-    function prev_sibling()
-    {
-        if ($this->parent===null) return null;
-        $idx = 0;
-        $count = count($this->parent->children);
-        while ($idx<$count && $this!==$this->parent->children[$idx])
-            ++$idx;
-        if (--$idx<0) return null;
-        return $this->parent->children[$idx];
-    }
+	/**
 
     // function to locate a specific ancestor tag in the path to the root.
     function find_ancestor_tag($tag)
@@ -572,10 +662,10 @@ class Node {
         // pattern of CSS selectors, modified from mootools
         // Paperg: Add the colon to the attrbute, so that it properly finds <tag attr:ibute="something" > like google does.
         // Note: if you try to look at this attribute, yo MUST use getAttribute since $dom->x:y will fail the php syntax check.
-// Notice the \[ starting the attbute?  and the @? following?  This implies that an attribute can begin with an @ sign that is not captured.
-// This implies that an html attribute specifier may start with an @ sign that is NOT captured by the expression.
-// farther study is required to determine of this should be documented or removed.
-//        $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
+		// Notice the \[ starting the attbute?  and the @? following?  This implies that an attribute can begin with an @ sign that is not captured.
+		// This implies that an html attribute specifier may start with an @ sign that is NOT captured by the expression.
+		// farther study is required to determine of this should be documented or removed.
+		//        $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
         $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
         preg_match_all($pattern, trim($selector_string).' ', $matches, PREG_SET_ORDER);
         if (is_object($debugObject)) {$debugObject->debugLog(2, "Matches Array: ", $matches);}
@@ -708,7 +798,7 @@ class Node {
     *
     * @param mixed $str String to be tested
     * @return boolean
-    */
+    *
     static function is_utf8($str)
     {
         $c=0; $b=0;
@@ -753,7 +843,7 @@ class Node {
      * @author John Schlick
      * @version April 19 2012
      * @return array an array containing the 'height' and 'width' of the image on the page or -1 if we can't figure it out.
-     */
+     *
     function get_display_size()
     {
         global $debugObject;
@@ -834,24 +924,17 @@ class Node {
         return $result;
     }
 
-    // camel naming conventions
-    function getAllAttributes() {return $this->attr;}
-    function getAttribute($name) {return $this->__get($name);}
-    function setAttribute($name, $value) {$this->__set($name, $value);}
-    function hasAttribute($name) {return $this->__isset($name);}
-    function removeAttribute($name) {$this->__set($name, null);}
-    function getElementById($id) {return $this->find("#$id", 0);}
-    function getElementsById($id, $idx=null) {return $this->find("#$id", $idx);}
-    function getElementByTagName($name) {return $this->find($name, 0);}
-    function getElementsByTagName($name, $idx=null) {return $this->find($name, $idx);}
-    function parentNode() {return $this->parent();}
-    function childNodes($idx=-1) {return $this->children($idx);}
-    function firstChild() {return $this->first_child();}
-    function lastChild() {return $this->last_child();}
-    function nextSibling() {return $this->next_sibling();}
-    function previousSibling() {return $this->prev_sibling();}
-    function hasChildNodes() {return $this->has_child();}
-    function nodeName() {return $this->tag;}
-    function appendChild($node) {$node->parent($this); return $node;}
+    /**
+     * clean up memory due to php5 circular references memory leak...
+     *
+     * @todo Remove the need for this. (Remove circular references)
+     */
+    protected function clear()
+    {
+        $this->dom = null;
+        $this->nodes = null;
+        $this->parent = null;
+        $this->children = null;
+    }
 
 }

@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-0": { 
-        	"Paquettg": "src/"
+        	"PHPHtmlParser": "src/"
        	}
     },
     "minimum-stability": "dev"
