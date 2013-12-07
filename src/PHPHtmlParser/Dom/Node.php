@@ -37,11 +37,6 @@ class Node {
     protected $parent = null;
 
     /**
-     * Not sure what this is for yet.
-     */
-    protected $tag_start = 0;
-   
-    /**
      * Contains the dom object that this node belongs to.
      *
      * @var Dom
@@ -310,179 +305,41 @@ class Node {
     }
 
 	/**
-
-    // function to locate a specific ancestor tag in the path to the root.
-    function find_ancestor_tag($tag)
+	 * Gets the tag object of this node.
+	 *
+	 * @return Tag
+	 */
+    public function getTag()
     {
-        global $debugObject;
-        if (is_object($debugObject)) { $debugObject->debugLogEntry(1); }
+    	return $this->tag;
+    }
 
+	/**
+     * Function to locate a specific ancestor tag in the path to the root.
+     *
+     * @param  string $tag
+     * @return Node
+     * @throws Exception
+     */
+    public function ancestorByTag($tag)
+    {
         // Start by including ourselves in the comparison.
-        $returnDom = $this;
+        $node = $this;
 
-        while (!is_null($returnDom))
+        while ( ! is_null($node))
         {
-            if (is_object($debugObject)) { $debugObject->debugLog(2, "Current tag is: " . $returnDom->tag); }
-
-            if ($returnDom->tag == $tag)
+            if ($node->tag->name() == $tag)
             {
-                break;
+            	return $node;
             }
-            $returnDom = $returnDom->parent;
+
+            $node = $node->getParent();
         }
-        return $returnDom;
+
+    	throw new Exception('Could not find an ancestor with "'.$tag.'" tag');
     }
 
-    // get dom node's inner html
-    function innertext()
-    {
-        if (isset($this->_[HDOM_INFO_INNER])) return $this->_[HDOM_INFO_INNER];
-        if (isset($this->_[HDOM_INFO_TEXT])) return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
-
-        $ret = '';
-        foreach ($this->nodes as $n)
-            $ret .= $n->outertext();
-        return $ret;
-    }
-
-    // get dom node's outer text (with tag)
-    function outertext()
-    {
-        global $debugObject;
-        if (is_object($debugObject))
-        {
-            $text = '';
-            if ($this->tag == 'text')
-            {
-                if (!empty($this->text))
-                {
-                    $text = " with text: " . $this->text;
-                }
-            }
-            $debugObject->debugLog(1, 'Innertext of tag: ' . $this->tag . $text);
-        }
-
-        if ($this->tag==='root') return $this->innertext();
-
-        // trigger callback
-        if ($this->dom && $this->dom->callback!==null)
-        {
-            call_user_func_array($this->dom->callback, array($this));
-        }
-
-        if (isset($this->_[HDOM_INFO_OUTER])) return $this->_[HDOM_INFO_OUTER];
-        if (isset($this->_[HDOM_INFO_TEXT])) return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
-
-        // render begin tag
-        if ($this->dom && $this->dom->nodes[$this->_[HDOM_INFO_BEGIN]])
-        {
-            $ret = $this->dom->nodes[$this->_[HDOM_INFO_BEGIN]]->makeup();
-        } else {
-            $ret = "";
-        }
-
-        // render inner text
-        if (isset($this->_[HDOM_INFO_INNER]))
-        {
-            // If it's a br tag...  don't return the HDOM_INNER_INFO that we may or may not have added.
-            if ($this->tag != "br")
-            {
-                $ret .= $this->_[HDOM_INFO_INNER];
-            }
-        } else {
-            if ($this->nodes)
-            {
-                foreach ($this->nodes as $n)
-                {
-                    $ret .= $this->convert_text($n->outertext());
-                }
-            }
-        }
-
-        // render end tag
-        if (isset($this->_[HDOM_INFO_END]) && $this->_[HDOM_INFO_END]!=0)
-            $ret .= '</'.$this->tag.'>';
-        return $ret;
-    }
-
-    // get dom node's plain text
-    function text()
-    {
-        if (isset($this->_[HDOM_INFO_INNER])) return $this->_[HDOM_INFO_INNER];
-        switch ($this->nodetype)
-        {
-            case HDOM_TYPE_TEXT: return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
-            case HDOM_TYPE_COMMENT: return '';
-            case HDOM_TYPE_UNKNOWN: return '';
-        }
-        if (strcasecmp($this->tag, 'script')===0) return '';
-        if (strcasecmp($this->tag, 'style')===0) return '';
-
-        $ret = '';
-        // In rare cases, (always node type 1 or HDOM_TYPE_ELEMENT - observed for some span tags, and some p tags) $this->nodes is set to NULL.
-        // NOTE: This indicates that there is a problem where it's set to NULL without a clear happening.
-        // WHY is this happening?
-        if (!is_null($this->nodes))
-        {
-            foreach ($this->nodes as $n)
-            {
-                $ret .= $this->convert_text($n->text());
-            }
-
-            // If this node is a span... add a space at the end of it so multiple spans don't run into each other.  This is plaintext after all.
-            if ($this->tag == "span")
-            {
-                $ret .= $this->dom->default_span_text;
-            }
-
-
-        }
-        return $ret;
-    }
-
-    function xmltext()
-    {
-        $ret = $this->innertext();
-        $ret = str_ireplace('<![CDATA[', '', $ret);
-        $ret = str_replace(']]>', '', $ret);
-        return $ret;
-    }
-
-    // build node's text with tag
-    function makeup()
-    {
-        // text, comment, unknown
-        if (isset($this->_[HDOM_INFO_TEXT])) return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
-
-        $ret = '<'.$this->tag;
-        $i = -1;
-
-        foreach ($this->attr as $key=>$val)
-        {
-            ++$i;
-
-            // skip removed attribute
-            if ($val===null || $val===false)
-                continue;
-
-            $ret .= $this->_[HDOM_INFO_SPACE][$i][0];
-            //no value attr: nowrap, checked selected...
-            if ($val===true)
-                $ret .= $key;
-            else {
-                switch ($this->_[HDOM_INFO_QUOTE][$i])
-                {
-                    case HDOM_QUOTE_DOUBLE: $quote = '"'; break;
-                    case HDOM_QUOTE_SINGLE: $quote = '\''; break;
-                    default: $quote = '';
-                }
-                $ret .= $key.$this->_[HDOM_INFO_SPACE][$i][1].'='.$this->_[HDOM_INFO_SPACE][$i][2].$quote.$val.$quote;
-            }
-        }
-        $ret = $this->dom->restore_noise($ret);
-        return $ret . $this->_[HDOM_INFO_ENDSPACE] . '>';
-    }
-
+/*
     // find elements by css selector
     //PaperG - added ability for find to lowercase the value of the selector.
     function find($selector, $idx=null, $lowercase=false)
@@ -828,6 +685,7 @@ class Node {
         }
         return true;
     }
+
     /*
     function is_utf8($string)
     {
