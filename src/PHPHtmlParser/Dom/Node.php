@@ -1,7 +1,7 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-use PHPHtmlParser\Dom;
+use PHPHtmlParser\Selector;
 
 /**
  * Dom node object.
@@ -36,13 +36,6 @@ class Node {
      */
     protected $parent = null;
 
-    /**
-     * Contains the dom object that this node belongs to.
-     *
-     * @var Dom
-     */
-   	protected $dom = null;
-
 	/**
 	 * The unique id of the class. Given by PHP.
 	 *
@@ -53,19 +46,6 @@ class Node {
 	public function __construct()
 	{
 		$this->id = spl_object_hash($this);
-	}
-
-	/**
-	 * Sets the dom object.
-	 *
-	 * @param Dom $dom
-	 * @chainable
-	 */
-	public function setDom(Dom $dom)
-	{
-		$this->dom = $dom;
-
-		return $this;
 	}
 
 	/**
@@ -165,6 +145,13 @@ class Node {
     {
     	$key     = null;
     	$newKey  = 0;
+
+    	// check if child is itself
+    	if ($child->id() == $this->id)
+    	{
+    		throw new Exception('Can not set itself as a child.');
+    	}
+
     	if ($this->hasChildren())
     	{
     		if (isset($this->children[$child->id()]))
@@ -315,6 +302,29 @@ class Node {
     }
 
 	/**
+	 * A wrapper method that simply calls the getAttribute method
+	 * on the tag of this node.
+	 *
+	 * @return array
+	 */
+    public function getAttributes()
+    {
+    	return $this->tag->getAttributes();
+    }
+
+	/**
+	 * A wrapper method that simply calls the getAttributes method
+	 * on the tag of this node.
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+    public function getAttribute($key)
+    {
+    	return $this->tag->getAttribute($key);
+    }
+
+	/**
      * Function to locate a specific ancestor tag in the path to the root.
      *
      * @param  string $tag
@@ -339,226 +349,30 @@ class Node {
     	throw new Exception('Could not find an ancestor with "'.$tag.'" tag');
     }
 
+    /**
+     * Find elements by css selector
+     *
+     * @param string $selector
+     * @param int    $nth
+     * @return array
+     */
+    function find($selector, $nth = null)
+    {
+    	$selector = new Selector($selector);
+    	$nodes    = $selector->find($this);
+
+        if ( ! is_null($nth))
+        {
+        	// return nth-element or array
+        	if (isset($nodes[$nth]))
+        		return $nodes[$nth];
+        	
+        	return null;
+        }
+
+        return $nodes;
+    }
 /*
-    // find elements by css selector
-    //PaperG - added ability for find to lowercase the value of the selector.
-    function find($selector, $idx=null, $lowercase=false)
-    {
-        $selectors = $this->parse_selector($selector);
-        if (($count=count($selectors))===0) return array();
-        $found_keys = array();
-
-        // find each selector
-        for ($c=0; $c<$count; ++$c)
-        {
-            // The change on the below line was documented on the sourceforge code tracker id 2788009
-            // used to be: if (($levle=count($selectors[0]))===0) return array();
-            if (($levle=count($selectors[$c]))===0) return array();
-            if (!isset($this->_[HDOM_INFO_BEGIN])) return array();
-
-            $head = array($this->_[HDOM_INFO_BEGIN]=>1);
-
-            // handle descendant selectors, no recursive!
-            for ($l=0; $l<$levle; ++$l)
-            {
-                $ret = array();
-                foreach ($head as $k=>$v)
-                {
-                    $n = ($k===-1) ? $this->dom->root : $this->dom->nodes[$k];
-                    //PaperG - Pass this optional parameter on to the seek function.
-                    $n->seek($selectors[$c][$l], $ret, $lowercase);
-                }
-                $head = $ret;
-            }
-
-            foreach ($head as $k=>$v)
-            {
-                if (!isset($found_keys[$k]))
-                    $found_keys[$k] = 1;
-            }
-        }
-
-        // sort keys
-        ksort($found_keys);
-
-        $found = array();
-        foreach ($found_keys as $k=>$v)
-            $found[] = $this->dom->nodes[$k];
-
-        // return nth-element or array
-        if (is_null($idx)) return $found;
-        else if ($idx<0) $idx = count($found) + $idx;
-        return (isset($found[$idx])) ? $found[$idx] : null;
-    }
-
-    // seek for given conditions
-    // PaperG - added parameter to allow for case insensitive testing of the value of a selector.
-    protected function seek($selector, &$ret, $lowercase=false)
-    {
-        global $debugObject;
-        if (is_object($debugObject)) { $debugObject->debugLogEntry(1); }
-
-        list($tag, $key, $val, $exp, $no_key) = $selector;
-
-        // xpath index
-        if ($tag && $key && is_numeric($key))
-        {
-            $count = 0;
-            foreach ($this->children as $c)
-            {
-                if ($tag==='*' || $tag===$c->tag) {
-                    if (++$count==$key) {
-                        $ret[$c->_[HDOM_INFO_BEGIN]] = 1;
-                        return;
-                    }
-                }
-            }
-            return;
-        }
-
-        $end = (!empty($this->_[HDOM_INFO_END])) ? $this->_[HDOM_INFO_END] : 0;
-        if ($end==0) {
-            $parent = $this->parent;
-            while (!isset($parent->_[HDOM_INFO_END]) && $parent!==null) {
-                $end -= 1;
-                $parent = $parent->parent;
-            }
-            $end += $parent->_[HDOM_INFO_END];
-        }
-
-        for ($i=$this->_[HDOM_INFO_BEGIN]+1; $i<$end; ++$i) {
-            $node = $this->dom->nodes[$i];
-
-            $pass = true;
-
-            if ($tag==='*' && !$key) {
-                if (in_array($node, $this->children, true))
-                    $ret[$i] = 1;
-                continue;
-            }
-
-            // compare tag
-            if ($tag && $tag!=$node->tag && $tag!=='*') {$pass=false;}
-            // compare key
-            if ($pass && $key) {
-                if ($no_key) {
-                    if (isset($node->attr[$key])) $pass=false;
-                } else {
-                    if (($key != "plaintext") && !isset($node->attr[$key])) $pass=false;
-                }
-            }
-            // compare value
-            if ($pass && $key && $val  && $val!=='*') {
-                // If they have told us that this is a "plaintext" search then we want the plaintext of the node - right?
-                if ($key == "plaintext") {
-                    // $node->plaintext actually returns $node->text();
-                    $nodeKeyValue = $node->text();
-                } else {
-                    // this is a normal search, we want the value of that attribute of the tag.
-                    $nodeKeyValue = $node->attr[$key];
-                }
-                if (is_object($debugObject)) {$debugObject->debugLog(2, "testing node: " . $node->tag . " for attribute: " . $key . $exp . $val . " where nodes value is: " . $nodeKeyValue);}
-
-                //PaperG - If lowercase is set, do a case insensitive test of the value of the selector.
-                if ($lowercase) {
-                    $check = $this->match($exp, strtolower($val), strtolower($nodeKeyValue));
-                } else {
-                    $check = $this->match($exp, $val, $nodeKeyValue);
-                }
-                if (is_object($debugObject)) {$debugObject->debugLog(2, "after match: " . ($check ? "true" : "false"));}
-
-                // handle multiple class
-                if (!$check && strcasecmp($key, 'class')===0) {
-                    foreach (explode(' ',$node->attr[$key]) as $k) {
-                        // Without this, there were cases where leading, trailing, or double spaces lead to our comparing blanks - bad form.
-                        if (!empty($k)) {
-                            if ($lowercase) {
-                                $check = $this->match($exp, strtolower($val), strtolower($k));
-                            } else {
-                                $check = $this->match($exp, $val, $k);
-                            }
-                            if ($check) break;
-                        }
-                    }
-                }
-                if (!$check) $pass = false;
-            }
-            if ($pass) $ret[$i] = 1;
-            unset($node);
-        }
-        // It's passed by reference so this is actually what this function returns.
-        if (is_object($debugObject)) {$debugObject->debugLog(1, "EXIT - ret: ", $ret);}
-    }
-
-    protected function match($exp, $pattern, $value) {
-        global $debugObject;
-        if (is_object($debugObject)) {$debugObject->debugLogEntry(1);}
-
-        switch ($exp) {
-            case '=':
-                return ($value===$pattern);
-            case '!=':
-                return ($value!==$pattern);
-            case '^=':
-                return preg_match("/^".preg_quote($pattern,'/')."/", $value);
-            case '$=':
-                return preg_match("/".preg_quote($pattern,'/')."$/", $value);
-            case '*=':
-                if ($pattern[0]=='/') {
-                    return preg_match($pattern, $value);
-                }
-                return preg_match("/".$pattern."/i", $value);
-        }
-        return false;
-    }
-
-    protected function parse_selector($selector_string) {
-        global $debugObject;
-        if (is_object($debugObject)) {$debugObject->debugLogEntry(1);}
-
-        // pattern of CSS selectors, modified from mootools
-        // Paperg: Add the colon to the attrbute, so that it properly finds <tag attr:ibute="something" > like google does.
-        // Note: if you try to look at this attribute, yo MUST use getAttribute since $dom->x:y will fail the php syntax check.
-		// Notice the \[ starting the attbute?  and the @? following?  This implies that an attribute can begin with an @ sign that is not captured.
-		// This implies that an html attribute specifier may start with an @ sign that is NOT captured by the expression.
-		// farther study is required to determine of this should be documented or removed.
-		//        $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
-        $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
-        preg_match_all($pattern, trim($selector_string).' ', $matches, PREG_SET_ORDER);
-        if (is_object($debugObject)) {$debugObject->debugLog(2, "Matches Array: ", $matches);}
-
-        $selectors = array();
-        $result = array();
-        //print_r($matches);
-
-        foreach ($matches as $m) {
-            $m[0] = trim($m[0]);
-            if ($m[0]==='' || $m[0]==='/' || $m[0]==='//') continue;
-            // for browser generated xpath
-            if ($m[1]==='tbody') continue;
-
-            list($tag, $key, $val, $exp, $no_key) = array($m[1], null, null, '=', false);
-            if (!empty($m[2])) {$key='id'; $val=$m[2];}
-            if (!empty($m[3])) {$key='class'; $val=$m[3];}
-            if (!empty($m[4])) {$key=$m[4];}
-            if (!empty($m[5])) {$exp=$m[5];}
-            if (!empty($m[6])) {$val=$m[6];}
-
-            // convert to lowercase
-            if ($this->dom->lowercase) {$tag=strtolower($tag); $key=strtolower($key);}
-            //elements that do NOT have the specified attribute
-            if (isset($key[0]) && $key[0]==='!') {$key=substr($key, 1); $no_key=true;}
-
-            $result[] = array($tag, $key, $val, $exp, $no_key);
-            if (trim($m[7])===',') {
-                $selectors[] = $result;
-                $result = array();
-            }
-        }
-        if (count($result)>0)
-            $selectors[] = $result;
-        return $selectors;
-    }
 
     function __get($name) {
         if (isset($this->attr[$name]))
@@ -606,8 +420,6 @@ class Node {
     // PaperG - Function to convert the text from one character set to another if the two sets are not the same.
     function convert_text($text)
     {
-        global $debugObject;
-        if (is_object($debugObject)) {$debugObject->debugLogEntry(1);}
 
         $converted_text = $text;
 
@@ -619,7 +431,6 @@ class Node {
             $sourceCharset = strtoupper($this->dom->_charset);
             $targetCharset = strtoupper($this->dom->_target_charset);
         }
-        if (is_object($debugObject)) {$debugObject->debugLog(3, "source charset: " . $sourceCharset . " target charaset: " . $targetCharset);}
 
         if (!empty($sourceCharset) && !empty($targetCharset) && (strcasecmp($sourceCharset, $targetCharset) != 0))
         {
@@ -704,7 +515,6 @@ class Node {
      *
     function get_display_size()
     {
-        global $debugObject;
 
         $width = -1;
         $height = -1;
@@ -789,9 +599,8 @@ class Node {
      */
     protected function clear()
     {
-        $this->dom = null;
-        $this->nodes = null;
-        $this->parent = null;
+        $this->nodes    = null;
+        $this->parent   = null;
         $this->children = null;
     }
 

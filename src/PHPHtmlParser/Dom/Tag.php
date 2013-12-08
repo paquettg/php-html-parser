@@ -93,6 +93,16 @@ class Tag {
 	}
 
 	/**
+	 * Returns all attributes of this tag.
+	 *
+	 * @return array
+	 */
+	public function getAttributes()
+	{
+		return $this->attr;
+	}
+
+	/**
 	 * Returns an attribute by the key
 	 *
 	 * @param string $key
