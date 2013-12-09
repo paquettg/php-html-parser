@@ -42,10 +42,10 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
 	public function testFind()
 	{
-		$root   = new HtmlNode(new Tag('root'));
-		$parent = new HtmlNode(new Tag('div'));
-		$child1 = new HtmlNode(new Tag('a'));
-		$child2 = new HtmlNode(new Tag('p'));
+		$root   = new HtmlNode('root');
+		$parent = new HtmlNode('div');
+		$child1 = new HtmlNode('a');
+		$child2 = new HtmlNode('p');
 		$parent->addChild($child1);
 		$parent->addChild($child2);
 		$root->addChild($parent);
@@ -60,7 +60,10 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 		$child1 = new HtmlNode(new Tag('a'));
 		$child2 = new HtmlNode(new Tag('p'));
 		$child2->getTag()->setAttributes([
-			'id' => 'content',
+			'id' => [
+				'value'       => 'content',
+				'doubleQuote' => true,
+			],
 		]);
 		$parent->addChild($child1);
 		$parent->addChild($child2);
@@ -74,9 +77,12 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 		$parent = new HtmlNode(new Tag('div'));
 		$child1 = new HtmlNode(new Tag('a'));
 		$child2 = new HtmlNode(new Tag('p'));
-		$child3 = new HtmlNode(new Tag('a'));
+		$child3 = new HtmlNode('a');
 		$child3->getTag()->setAttributes([
-			'class' => 'link',
+			'class' => [
+				'value'       => 'link',
+				'doubleQuote' => true,
+			],
 		]);
 		$parent->addChild($child1);
 		$parent->addChild($child2);
@@ -93,7 +99,10 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 		$child2 = new HtmlNode(new Tag('p'));
 		$child3 = new HtmlNode(new Tag('a'));
 		$child3->getTag()->setAttributes([
-			'class' => 'link outer',
+			'class' => [
+				'value'       => 'link outer',
+				'doubleQuote' => false,
+			],
 		]);
 		$parent->addChild($child1);
 		$parent->addChild($child2);

@@ -6,8 +6,12 @@ class HtmlNode extends Node {
 	/**
 	 * Sets up the tag of this node.
 	 */
-	public function __construct(Tag $tag)
+	public function __construct($tag)
 	{
+		if ( ! $tag instanceof Tag)
+		{
+			$tag = new Tag($tag);
+		}
 		$this->tag = $tag;
 		parent::__construct();
 	}

@@ -31,6 +31,20 @@ class NodeTagTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('http://google.com', $tag->getAttribute('href')['value']);
 	}
 
+	public function testGetAttributeMagic()
+	{
+		$attr = [
+			'href' => [
+				'value'       => 'http://google.com',
+				'doublequote' => false,
+			],
+		];
+
+		$tag = new Tag('a');
+		$tag->setAttributes($attr);
+		$this->assertEquals('http://google.com', $tag->href['value']);
+	}
+
 	public function testMakeOpeningTag()
 	{
 		$attr = [

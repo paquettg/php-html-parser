@@ -41,6 +41,32 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("<a href='http://google.com'>link</a><br />", $parent->innerHtml());
 	}
 
+	public function testInnerHtmlMagic()
+	{
+		$parent  = new HtmlNode('div');
+		$parent->getTag()->setAttributes([
+			'class' => [
+				'value'       => 'all',
+				'doubleQuote' => true,
+			],
+		]);
+		$childa  = new HtmlNode('a');
+		$childa->getTag()->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+		]);
+		$childbr = new HtmlNode('br');
+		$childbr->getTag()->selfClosing();
+
+		$parent->addChild($childa);
+		$parent->addChild($childbr);
+		$childa->addChild(new TextNode('link'));
+
+		$this->assertEquals("<a href='http://google.com'>link</a><br />", $parent->innerHtml);
+	}
+
 	public function testOuterHtml()
 	{
 		$div = new Tag('div');
@@ -84,6 +110,32 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("<a href='http://google.com'></a>", $node->OuterHtml());
 	}
 
+	public function testOuterHtmlMagic()
+	{
+		$parent  = new HtmlNode('div');
+		$parent->getTag()->setAttributes([
+			'class' => [
+				'value'       => 'all',
+				'doubleQuote' => true,
+			],
+		]);
+		$childa  = new HtmlNode('a');
+		$childa->getTag()->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+		]);
+		$childbr = new HtmlNode('br');
+		$childbr->getTag()->selfClosing();
+
+		$parent->addChild($childa);
+		$parent->addChild($childbr);
+		$childa->addChild(new TextNode('link'));
+
+		$this->assertEquals('<div class="all"><a href=\'http://google.com\'>link</a><br /></div>', $parent->outerHtml);
+	}
+
 	public function testText()
 	{
 		$a    = new Tag('a');
@@ -99,5 +151,64 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$node = new HtmlNode($a);
 		
 		$this->assertEmpty($node->text());
+	}
+
+	public function testTextMagic()
+	{
+		$node = new HtmlNode('a');
+		$node->addChild(new TextNode('link'));
+		
+		$this->assertEquals('link', $node->text);
+	}
+
+	public function testGetAttribute()
+	{
+		$node = new HtmlNode('a');
+		$node->getTag()->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+			'class' => [
+				'value'       => 'outerlink rounded',
+				'doubleQuote' => true,
+			],
+		]);
+		
+		$this->assertEquals('outerlink rounded', $node->getAttribute('class'));
+	}
+
+	public function testGetAttributeMagic()
+	{
+		$node = new HtmlNode('a');
+		$node->getTag()->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+			'class' => [
+				'value'       => 'outerlink rounded',
+				'doubleQuote' => true,
+			],
+		]);
+		
+		$this->assertEquals('http://google.com', $node->href);
+	}
+
+	public function testGetAttributes()
+	{
+		$node = new HtmlNode('a');
+		$node->getTag()->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+			'class' => [
+				'value'       => 'outerlink rounded',
+				'doubleQuote' => true,
+			],
+		]);
+		
+		$this->assertEquals('outerlink rounded', $node->getAttributes()['class']);
 	}
 }

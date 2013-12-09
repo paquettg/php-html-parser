@@ -57,9 +57,9 @@ class Node {
     public function __get($key)
     {
     	// check attribute first
-        if ( ! is_null($this->tag->getAttribute($key)))
+        if ( ! is_null($this->getAttribute($key)))
         {
-            return $this->tag->getAttribute($key);
+            return $this->getAttribute($key);
         }
         switch (strtolower($key))
         {
@@ -367,7 +367,12 @@ class Node {
 	 */
     public function getAttributes()
     {
-    	return $this->tag->getAttributes();
+    	$attributes = $this->tag->getAttributes();
+    	foreach ($attributes as $name => $info)
+    	{
+    		$attributes[$name] = $info['value'];
+    	}
+    	return $attributes;
     }
 
 	/**
@@ -379,7 +384,13 @@ class Node {
 	 */
     public function getAttribute($key)
     {
-    	return $this->tag->getAttribute($key);
+    	$attribute = $this->tag->getAttribute($key);
+    	if ( ! is_null($attribute))
+    	{
+    		$attribute = $attribute['value'];
+    	}
+
+    	return $attribute;
     }
 
 	/**

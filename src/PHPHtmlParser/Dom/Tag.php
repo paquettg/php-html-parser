@@ -34,6 +34,11 @@ class Tag {
 		$this->name = $name;
 	}
 
+	public function __get($key)
+	{
+		return $this->getAttribute($key);
+	}
+
 	/**
 	 * Returns the name of this tag.
 	 *
