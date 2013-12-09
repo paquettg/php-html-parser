@@ -115,9 +115,16 @@ class Node {
 	 *
 	 * @param Node $parent
 	 * @chainable
+	 * @throws Exception
 	 */
    	public function setParent(Node $parent)
    	{
+   		// check integrity 
+   		if ($this->isDescendant($parent->id()))
+   		{
+   			throw new Exception('Can not add descendant "'.$parent->id().'" as my parent.');
+   		}
+   		
    		// remove from old parent
    		if ( ! is_null($this->parent))
    		{
@@ -176,6 +183,12 @@ class Node {
     {
     	$key     = null;
     	$newKey  = 0;
+
+   		// check integrity
+   		if ($this->isAncestor($child->id()))
+   		{
+   			throw new Exception('Can not add child. It is my ancestor.');
+   		}
 
     	// check if child is itself
     	if ($child->id() == $this->id)
@@ -266,7 +279,7 @@ class Node {
 	}
 
 	/**
-	 * Checks if the give node id is a decendant of the 
+	 * Checks if the given node id is a decendant of the 
 	 * current node.
 	 *
 	 * @param int $id
@@ -280,13 +293,34 @@ class Node {
 			{
 				return true;
 			}
-			elseif ($child->hasChildren())
+			elseif ($child['node']->hasChildren())
 			{
-				if ($child->isDescendant($id))
+				if ($child['node']->isDescendant($id))
 				{
 					return true;
 				}
 			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the given node id is an ancestor of
+	 * the current node.
+	 *
+	 * @param int $id
+	 * @return bool
+	 */
+	public function isAncestor($id)
+	{
+		if ( ! is_null($this->parent))
+		{
+			if ($this->parent->id() == $id)
+			{
+				return true;
+			}
+			return $this->parent->isAncestor($id);
 		}
 
 		return false;
