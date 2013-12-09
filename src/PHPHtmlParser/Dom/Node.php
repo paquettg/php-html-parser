@@ -49,6 +49,32 @@ class Node {
 	}
 
 	/**
+	 * Magic get method for attributes and certain methods.
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+    public function __get($key)
+    {
+    	// check attribute first
+        if ( ! is_null($this->tag->getAttribute($key)))
+        {
+            return $this->tag->getAttribute($key);
+        }
+        switch (strtolower($key))
+        {
+            case 'outerhtml': 
+            	return $this->outerHtml();
+            case 'innerhtml': 
+            	return $this->innerHtml();
+            case 'text': 
+            	return $this->text();
+        }
+		
+        return null;
+    }
+
+	/**
 	 * @todo Remove the need for this to be called.
 	 */
     public function __destruct()
@@ -56,9 +82,14 @@ class Node {
         $this->clear();
     }
 
+	/**
+	 * Simply calls the outer text method.
+     *
+     * @return string
+	 */
     public function __toString()
     {
-        return $this->outertext();
+        return $this->outerHtml();
     }
 
 	/**
@@ -234,6 +265,33 @@ class Node {
 		return $this->getChild($next);
 	}
 
+	/**
+	 * Checks if the give node id is a decendant of the 
+	 * current node.
+	 *
+	 * @param int $id
+	 * @return bool
+	 */
+	public function isDescendant($id)
+	{
+		foreach ($this->children as $childId => $child)
+		{
+			if ($id == $childId)
+			{
+				return true;
+			}
+			elseif ($child->hasChildren())
+			{
+				if ($child->isDescendant($id))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
     /**
      * Shortcut to return the first child.
      *
@@ -356,7 +414,7 @@ class Node {
      * @param int    $nth
      * @return array
      */
-    function find($selector, $nth = null)
+    public function find($selector, $nth = null)
     {
     	$selector = new Selector($selector);
     	$nodes    = $selector->find($this);
@@ -372,181 +430,58 @@ class Node {
 
         return $nodes;
     }
-/*
-
-    function __get($name) {
-        if (isset($this->attr[$name]))
-        {
-            return $this->convert_text($this->attr[$name]);
-        }
-        switch ($name) {
-            case 'outertext': return $this->outertext();
-            case 'innertext': return $this->innertext();
-            case 'plaintext': return $this->text();
-            case 'xmltext': return $this->xmltext();
-            default: return array_key_exists($name, $this->attr);
-        }
-    }
-
-    function __set($name, $value) {
-        switch ($name) {
-            case 'outertext': return $this->_[HDOM_INFO_OUTER] = $value;
-            case 'innertext':
-                if (isset($this->_[HDOM_INFO_TEXT])) return $this->_[HDOM_INFO_TEXT] = $value;
-                return $this->_[HDOM_INFO_INNER] = $value;
-        }
-        if (!isset($this->attr[$name])) {
-            $this->_[HDOM_INFO_SPACE][] = array(' ', '', '');
-            $this->_[HDOM_INFO_QUOTE][] = HDOM_QUOTE_DOUBLE;
-        }
-        $this->attr[$name] = $value;
-    }
-
-    function __isset($name) {
-        switch ($name) {
-            case 'outertext': return true;
-            case 'innertext': return true;
-            case 'plaintext': return true;
-        }
-        //no value attr: nowrap, checked selected...
-        return (array_key_exists($name, $this->attr)) ? true : isset($this->attr[$name]);
-    }
-
-    function __unset($name) {
-        if (isset($this->attr[$name]))
-            unset($this->attr[$name]);
-    }
-
-    // PaperG - Function to convert the text from one character set to another if the two sets are not the same.
-    function convert_text($text)
-    {
-
-        $converted_text = $text;
-
-        $sourceCharset = "";
-        $targetCharset = "";
-
-        if ($this->dom)
-        {
-            $sourceCharset = strtoupper($this->dom->_charset);
-            $targetCharset = strtoupper($this->dom->_target_charset);
-        }
-
-        if (!empty($sourceCharset) && !empty($targetCharset) && (strcasecmp($sourceCharset, $targetCharset) != 0))
-        {
-            // Check if the reported encoding could have been incorrect and the text is actually already UTF-8
-            if ((strcasecmp($targetCharset, 'UTF-8') == 0) && ($this->is_utf8($text)))
-            {
-                $converted_text = $text;
-            }
-            else
-            {
-                $converted_text = iconv($sourceCharset, $targetCharset, $text);
-            }
-        }
-
-        // Lets make sure that we don't have that silly BOM issue with any of the utf-8 text we output.
-        if ($targetCharset == 'UTF-8')
-        {
-            if (substr($converted_text, 0, 3) == "\xef\xbb\xbf")
-            {
-                $converted_text = substr($converted_text, 3);
-            }
-            if (substr($converted_text, -3) == "\xef\xbb\xbf")
-            {
-                $converted_text = substr($converted_text, 0, -3);
-            }
-        }
-
-        return $converted_text;
-    }
-
-    /**
-    * Returns true if $string is valid UTF-8 and false otherwise.
-    *
-    * @param mixed $str String to be tested
-    * @return boolean
-    *
-    static function is_utf8($str)
-    {
-        $c=0; $b=0;
-        $bits=0;
-        $len=strlen($str);
-        for($i=0; $i<$len; $i++)
-        {
-            $c=ord($str[$i]);
-            if($c > 128)
-            {
-                if(($c >= 254)) return false;
-                elseif($c >= 252) $bits=6;
-                elseif($c >= 248) $bits=5;
-                elseif($c >= 240) $bits=4;
-                elseif($c >= 224) $bits=3;
-                elseif($c >= 192) $bits=2;
-                else return false;
-                if(($i+$bits) > $len) return false;
-                while($bits > 1)
-                {
-                    $i++;
-                    $b=ord($str[$i]);
-                    if($b < 128 || $b > 191) return false;
-                    $bits--;
-                }
-            }
-        }
-        return true;
-    }
-
-    /*
-    function is_utf8($string)
-    {
-        //this is buggy
-        return (utf8_encode(utf8_decode($string)) == $string);
-    }
-    */
 
     /**
      * Function to try a few tricks to determine the displayed size of an img on the page.
      * NOTE: This will ONLY work on an IMG tag. Returns FALSE on all other tag types.
      *
-     * @author John Schlick
-     * @version April 19 2012
-     * @return array an array containing the 'height' and 'width' of the image on the page or -1 if we can't figure it out.
+     * Future enhancement:
+     * Look in the tag to see if there is a class or id specified that has a height or width attribute to it.
      *
-    function get_display_size()
+     * Far future enhancement
+     * Look at all the parent tags of this image to see if they specify a class or id that has an img selector that specifies a height or width
+     * Note that in this case, the class or id will have the img subselector for it to apply to the image.
+     *
+     * ridiculously far future development
+     * If the class or id is specified in a SEPARATE css file thats not on the page, go get it and do what we were just doing for the ones on the page.
+     *
+     * @author John Schlick
+     * @return array an array containing the 'height' and 'width' of the image on the page or -1 if we can't figure it out.
+     */
+    public function get_display_size()
     {
-
         $width = -1;
         $height = -1;
 
-        if ($this->tag !== 'img')
+        if ($this->tag->name() != 'img')
         {
             return false;
         }
 
-        // See if there is aheight or width attribute in the tag itself.
-        if (isset($this->attr['width']))
+        // See if there is a height or width attribute in the tag itself.
+        if ( ! is_null($this->tag->getAttribute('width')))
         {
-            $width = $this->attr['width'];
+            $width = $this->tag->getAttribute('width');
         }
 
-        if (isset($this->attr['height']))
+        if ( ! is_null($this->tag->getAttribute('height')))
         {
-            $height = $this->attr['height'];
+            $height = $this->tag->getAttribute('height');
         }
 
         // Now look for an inline style.
-        if (isset($this->attr['style']))
+        if ( ! is_null($this->tag->getAttribute('style')))
         {
             // Thanks to user gnarf from stackoverflow for this regular expression.
-            $attributes = array();
-            preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->attr['style'], $matches, PREG_SET_ORDER);
-            foreach ($matches as $match) {
-              $attributes[$match[1]] = $match[2];
+            $attributes = [];
+            preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->tag->getAttribute['style'], $matches, PREG_SET_ORDER);
+            foreach ($matches as $match) 
+            {
+            	$attributes[$match[1]] = $match[2];
             }
 
             // If there is a width in the style attributes:
-            if (isset($attributes['width']) && $width == -1)
+            if (isset($attributes['width']) and $width == -1)
             {
                 // check that the last two characters are px (pixels)
                 if (strtolower(substr($attributes['width'], -2)) == 'px')
@@ -561,7 +496,7 @@ class Node {
             }
 
             // If there is a width in the style attributes:
-            if (isset($attributes['height']) && $height == -1)
+            if (isset($attributes['height']) and $height == -1)
             {
                 // check that the last two characters are px (pixels)
                 if (strtolower(substr($attributes['height'], -2)) == 'px')
@@ -577,18 +512,10 @@ class Node {
 
         }
 
-        // Future enhancement:
-        // Look in the tag to see if there is a class or id specified that has a height or width attribute to it.
-
-        // Far future enhancement
-        // Look at all the parent tags of this image to see if they specify a class or id that has an img selector that specifies a height or width
-        // Note that in this case, the class or id will have the img subselector for it to apply to the image.
-
-        // ridiculously far future development
-        // If the class or id is specified in a SEPARATE css file thats not on the page, go get it and do what we were just doing for the ones on the page.
-
-        $result = array('height' => $height,
-                        'width' => $width);
+        $result = [
+        	'height' => $height,
+            'width'  => $width
+      	];
         return $result;
     }
 
