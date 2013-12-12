@@ -22,7 +22,6 @@
         "php": ">=5.4"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master",
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {

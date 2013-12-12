@@ -1,14 +1,8 @@
 <?php
 
 use PHPHtmlParser\Dom\Tag;
-use Mockery as m;
 
 class NodeTagTest extends PHPUnit_Framework_TestCase {
-
-	public function tearDown()
-	{
-		m::close();
-	}
 
 	public function testSelfClosing()
 	{

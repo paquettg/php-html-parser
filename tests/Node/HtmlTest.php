@@ -3,14 +3,8 @@
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Dom\Tag;
-use Mockery as m;
 
 class NodeHtmlTest extends PHPUnit_Framework_TestCase {
-
-	public function tearDown()
-	{
-		m::close();
-	}
 
 	public function testInnerHtml()
 	{

@@ -3,15 +3,9 @@
 use PHPHtmlParser\Selector;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
-use Mockery as m;
 
 class SelectorTest extends PHPUnit_Framework_TestCase {
 	
-	public function tearDown()
-	{
-		m::close();
-	}
-
 	public function testParseSelectorStringId()
 	{
 		$selector  = new Selector('#all');
