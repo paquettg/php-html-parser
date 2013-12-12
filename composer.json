@@ -8,15 +8,10 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Sunra",
-            "email": "sunra@yandex.ru",
-            "homepage": "https://github.com/sunra"
-        },
-        {
             "name": "Gilles Paquette",
             "email": "paquettg@gmail.com",
             "homepage": "http://gillespaquette.ca"
-        }
+        },
     ],
     "require": {
         "php": ">=5.4"
