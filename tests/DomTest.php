@@ -28,6 +28,13 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div>', $div->outerHtml);
 	}
 
+	public function testLoadNoOpeningTag()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><font color="red"><strong>PR Manager</strong></font></b><div class="content">content</div></div>');
+		$this->assertEquals('content', $dom->find('.content', 0)->text);
+	}
+
 	public function testLoadNoClosingTag()
 	{
 		$dom = new Dom;
@@ -62,6 +69,14 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$dom = new Dom;
 		$dom->loadFromFile('tests/big.html');
 		$this->assertEquals(10, count($dom->find('.content-border')));
+	}
+
+	public function testLoadFileBigTwice()
+	{
+		$dom = new Dom;
+		$dom->loadFromFile('tests/big.html');
+		$post = $dom->find('.post-row', 0);
+		$this->assertEquals(' <p>Журчанье воды<br /> Черно-белые тени<br /> Вновь на фонтане</p> ', $post->find('.post-message', 0)->innerHtml);
 	}
 
 	public function testToStringMagic()

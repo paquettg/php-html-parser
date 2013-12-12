@@ -24,7 +24,7 @@ class TextNode extends Node {
 	 */
 	public function __construct($text)
 	{
-		$this->text = $text;
+		$this->text = preg_replace('/\s+/', ' ', $text);
 		$this->tag  = new Tag('text');
 		parent::__construct();
 	}

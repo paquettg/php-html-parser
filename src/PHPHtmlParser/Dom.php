@@ -196,7 +196,7 @@ class Dom {
 	protected function clean($str)
 	{
 		// clean out the \n\r
-		$str = str_replace(["\r\n", "\r", "\n"], '', $str);
+		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
 
         // strip out comments
         $str = preg_replace("'<!--(.*?)-->'is", '', $str);
@@ -248,11 +248,14 @@ class Dom {
 				// check if it was a closing tag
 				if ($info['closing'])
 				{
+					$originalNode = $activeNode;
 					while ($activeNode->getTag()->name() != $info['tag'])
 					{
 						$activeNode = $activeNode->getParent();
 						if (is_null($activeNode))
 						{
+							// we could not find opening tag
+							$activeNode = $originalNode;
 							break;
 						}
 					}

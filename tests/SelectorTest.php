@@ -137,4 +137,24 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 		$selector = new Selector('a, p');
 		$this->assertEquals(3, count($selector->find($root)));
 	}
+
+	public function testFindXpathKeySelector()
+	{
+		$parent = new HtmlNode(new Tag('div'));
+		$child1 = new HtmlNode(new Tag('a'));
+		$child2 = new HtmlNode(new Tag('p'));
+		$child3 = new HtmlNode(new Tag('a'));
+		$child3->getTag()->setAttributes([
+			'class' => [
+				'value'       => 'link outer',
+				'doubleQuote' => false,
+			],
+		]);
+		$parent->addChild($child1);
+		$parent->addChild($child2);
+		$parent->addChild($child3);
+
+		$selector = new Selector('div[1]');
+		$this->assertEquals($parent->id(), $selector->find($parent)[0]->id());
+	}
 }
