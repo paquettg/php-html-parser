@@ -465,28 +465,6 @@ class Parser {
         return true;
     }
 
-    // link node's parent
-    protected function link_nodes(&$node, $is_child)
-    {
-        $node->parent = $this->parent;
-        $this->parent->nodes[] = $node;
-        if ($is_child)
-        {
-            $this->parent->children[] = $node;
-        }
-    }
-
-    // as a text node
-    protected function as_text_node($tag)
-    {
-        $node = new simple_html_dom_node($this);
-        ++$this->cursor;
-        $node->_[HDOM_INFO_TEXT] = '</' . $tag . '>';
-        $this->link_nodes($node, false);
-        $this->char = (++$this->pos<$this->size) ? $this->doc[$this->pos] : null; // next
-        return true;
-    }
-
     function __toString()
     {
         return $this->root->innertext();

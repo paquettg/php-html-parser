@@ -63,4 +63,53 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$dom->loadFromFile('tests/big.html');
 		$this->assertEquals(10, count($dom->find('.content-border')));
 	}
+
+	public function testToStringMagic()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+		$this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', (string) $dom);
+	}
+
+	public function testGetMagic()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+		$this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $dom->innerHtml);
+	}
+
+	public function testFirstChild()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
+		$this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div>', $dom->firstChild()->outerHtml);
+	}
+
+	public function testLastChild()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
+		$this->assertEquals('<br />', $dom->lastChild()->outerHtml);
+	}
+
+	public function testGetElementById()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
+		$this->assertEquals('<a href="google.com" id="78">click here</a>', $dom->getElementById('78')->outerHtml);
+	}
+
+	public function testGetElementsByTag()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
+		$this->assertEquals('<p>Hey bro, <a href="google.com" id="78">click here</a></p>', $dom->getElementsByTag('p')[0]->outerHtml);
+	}
+
+	public function testGetElementsByClass()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
+		$this->assertEquals('<p>Hey bro, <a href="google.com" id="78">click here</a></p>', $dom->getElementsByClass('all')[0]->innerHtml);
+	}
 }

@@ -23,9 +23,9 @@ class Dom {
 	/**
 	 * The document string.
 	 *
-	 * @var string
+	 * @var Content
 	 */
-	protected $content;
+	protected $content = null;
 
 	/**
 	 * The original file size of the document.
@@ -42,6 +42,27 @@ class Dom {
 	protected $size;
 
 	/**
+	 * Returns the inner html of the root node.
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->root->innerHtml();
+	}
+
+	/**
+	 * A simple wrapper around the root node.
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get($name)
+	{
+		return $this->root->$name;
+	}
+
+	/**
 	 * Attempts to load the dom from a string.
 	 *
 	 * @param string $str
@@ -53,12 +74,18 @@ class Dom {
 		$this->raw     = $str;
 
 		// clean out none-html text
+		if ( ! $this instanceof Dom)
+		{
+			throw new \Exception(get_class($this));
+		}
 		$html = $this->clean($str);
 
 		$this->size    = strlen($str);
 		$this->content = new Content($html);
 
 		$this->parse();
+
+		return $this;
 	}
 
 	/**
@@ -85,7 +112,79 @@ class Dom {
 	 */
 	public function find($selector, $nth = null)
 	{
+		$this->isLoaded();
 		return $this->root->find($selector, $nth);
+	}
+
+	/**
+	 * Simple wrapper function that returns the first child.
+	 *
+	 * @return Node
+	 */
+	public function firstChild()
+	{
+		$this->isLoaded();
+		return $this->root->firstChild();
+	}
+
+	/**
+	 * Simple wrapper function that returns the last child.
+	 *
+	 * @return Node
+	 */
+	public function lastChild()
+	{
+		$this->isLoaded();
+		return $this->root->lastChild();
+	}
+
+	/**
+	 * Simple wrapper function that returns an element by the
+	 * id.
+	 *
+	 * @return Node
+	 */
+	public function getElementById($id)
+	{
+		$this->isLoaded();
+		return $this->find('#'.$id, 0);
+	}
+
+	/**
+	 * Simple wrapper function that returns all elements by 
+	 * tag name.
+	 *
+	 * @return array
+	 */
+	public function getElementsByTag($name)
+	{
+		$this->isLoaded();
+		return $this->find($name);
+	}
+
+	/**
+	 * Simple wrapper function that returns all elements by
+	 * class name.
+	 *
+	 * @return array
+	 */
+	public function getElementsByClass($class)
+	{
+		$this->isLoaded();
+		return $this->find('.'.$class);
+	}
+
+	/**
+	 * Checks if the load methods have been called.
+	 *
+	 * @throws Exception
+	 */
+	protected function isLoaded()
+	{
+		if (is_null($this->content))
+		{
+			throw new Exception('Content is not loaded!');
+		}
 	}
 
 	/**
