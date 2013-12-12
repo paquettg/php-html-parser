@@ -1,17 +1,17 @@
 <?php
 namespace PHPHtmlParser;
 
-use Dom\HtmlNode;
-use Dom\TextNode;
+use PHPHtmlParser\Dom\HtmlNode;
+use PHPHtmlParser\Dom\TextNode;
 
-class Parser {
+class Dom {
 	
 	/**
 	 * Contains the root node of this dom tree.
 	 *
 	 * @var HtmlNode
 	 */
-	protected $root;
+	public $root;
 
 	/**
 	 * The raw version of the document string.
@@ -73,7 +73,19 @@ class Parser {
 		$document = fread($fp, filesize($file));
 		fclose($fp);
 
-		return $this->load($file);
+		return $this->load($document);
+	}
+
+	/**
+	 * Find elements by css selector on the root node.
+	 *
+	 * @param string $selector
+	 * @param int    $nth
+	 * @return array
+	 */
+	public function find($selector, $nth = null)
+	{
+		return $this->root->find($selector, $nth);
 	}
 
 	/**
@@ -137,18 +149,36 @@ class Parser {
 				// check if it was a closing tag
 				if ($info['closing'])
 				{
-					$activeNode = $activeNode->getParent();
+					while ($activeNode->getTag()->name() != $info['tag'])
+					{
+						$activeNode = $activeNode->getParent();
+						if (is_null($activeNode))
+						{
+							break;
+						}
+					}
+					if ( ! is_null($activeNode))
+					{
+						$activeNode = $activeNode->getParent();
+					}
 					continue;
 				}
 
 				$node = $info['node'];
 				$activeNode->addChild($node);
-				$activeNode = $node;
-			}
 
-			// we found text
-			$textNode = new TextNode($str);
-			$activeNode->addChild($textNode);
+				// check if node is self closing
+				if ( ! $node->getTag()->isSelfClosing())
+				{
+					$activeNode = $node;
+				}
+			}
+			else
+			{
+				// we found text
+				$textNode = new TextNode($str);
+				$activeNode->addChild($textNode);
+			}
 		}
 	}
 
@@ -170,21 +200,23 @@ class Parser {
 			return $return;
 		}
 
-		// check if this is an end tag
+		// check if this is a closing tag
 		if ($this->content->fastForward(1)->char() == '/')
 		{
 			// end tag
 			$tag = $this->content->fastForward(1)
-			                     ->skipByToken('blank')
-			                     ->copyUntil('>');
-
+			                     ->copyByToken('slash', true);
+			// move to end of tag
+			$this->content->copyUntil('>');
+			$this->content->fastForward(1);
 			$return['status']  = true;
 			$return['closing'] = true;
+			$return['tag']     = strtolower($tag);
 			return $return;
 		}
 
-		$tag = strtolower($this->content->copyByToken('slash', true));
-		$node = new HtmlNode($tag);
+		$tag   = strtolower($this->content->copyByToken('slash', true));
+		$node  = new HtmlNode($tag);
 
 		// attributes
 		while ($this->content->char() != '>' and
@@ -196,8 +228,9 @@ class Parser {
 				break;
 			}
 
-			$name  = $this->content->copyByToken('equal', true);
-			if ($name == '/')
+			$name = $this->content->copyByToken('equal', true);
+			if ($name == '/' OR
+			    empty($name))
 			{
 				break;
 			}
@@ -244,8 +277,22 @@ class Parser {
 					'value'       => null,
 					'doubleQuote' => true,
 				];
+				$this->content->rewind(1);
 			}
-
 		}
+
+		$this->content->skipByToken('blank');
+		if ($this->content->char() == '/')
+		{
+			// self closing tag
+			$node->getTag()->selfClosing();
+			$this->content->fastForward(1);
+		}
+		
+		$this->content->fastForward(1);
+
+		$return['status'] = true;
+		$return['node']   = $node;
+		return $return;
 	}
 }

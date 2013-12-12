@@ -73,7 +73,7 @@ class HtmlNode extends Node {
 		// special handling for root
 		if ( $this->tag->name() == 'root')
 		{
-			return $this->innerText();
+			return $this->innerHtml();
 		}
 
 		$return = $this->tag->makeOpeningTag();

@@ -101,7 +101,7 @@ class Content {
 	 */
 	public function copyUntil($string, $char = false, $escape = false)
 	{
-		if ($this->pos == $this->size)
+		if ($this->pos >= $this->size)
 		{
 			// nothing left
 			return '';
