@@ -39,6 +39,11 @@ class Tag {
 		return $this->getAttribute($key);
 	}
 
+	public function __set($key, $value)
+	{
+		$this->setAttribute($key, $value);
+	}
+
 	/**
 	 * Returns the name of this tag.
 	 *
@@ -78,6 +83,19 @@ class Tag {
 	public function noise($noise)
 	{
 		$this->noise = $noise;
+		return $this;
+	}		
+
+	/**
+	 * Set an attribute for this tag.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @chainable
+	 */
+	public function setAttribute($key, $value)
+	{
+		$this->attr[$key] = $value;
 		return $this;
 	}
 

@@ -59,6 +59,23 @@ class NodeTagTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<a href="http://google.com">', $tag->makeOpeningTag());
 	}
 
+	public function testMakeOpeningTagEmptyAttr()
+	{
+		$attr = [
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => true,
+			],
+		];
+
+		$tag = new Tag('a');
+		$tag->setAttributes($attr);
+		$tag->selected = [
+			'value' => null,
+		];
+		$this->assertEquals('<a href="http://google.com" selected>', $tag->makeOpeningTag());
+	}
+
 	public function testMakeOpeningTagSelfClosing()
 	{
 		$attr = [

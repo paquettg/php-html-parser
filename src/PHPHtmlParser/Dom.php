@@ -2,6 +2,7 @@
 namespace PHPHtmlParser;
 
 use Dom\HtmlNode;
+use Dom\TextNode;
 
 class Parser {
 	
@@ -11,6 +12,13 @@ class Parser {
 	 * @var HtmlNode
 	 */
 	protected $root;
+
+	/**
+	 * The raw version of the document string.
+	 *
+	 * @var string
+	 */
+	protected $raw;
 
 	/**
 	 * The document string.
@@ -24,7 +32,7 @@ class Parser {
 	 *
 	 * @var int
 	 */
-	protected $originalSize;
+	protected $rawSize;
 	
 	/**
 	 * The size of the document after it is cleaned.
@@ -41,13 +49,16 @@ class Parser {
 	 */
 	public function load($str)
 	{
-		$this->originalSize = strlen($str);
+		$this->rawSize = strlen($str);
+		$this->raw     = $str;
 
 		// clean out none-html text
 		$html = $this->clean($str);
 
 		$this->size    = strlen($str);
-		$this->content = $html;
+		$this->content = new Content($html);
+
+		$this->parse();
 	}
 
 	/**
@@ -74,7 +85,7 @@ class Parser {
 	protected function clean($str)
 	{
 		// clean out the \n\r
-		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
+		$str = str_replace(["\r\n", "\r", "\n"], '', $str);
 
         // strip out comments
         $str = preg_replace("'<!--(.*?)-->'is", '', $str);
@@ -100,5 +111,141 @@ class Parser {
         $str = preg_replace("'(\{\w)(.*?)(\})'s", '', $str);
 
 		return $str;
+	}
+
+	/**
+	 * Attempts to parse the html in content.
+	 */
+	protected function parse()
+	{
+		// add the root node
+		$this->root = new HtmlNode('root');
+		$activeNode = $this->root;
+		while ( ! is_null($activeNode))
+		{
+			$str = $this->content->copyUntil('<');
+			if ($str == '')
+			{
+				$info = $this->parseTag();
+				if ( ! $info['status'])
+				{
+					// we are done here
+					$activeNode = null;
+					continue;
+				}
+
+				// check if it was a closing tag
+				if ($info['closing'])
+				{
+					$activeNode = $activeNode->getParent();
+					continue;
+				}
+
+				$node = $info['node'];
+				$activeNode->addChild($node);
+				$activeNode = $node;
+			}
+
+			// we found text
+			$textNode = new TextNode($str);
+			$activeNode->addChild($textNode);
+		}
+	}
+
+	/**
+	 * Attempt to parse a tag out of the content.
+	 *
+	 * @return array
+	 */
+	protected function parseTag()
+	{
+		$return = [
+			'status'  => false,
+			'closing' => false,
+			'node'    => null,
+		];
+		if ($this->content->char() != '<')
+		{
+			// we are not at the beginning of a tag
+			return $return;
+		}
+
+		// check if this is an end tag
+		if ($this->content->fastForward(1)->char() == '/')
+		{
+			// end tag
+			$tag = $this->content->fastForward(1)
+			                     ->skipByToken('blank')
+			                     ->copyUntil('>');
+
+			$return['status']  = true;
+			$return['closing'] = true;
+			return $return;
+		}
+
+		$tag = strtolower($this->content->copyByToken('slash', true));
+		$node = new HtmlNode($tag);
+
+		// attributes
+		while ($this->content->char() != '>' and
+		       $this->content->char() != '/')
+		{
+			$space = $this->content->skipByToken('blank', true);
+			if (empty($space))
+			{
+				break;
+			}
+
+			$name  = $this->content->copyByToken('equal', true);
+			if ($name == '/')
+			{
+				break;
+			}
+
+			if (empty($name))
+			{
+				$this->content->fastForward(1);
+				continue;
+			}
+
+			$this->content->skipByToken('blank');
+			if ($this->content->char() == '=')
+			{
+				$attr = [];
+				$this->content->fastForward(1)
+				              ->skipByToken('blank');
+				switch ($this->content->char())
+				{
+					case '"':
+						$attr['doubleQuote'] = true;
+						$this->content->fastForward(1);
+						$attr['value'] = $this->content->copyUntil('"', false, true);
+						$this->content->fastForward(1);
+						$node->getTag()->$name = $attr;
+						break;
+					case "'":
+						$attr['doubleQuote'] = false;
+						$this->content->fastForward(1);
+						$attr['value'] = $this->content->copyUntil("'", false, true);
+						$this->content->fastForward(1);
+						$node->getTag()->$name = $attr;
+						break;
+					default:
+						$attr['doubleQuote'] = true;
+						$attr['value']       = $this->content->copyByToken('attr', true);
+						$node->getTag()->$name = $attr;
+						break;
+				}
+			}
+			else
+			{
+				// no value attribute
+				$node->getTag()->$name = [
+					'value'       => null,
+					'doubleQuote' => true,
+				];
+			}
+
+		}
 	}
 }
