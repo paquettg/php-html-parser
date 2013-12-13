@@ -1,6 +1,9 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
+use PHPHtmlParser\Dom;
+use stringEncode\Encode;
+
 class TextNode extends Node {
 	
 	/**
@@ -24,7 +27,16 @@ class TextNode extends Node {
 	 */
 	public function __construct($text)
 	{
-		$this->text = preg_replace('/\s+/', ' ', $text);
+		// remove double spaces
+		$text = preg_replace('/\s+/', ' ', $text);
+
+		// convert charset
+		$encode = new Encode;
+		$encode->from(Dom::$expectedCharset);
+		$encode->to(Dom::$charset);
+		$text = $encode->convert($text);
+
+		$this->text = $text;
 		$this->tag  = new Tag('text');
 		parent::__construct();
 	}

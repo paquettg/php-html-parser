@@ -1,5 +1,5 @@
 {
-    "name": "paquettg/phpHtmlParser",
+    "name": "paquettg/php-html-parser",
     "type": "library",
     "description": "An HTML DOM parser. It allows you to manipulate HTML. Find tags on an HTML page with selectors just like jQuery.",
     "version": "1.6.0",
@@ -14,7 +14,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "paquettg/string-encode": "0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

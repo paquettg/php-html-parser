@@ -1,6 +1,9 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
+use PHPHtmlParser\Dom;
+use stringEncode\Encode;
+
 class Tag {
 
 	/**
@@ -95,6 +98,12 @@ class Tag {
 	 */
 	public function setAttribute($key, $value)
 	{
+		// convert charset
+		$encode = new Encode;
+		$encode->from(Dom::$expectedCharset);
+		$encode->to(Dom::$charset);
+		$value['value'] = $encode->convert($value['value']);
+
 		$this->attr[$key] = $value;
 		return $this;
 	}

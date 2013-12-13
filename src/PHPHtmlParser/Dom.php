@@ -7,6 +7,20 @@ use PHPHtmlParser\Dom\TextNode;
 class Dom {
 	
 	/**
+	 * The charset we would like the output to be in.
+	 *
+	 * @var string
+	 */
+	public static $charset = 'UTF-8';
+
+	/**
+	 * The charset that we expect the html to be in.
+	 *
+	 * @var string
+	 */
+	public static $expectedCharset = 'UTF-8';
+
+	/**
 	 * Contains the root node of this dom tree.
 	 *
 	 * @var HtmlNode
@@ -84,6 +98,7 @@ class Dom {
 		$this->content = new Content($html);
 
 		$this->parse();
+		$this->detectCharset();
 
 		return $this;
 	}
@@ -396,5 +411,34 @@ class Dom {
 		$return['status'] = true;
 		$return['node']   = $node;
 		return $return;
+	}
+
+	/**
+	 * Attempts to detect the charset that the html was sent in.
+	 *
+	 * @return bool
+	 */
+	protected function detectCharset()
+	{
+		$meta = $this->root->find('meta[http-equiv=Content-Type]', 0);
+		if (is_null($meta))
+		{
+			// could not find meta tag
+			return false;
+		}
+		$content = $meta->content;
+		if (empty($content))
+		{
+			// could not find content
+			return false;
+		}
+		$matches = [];
+		if (preg_match('/charset=(.+)/', $content, $matches))
+		{
+			static::$expectedCharset = trim($matches[1]);
+		}
+		
+		// no charset found
+		return false;
 	}
 }
