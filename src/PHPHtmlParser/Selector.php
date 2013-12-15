@@ -1,6 +1,8 @@
 <?php
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Dom\Collection;
+
 class Selector {
 
    	/** 
@@ -41,7 +43,7 @@ class Selector {
 	 */
 	public function find($node)
 	{
-		$results = [];
+		$results = new Collection;
 		foreach ($this->selectors as $selector)
 		{
 			$nodes = [$node];
