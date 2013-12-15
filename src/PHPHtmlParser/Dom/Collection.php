@@ -1,10 +1,10 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-use IteratorAggregate;
-use ArrayIterator;
-use ArrayAccess;
 use Countable;
+use ArrayAccess;
+use ArrayIterator;
+use IteratorAggregate;
 
 class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	
@@ -14,6 +14,54 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 * @param array
 	 */
 	protected $collection = [];
+
+	/**
+	 * Attempts to call the method on the first node in
+	 * the collection.
+	 *
+	 * @param string $method
+	 * @param array $arguments
+	 * @return mixed;
+	 */
+	public function __call($method, $arguments)
+	{
+		$node = reset($this->collection);
+		if ($node instanceof Node)
+		{
+			return call_user_func_array([$node, $method], $arguments);
+		}
+	}
+
+	/**
+	 * Attempts to apply the magic get to the first node
+	 * in the collection.
+	 *
+	 * @param mixed $key
+	 * @return mixed
+	 */
+	public function __get($key)
+	{
+		$node = reset($this->collection);
+		if ($node instanceof Node)
+		{
+			return $node->$key;
+		}
+	}
+
+	/** 
+	 * Applies the magic string method to the first node in
+	 * the collection.
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		$node = reset($this->collection);
+		if ($node instanceof Node)
+		{
+			return (string) $node;
+		}
+	}
 
 	/** 
 	 * Returns the count of the collection.
@@ -83,5 +131,17 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
     public function offsetGet($offset) 
     {
         return isset($this->collection[$offset]) ? $this->collection[$offset] : null;
+    }
+
+	/**
+	 * Similar to jQuery "each" method. Calls the callback with each
+	 * Node in this collection.
+	 */
+    public function each($callback)
+    {
+    	foreach ($this->collection as $key => $value)
+    	{
+    		$callback($value, $key);
+    	}
     }
 }
