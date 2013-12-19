@@ -1,6 +1,8 @@
 <?php
+
 namespace PHPHtmlParser;
 
+use Guzzle\Http\Client;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 
@@ -116,6 +118,21 @@ class Dom {
 		fclose($fp);
 
 		return $this->load($document);
+	}
+
+	/**
+	 * Uses guzzle to load the html from the given url.
+	 *
+	 * @param string $url
+	 * @chainable
+	 */
+	public function loadFromUrl($url)
+	{
+		$client    = new Client($url);
+		$response = $client->get()->send();
+		$content  = (string) $response;
+
+		return $this->load($content);
 	}
 
 	/**
