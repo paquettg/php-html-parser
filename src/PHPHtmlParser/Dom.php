@@ -79,30 +79,25 @@ class Dom {
 	}
 
 	/**
-	 * Attempts to load the dom from a string.
+	 * Attempts to load the dom from any resource, string, file, or URL.
 	 *
 	 * @param string $str
 	 * @chainable
 	 */
 	public function load($str)
 	{
-		$this->rawSize = strlen($str);
-		$this->raw     = $str;
-
-		// clean out none-html text
-		if ( ! $this instanceof Dom)
+		// check if it's a file
+		if (is_file($str))
 		{
-			throw new \Exception(get_class($this));
+			return $this->loadFromFile($str);
 		}
-		$html = $this->clean($str);
+		// check if it's a url
+		if (preg_match("/^https?:\/\//i",$str))
+		{
+			return $this->loadFromUrl($str);
+		}
 
-		$this->size    = strlen($str);
-		$this->content = new Content($html);
-
-		$this->parse();
-		$this->detectCharset();
-
-		return $this;
+		return $this->loadStr($str);
 	}
 
 	/**
@@ -113,11 +108,7 @@ class Dom {
 	 */
 	public function loadFromFile($file)
 	{
-		$fp = fopen($file, 'r');
-		$document = fread($fp, filesize($file));
-		fclose($fp);
-
-		return $this->load($document);
+		return $this->loadStr(file_get_contents($file));
 	}
 
 	/**
@@ -128,11 +119,9 @@ class Dom {
 	 */
 	public function loadFromUrl($url)
 	{
-		$client    = new Client($url);
-		$response = $client->get()->send();
-		$content  = (string) $response;
+		$content = file_get_contents($url);
 
-		return $this->load($content);
+		return $this->loadStr($content);
 	}
 
 	/**
@@ -204,6 +193,34 @@ class Dom {
 	{
 		$this->isLoaded();
 		return $this->find('.'.$class);
+	}
+
+	/**
+	 * Parsers the html of the given string. Used for load(), loadFromFile(),
+	 * and loadFromUrl().
+	 *
+	 * @param string
+	 * @chainable
+	 */
+	protected function loadStr($str)
+	{
+		$this->rawSize = strlen($str);
+		$this->raw     = $str;
+
+		// clean out none-html text
+		if ( ! $this instanceof Dom)
+		{
+			throw new \Exception(get_class($this));
+		}
+		$html = $this->clean($str);
+
+		$this->size    = strlen($str);
+		$this->content = new Content($html);
+
+		$this->parse();
+		$this->detectCharset();
+
+		return $this;
 	}
 
 	/**
