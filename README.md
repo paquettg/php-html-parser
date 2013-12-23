@@ -54,3 +54,20 @@ foreach ($contents as $content)
 ```
 
 This example loads the html from big.html, a real page found online, and gets all the content-border classes to process. It also shows a few things you can do with a node but it is not an exhaustive list of methods that a node has avaiable.
+
+Alternativly, you can always use the load() method to load the file. It will attempt to find the file using file_exists and, if succesfull, will call loadFromFile() for you. The same applies to a URL and loadFromUrl() method.
+
+Static Facade
+------------
+
+You can also mount a static facade for the Dom object.
+
+```PHP
+PHPHtmlParser\StaticDom::mount();
+
+Dom::load('tests/big.hmtl');
+$objects Dom::find('.content-border');
+
+```
+
+The above php block does the same find and load as the first example but it is done using the static facade, which supports all public methods found in the Dom object.
