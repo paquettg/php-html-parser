@@ -5,6 +5,7 @@ namespace PHPHtmlParser;
 use Guzzle\Http\Client;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
+use stringEncode\Encode;
 
 class Dom {
 	
@@ -13,14 +14,7 @@ class Dom {
 	 *
 	 * @var string
 	 */
-	public static $charset = 'UTF-8';
-
-	/**
-	 * The charset that we expect the html to be in.
-	 *
-	 * @var string
-	 */
-	public static $expectedCharset = 'UTF-8';
+	protected $defaultCharset = 'UTF-8';
 
 	/**
 	 * Contains the root node of this dom tree.
@@ -56,12 +50,6 @@ class Dom {
 	 * @var int
 	 */
 	protected $size;
-
-	public function __construct()
-	{
-		self::$expectedCharset = 'UTF-8';
-		self::$charset = 'UTF-8';
-	}
 
 	/**
 	 * Returns the inner html of the root node.
@@ -460,25 +448,35 @@ class Dom {
 	 */
 	protected function detectCharset()
 	{
+		// set the default
+		$encode = new Encode;
+		$encode->from($this->defaultCharset);
+		$encode->to($this->defaultCharset);
+
 		$meta = $this->root->find('meta[http-equiv=Content-Type]', 0);
 		if (is_null($meta))
 		{
 			// could not find meta tag
+			$this->root->propagateEncoding($encode);
 			return false;
 		}
 		$content = $meta->content;
 		if (empty($content))
 		{
 			// could not find content
+			$this->root->propagateEncoding($encode);
 			return false;
 		}
 		$matches = [];
 		if (preg_match('/charset=(.+)/', $content, $matches))
 		{
-			static::$expectedCharset = trim($matches[1]);
+			$encode->from(trim($matches[1]));
+			$this->root->propagateEncoding($encode);
+			return true;
 		}
 		
 		// no charset found
+		$this->root->propagateEncoding($encode);
 		return false;
 	}
 }

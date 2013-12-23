@@ -32,6 +32,13 @@ class Tag {
 	 */
 	protected $noise = '';
 
+	/**
+	 * The encoding class to... encode the tags
+	 *
+	 * @var mixed
+	 */
+	protected $encode = null;
+
 	public function __construct($name)
 	{
 		$this->name = $name;
@@ -76,6 +83,11 @@ class Tag {
 	public function isSelfClosing()
 	{
 		return $this->selfclosing;
+	}
+
+	public function setEncoding(Encode $encode)
+	{
+		$this->encode = $encode;
 	}
 
 	/**
@@ -146,13 +158,10 @@ class Tag {
 			return null;
 		}
 		$value = $this->attr[$key]['value'];
-		if (is_string($value))
+		if (is_string($value) AND ! is_null($this->encode))
 		{
 			// convert charset
-			$encode = new Encode;
-			$encode->from(Dom::$expectedCharset);
-			$encode->to(Dom::$charset);
-			$this->attr[$key]['value'] = $encode->convert($value);
+			$this->attr[$key]['value'] = $this->encode->convert($value);
 		}
 
 		return $this->attr[$key];

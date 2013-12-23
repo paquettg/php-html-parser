@@ -43,6 +43,13 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div><br />', $root->outerHtml);
 	}
 
+	public function testLoadWithFile()
+	{
+		$dom = new Dom;
+		$dom->loadFromFile('tests/small.html');
+		$this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
+	}
+
 	public function testLoadFromFile()
 	{
 		$dom = new Dom;

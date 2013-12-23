@@ -2,6 +2,7 @@
 namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\Selector;
+use stringEncode\Encode;
 
 /**
  * Dom node object.
@@ -39,9 +40,16 @@ class Node {
 	/**
 	 * The unique id of the class. Given by PHP.
 	 *
-	 * @string
+	 * @var string
 	 */
    	protected $id;
+
+   	/**
+   	 * The encoding class used to encode strings.
+   	 *
+   	 * @var mixed
+   	 */
+   	protected $encode;
 
 	public function __construct()
 	{
@@ -143,6 +151,23 @@ class Node {
         $this->parent->addChild($this);
 
         return $this;
+    }
+
+	/** 
+	 * Sets the encoding class to this node and propagates it
+	 * to all its children.
+	 *
+	 * @param Encode $encode
+	 */
+    public function propagateEncoding(Encode $encode)
+    {
+    	$this->encode = $encode;
+    	$this->tag->setEncoding($encode);
+    	// check children
+    	foreach ($this->children as $id => $child)
+    	{
+    		$child['node']->propagateEncoding($encode);
+    	}
     }
 
 	/**
