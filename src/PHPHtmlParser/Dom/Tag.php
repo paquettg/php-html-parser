@@ -98,15 +98,6 @@ class Tag {
 	 */
 	public function setAttribute($key, $value)
 	{
-		if (is_string($value['value']))
-		{
-			// convert charset
-			$encode = new Encode;
-			$encode->from(Dom::$expectedCharset);
-			$encode->to(Dom::$charset);
-			$value['value'] = $encode->convert($value['value']);
-		}
-
 		$this->attr[$key] = $value;
 		return $this;
 	}
@@ -134,7 +125,12 @@ class Tag {
 	 */
 	public function getAttributes()
 	{
-		return $this->attr;
+		$return = [];
+		foreach ($this->attr as $attr => $info)
+		{
+			$return[$attr] = $this->getAttribute($attr);
+		}
+		return $return;
 	}
 
 	/**
@@ -149,6 +145,16 @@ class Tag {
 		{
 			return null;
 		}
+		$value = $this->attr[$key]['value'];
+		if (is_string($value))
+		{
+			// convert charset
+			$encode = new Encode;
+			$encode->from(Dom::$expectedCharset);
+			$encode->to(Dom::$charset);
+			$this->attr[$key]['value'] = $encode->convert($value);
+		}
+
 		return $this->attr[$key];
 	}
 
@@ -164,7 +170,8 @@ class Tag {
 		// add the attributes
 		foreach ($this->attr as $key => $info)
 		{
-			$val = $info['value'];
+			$info = $this->getAttribute($key);
+			$val  = $info['value'];
 			if (is_null($val))
 			{
 				$return .= ' '.$key;

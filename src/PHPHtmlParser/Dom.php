@@ -57,6 +57,12 @@ class Dom {
 	 */
 	protected $size;
 
+	public function __construct()
+	{
+		self::$expectedCharset = 'UTF-8';
+		self::$charset = 'UTF-8';
+	}
+
 	/**
 	 * Returns the inner html of the root node.
 	 *

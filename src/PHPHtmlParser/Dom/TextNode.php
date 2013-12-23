@@ -30,12 +30,6 @@ class TextNode extends Node {
 		// remove double spaces
 		$text = preg_replace('/\s+/', ' ', $text);
 
-		// convert charset
-		$encode = new Encode;
-		$encode->from(Dom::$expectedCharset);
-		$encode->to(Dom::$charset);
-		$text = $encode->convert($text);
-
 		$this->text = $text;
 		$this->tag  = new Tag('text');
 		parent::__construct();
@@ -48,7 +42,13 @@ class TextNode extends Node {
 	 */
 	public function text()
 	{
-		return $this->text;
+		// convert charset
+		$encode = new Encode;
+		$encode->from(Dom::$expectedCharset);
+		$encode->to(Dom::$charset);
+		$text = $encode->convert($this->text);
+
+		return $text;
 	}
 
 }
