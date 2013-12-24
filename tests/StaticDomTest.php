@@ -24,7 +24,13 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 
 	public function testFind()
 	{
-		Dom::load('tests/small.html');
-		$this->assertEquals('VonBurgermeister', Dom::find('.post-user font', 0)->text);
+		Dom::load('tests/horrible.html');
+		$this->assertEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', Dom::find('table input', 1)->outerHtml);
+	}
+
+	public function testFindI()
+	{
+		Dom::load('tests/horrible.html');
+		$this->assertEquals('[ Досие бр:12928 ]', Dom::find('i')[0]->innerHtml);
 	}
 }

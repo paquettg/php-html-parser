@@ -110,6 +110,7 @@ class Tag {
 	 */
 	public function setAttribute($key, $value)
 	{
+		$key = strtolower($key);
 		$this->attr[$key] = $value;
 		return $this;
 	}

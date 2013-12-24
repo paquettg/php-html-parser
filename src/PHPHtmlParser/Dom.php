@@ -52,6 +52,23 @@ class Dom {
 	protected $size;
 
 	/**
+	 * A list of tags which will always be self closing
+	 *
+	 * @var array
+	 */
+	protected $selfClosing = [
+		'img',
+		'br',
+		'input',
+		'meta',
+		'link',
+		'hr',
+		'base',
+		'embed',
+		'spacer',
+	];
+
+	/**
 	 * Returns the inner html of the root node.
 	 *
 	 * @return string
@@ -129,6 +146,54 @@ class Dom {
 	{
 		$this->isLoaded();
 		return $this->root->find($selector, $nth);
+	}
+
+	/**
+	 * Adds the tag (or tags in an array) to the list of tags that will always
+	 * be self closing.
+	 *
+	 * @param string|array $tag
+	 * @chainable
+	 */
+	public function addSelfClosingTag($tag)
+	{
+		if ( ! is_array($tag))
+		{
+			$tag = [$tag];
+		}
+		foreach ($tag as $value)
+		{
+			$this->selfClosing[] = $value;
+		}
+		return $this;
+	}
+	
+	/**
+	 * Removes the tag (or tags in an array) from the list of tags that will
+	 * always be self closing.
+	 *
+	 * @param string|array $tag
+	 * @chainable
+	 */
+	public function removeSelfClosingTag($tag)
+	{
+		if ( ! is_array($tag))
+		{
+			$tag = [$tag];
+		}
+		$this->selfClosing = array_diff($this->selfClosing, $tag);
+		return $this;
+	}
+
+	/**
+	 * Sets the list of self closing tags to empty.
+	 *
+	 * @chainable
+	 */
+	public function clearSelfClosingTags()
+	{
+		$this->selfClosing = [];
+		return $this;
 	}
 
 	/**
@@ -309,6 +374,11 @@ class Dom {
 					continue;
 				}
 
+				if ( ! isset($info['node']))
+				{
+					continue;
+				}
+
 				$node = $info['node'];
 				$activeNode->addChild($node);
 
@@ -354,9 +424,20 @@ class Dom {
 			// move to end of tag
 			$this->content->copyUntil('>');
 			$this->content->fastForward(1);
-			$return['status']  = true;
-			$return['closing'] = true;
-			$return['tag']     = strtolower($tag);
+			
+			// check if this closing tag counts
+			$tag = strtolower($tag);
+			if (in_array($tag, $this->selfClosing))
+			{
+				$return['status'] = true;
+				return $return;
+			}
+			else
+			{
+				$return['status']  = true;
+				$return['closing'] = true;
+				$return['tag']     = strtolower($tag);
+			}
 			return $return;
 		}
 
@@ -432,6 +513,11 @@ class Dom {
 			// self closing tag
 			$node->getTag()->selfClosing();
 			$this->content->fastForward(1);
+		}
+		elseif (in_array($tag, $this->selfClosing))
+		{
+			// We force self closing on this tag.
+			$node->getTag()->selfClosing();
 		}
 		
 		$this->content->fastForward(1);

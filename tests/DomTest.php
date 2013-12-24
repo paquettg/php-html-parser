@@ -43,6 +43,28 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div><br />', $root->outerHtml);
 	}
 
+	public function testLoadAttributeOnSelfClosing()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br class="both" />');
+		$br = $dom->find('br', 0);
+		$this->assertEquals('both', $br->getAttribute('class'));
+	}
+
+	public function testLoadClosingTagOnSelfClosing()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+		$this->assertEquals('<br /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
+	}
+
+	public function testLoadUpperCase()
+	{
+		$dom = new Dom;
+		$dom->load('<DIV CLASS="ALL"><BR><P>hEY BRO, <A HREF="GOOGLE.COM" DATA-QUOTE="\"">CLICK HERE</A></BR></DIV>');
+		$this->assertEquals('<br /><p>hEY BRO, <a href="GOOGLE.COM" data-quote="\"">CLICK HERE</a></p>', $dom->find('div', 0)->innerHtml);
+	}
+
 	public function testLoadWithFile()
 	{
 		$dom = new Dom;
