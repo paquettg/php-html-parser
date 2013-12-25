@@ -127,10 +127,13 @@ class Dom {
 	 *
 	 * @param string $url
 	 * @chainable
+	 * @throws \Guzzle\Http\Exception\...
 	 */
 	public function loadFromUrl($url)
 	{
-		$content = file_get_contents($url);
+		$client   = new Client($url);
+		$response = $client->get()->send();
+		$content = (string) $response;
 
 		return $this->loadStr($content);
 	}
