@@ -133,9 +133,21 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
         return isset($this->collection[$offset]) ? $this->collection[$offset] : null;
     }
 
+    /**
+     * Returns this collection as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+    	return $this->collection;
+    }
+
 	/**
 	 * Similar to jQuery "each" method. Calls the callback with each
 	 * Node in this collection.
+	 *
+	 * @param callback $callback
 	 */
     public function each($callback)
     {
