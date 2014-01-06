@@ -162,4 +162,15 @@ class HtmlNode extends Node {
 
 		return '';
 	}
+
+	/**
+	 * Call this when something in the node tree has changed. Like a child has been added
+	 * or a parent has been changed.
+	 */
+    protected function clear()
+    {
+		$this->innerHtml = null;
+		$this->outerHtml = null;
+		$this->text      = null;
+    }
 }

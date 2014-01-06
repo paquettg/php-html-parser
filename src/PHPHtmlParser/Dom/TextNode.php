@@ -20,6 +20,13 @@ class TextNode extends Node {
 	protected $text;
 
 	/**
+	 * This is the converted version of the text.
+	 *
+	 * @var string
+	 */
+	protected $convertedText = null;
+
+	/**
 	 * Sets the text for this node.
 	 *
 	 * @param string $text
@@ -30,7 +37,7 @@ class TextNode extends Node {
 		$text = preg_replace('/\s+/', ' ', $text);
 
 		$this->text = $text;
-		$this->tag  = new Tag('text');
+		$this->tag	= new Tag('text');
 		parent::__construct();
 	}
 
@@ -44,14 +51,30 @@ class TextNode extends Node {
 		// convert charset
 		if ( ! is_null($this->encode))
 		{
+			if ( ! is_null($this->convertedText))
+			{
+				// we already know the converted value
+				return $this->convertedText;
+			}
 			$text = $this->encode->convert($this->text);
+			
+			// remember the conversion
+			$this->convertedText = $text;
+
+			return $text;
 		}
 		else
 		{
-			$text = $this->text;
+			return $this->text;
 		}
-
-		return $text;
 	}
 
+	/**
+	 * Call this when something in the node tree has changed. Like a child has been added
+	 * or a parent has been changed.
+	 */
+	protected function clear()
+	{
+		$this->convertedText = null;
+	}
 }

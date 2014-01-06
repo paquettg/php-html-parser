@@ -83,11 +83,14 @@ class Node {
     }
 
 	/**
-	 * @todo Remove the need for this to be called.
+	 * Attempts to clear out any object references.
 	 */
     public function __destruct()
     {
-        $this->clear();
+		$this->tag      = null;
+		$this->attr     = [];
+        $this->parent   = null;
+        $this->children = [];
     }
 
 	/**
@@ -149,6 +152,9 @@ class Node {
 
         // assign child to parent
         $this->parent->addChild($this);
+
+		//clear any cache
+        $this->clear();
 
         return $this;
     }
@@ -243,6 +249,9 @@ class Node {
     	// tell child I am the new parent
     	$child->setParent($this);
 
+		//clear any cache
+        $this->clear();
+
     	return true;
     }
 
@@ -271,6 +280,9 @@ class Node {
 		
 		// remove the child
 		unset($this->children[$id]);
+
+		//clear any cache
+        $this->clear();
 
 		return $this;
 	}
@@ -349,6 +361,26 @@ class Node {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Attempts to get an ancestor node by the given id.
+	 *
+	 * @param int $id
+	 * @return null|Node
+	 */
+	public function getAncestor($id)
+	{
+		if ( ! is_null($this->parent))
+		{
+			if ($this->parent->id() == $id)
+			{
+				return $this->parent;
+			}
+			return $this->parent->getAncestor($id);
+		}
+
+		return null;
 	}
 
     /**
@@ -589,16 +621,9 @@ class Node {
         return $result;
     }
 
-    /**
-     * clean up memory due to php5 circular references memory leak...
-     *
-     * @todo Remove the need for this. (Remove circular references)
-     */
-    protected function clear()
-    {
-        $this->nodes    = null;
-        $this->parent   = null;
-        $this->children = null;
-    }
-
+	/**
+	 * Call this when something in the node tree has changed. Like a child has been added
+	 * or a parent has been changed.
+	 */
+    protected function clear() {}
 }
