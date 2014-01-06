@@ -4,6 +4,25 @@ namespace PHPHtmlParser\Dom;
 class HtmlNode extends Node {
 
 	/**
+	 * Remembers what the innerHtml was if it was scaned previously.
+	 */
+	protected $innerHtml = null;
+
+	/**
+	 * Remembers what the outerHtml was if it was scaned previously.
+	 *
+	 * @var string
+	 */
+	protected $outerHtml = null;
+
+	/**
+	 * Remembers what the text was if it was scaned previously.
+	 *
+	 * @var string
+	 */
+	protected $text = null;
+
+	/**
 	 * Sets up the tag of this node.
 	 */
 	public function __construct($tag)
@@ -27,6 +46,12 @@ class HtmlNode extends Node {
 		{
 			// no children
 			return '';
+		}
+
+		if ( ! is_null($this->innerHtml))
+		{
+			// we already know the result.
+			return $this->innerHtml;
 		}
 
 		$child  = $this->firstChild();
@@ -59,6 +84,9 @@ class HtmlNode extends Node {
 			}
 		}
 		
+		// remember the results
+		$this->innerHtml = $string;
+
 		return $string;
 	}
 
@@ -76,6 +104,12 @@ class HtmlNode extends Node {
 			return $this->innerHtml();
 		}
 
+		if ( ! is_null($this->outerHtml))
+		{
+			// we already know the results.
+			return $this->outerHtml;
+		}
+
 		$return = $this->tag->makeOpeningTag();
 		if ($this->tag->isSelfClosing())
 		{
@@ -89,6 +123,9 @@ class HtmlNode extends Node {
 		// add closing tag
 		$return .= $this->tag->makeClosingTag();
 
+		// remember the results
+		$this->outerHtml = $return;
+
 		return $return;
 	}
 
@@ -99,17 +136,30 @@ class HtmlNode extends Node {
 	 */
 	public function text()
 	{
+		if ( ! is_null($this->text))
+		{
+			// we already know the results.
+			return $this->text;
+		}
+
 		// find out if this node has any text children
 		foreach ($this->children as $child)
 		{
 			if ($child['node'] instanceof TextNode)
 			{
 				// we found a text node
-				return $child['node']->text();
+				$text = $child['node']->text();
+
+				// remember the results
+				$this->text = $text;
+
+				return $text;
 			}
 		}
 
 		// no text found in this node
+		$this->text = '';
+
 		return '';
 	}
 }
