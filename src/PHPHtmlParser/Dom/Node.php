@@ -7,7 +7,7 @@ use stringEncode\Encode;
 /**
  * Dom node object.
  */
-class Node {
+abstract class Node {
 
 	/**
 	 * Contains the tag name/type
@@ -622,8 +622,32 @@ class Node {
     }
 
 	/**
+	 * Gets the inner html of this node.
+	 *
+	 * @return string
+	 */
+    abstract public function innerHtml();
+
+	/**
+	 * Gets the html of this node, including it's own
+	 * tag.
+	 *
+	 * @return string
+	 */
+    abstract public function outerHtml();
+
+	/**
+	 * Gets the text of this node (if there is any text).
+	 *
+	 * @return string
+	 */
+    abstract public function text();
+
+	/**
 	 * Call this when something in the node tree has changed. Like a child has been added
 	 * or a parent has been changed.
+	 *
+	 * @return void
 	 */
-    protected function clear() {}
+    abstract protected function clear();
 }

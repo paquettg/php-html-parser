@@ -1,8 +1,6 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-use PHPHtmlParser\Dom;
-
 class TextNode extends Node {
 	
 	/**
@@ -67,6 +65,28 @@ class TextNode extends Node {
 		{
 			return $this->text;
 		}
+	}
+
+	/**
+	 * This node has no html, just return the text.
+	 *
+	 * @return string
+	 * @uses $this->text()
+	 */
+	public function innerHtml()
+	{
+		return $this->text();
+	}
+
+	/**
+	 * This node has no html, just return the text.
+	 *
+	 * @return string
+	 * @uses $this->text()
+	 */
+	public function outerHtml()
+	{
+		return $this->text();
 	}
 
 	/**

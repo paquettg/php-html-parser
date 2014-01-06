@@ -1,6 +1,6 @@
 <?php
 
-use PHPHtmlParser\Dom\Node;
+use PHPHtmlParser\Dom\MockNode as Node;
 
 class NodeParentTest extends PHPUnit_Framework_TestCase {
 
