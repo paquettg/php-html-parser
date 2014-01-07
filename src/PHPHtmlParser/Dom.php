@@ -2,7 +2,6 @@
 
 namespace PHPHtmlParser;
 
-use Guzzle\Http\Client;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use stringEncode\Encode;
@@ -126,14 +125,17 @@ class Dom {
 	 * Uses guzzle to load the html from the given url.
 	 *
 	 * @param string $url
+	 * @param CurlInterface $curl
 	 * @chainable
-	 * @throws \Guzzle\Http\Exception\...
 	 */
-	public function loadFromUrl($url)
+	public function loadFromUrl($url, CurlInterface $curl = null)
 	{
-		$client   = new Client($url);
-		$response = $client->get()->send();
-		$content = (string) $response;
+		if (is_null($curl))
+		{
+			// use the default curl interface
+			$curl = new Curl;
+		}
+		$content = $curl->get($url);
 
 		return $this->loadStr($content);
 	}
@@ -308,6 +310,9 @@ class Dom {
 	{
 		// clean out the \n\r
 		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
+
+		// strip the doctype
+		$str = preg_replace("'<!doctype(.*?)>'is", '', $str);
 
         // strip out comments
         $str = preg_replace("'<!--(.*?)-->'is", '', $str);
