@@ -122,7 +122,8 @@ class Dom {
 	}
 
 	/**
-	 * Uses guzzle to load the html from the given url.
+	 * Use a curl interface implementation to attempt to load
+	 * the content from a url.
 	 *
 	 * @param string $url
 	 * @param CurlInterface $curl

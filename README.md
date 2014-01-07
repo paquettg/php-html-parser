@@ -57,6 +57,36 @@ This example loads the html from big.html, a real page found online, and gets al
 
 Alternativly, you can always use the load() method to load the file. It will attempt to find the file using file_exists and, if succesfull, will call loadFromFile() for you. The same applies to a URL and loadFromUrl() method.
 
+Example With Url
+----------------
+
+Loading a url is very similar to the way you would load the html from a file. 
+
+```php
+use PHPHtmlParser\Dom;
+
+$dom = new Dom;
+$dom->loadFromUrl('http://google.com');
+$html = $dom->outerHtml;
+
+// or
+$dom->load('http://google.com');
+$html = $dom->outerHtml; // same result as the first example
+```
+
+What makes the loadFromUrl method note worthy is the PHPHtmlParser\CurlInterface parameter, an optional second parameter. By default, we use the PHPHtmlParser\Curl class to get the contents of the url. On the other hand, though, you can inject your own implementation of CurlInterface and we will attempt to load the url using what ever tool/settings you want, up to you.
+
+```php
+use PHPHtmlParser\Dom;
+use App\Services\Connector;
+
+$dom = new Dom;
+$dom->loadFromUrl('http://google.com', new Connector);
+$html = $dom->outerHtml;
+```
+
+As long as the Connector object implements the PHPHtmlParser\CurlInterface interface properly it will use that object to get the content of the url instead of the default PHPHtmlParser\Curl class.
+
 Static Facade
 ------------
 

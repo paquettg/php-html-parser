@@ -5,6 +5,15 @@ final class StaticDom {
 
 	private static $dom = null;
 
+	/**
+	 * Attempts to call the given method on the most recent created dom
+	 * from bellow.
+	 *
+	 * @param string $method
+	 * @param array $arguments
+	 * @throws Exception
+	 * @return mixed
+	 */
 	public static function __callStatic($method, $arguments)
 	{
 		if (self::$dom instanceof Dom)
@@ -17,6 +26,14 @@ final class StaticDom {
 		}
 	}
 
+	/**
+	 * Call this to mount the static facade. The facade allows you to use
+	 * this object as a $className.
+	 *
+	 * @param string $className
+	 * @param Dom $dom
+	 * @return bool
+	 */
 	public static function mount($className = 'Dom', Dom $dom = null)
 	{
 		if (class_exists($className))
@@ -31,6 +48,13 @@ final class StaticDom {
 		return true;
 	}
 
+	/**
+	 * Creates a new dom object and calls load() on the
+	 * new object.
+	 *
+	 * @param string $str
+	 * @chainable
+	 */
 	public static function load($str)
 	{
 		$dom       = new Dom;
@@ -38,16 +62,38 @@ final class StaticDom {
 		return $dom->load($str);
 	}
 
-	public static function loadFromFile($file)
-	{
-		$dom = new Dom;
-		return $dom->loadFromFile($file);
-	}
+	/**
+	 * Creates a new dom object and calls loadFromFile() on the
+	 * new object.
 
-	public static function loadFromUrl($url)
+	 * @param string $file
+	 * @chainable
+	 */
+	public static function loadFromFile($file)
 	{
 		$dom       = new Dom;
 		self::$dom = $dom;
-		return $dom->loadFromUrl($url);
+		return $dom->loadFromFile($file);
+	}
+
+	/**
+	 * Creates a new dom object and calls loadFromUrl() on the
+	 * new object.
+	 *
+	 * @param string $url
+	 * @param CurlInterface $curl
+	 * @chainable
+	 */
+	public static function loadFromUrl($url, CurlInterface $curl = null)
+	{
+		$dom       = new Dom;
+		self::$dom = $dom;
+		if (is_null($curl))
+		{
+			// use the default curl interface
+			$curl = new Curl;
+		}
+
+		return $dom->loadFromUrl($url, $curl);
 	}
 }
