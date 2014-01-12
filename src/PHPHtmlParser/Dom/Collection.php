@@ -80,7 +80,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 */
 	public function getIterator()
 	{
-		return ArrayIterator($this->collection);
+		return new ArrayIterator($this->collection);
 	}
 
 	/**
