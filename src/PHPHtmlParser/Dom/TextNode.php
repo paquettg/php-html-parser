@@ -1,7 +1,7 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-class TextNode extends Node {
+class TextNode extends AbstractNode {
 	
 	/**
 	 * This is a text node.

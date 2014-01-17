@@ -1,7 +1,7 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-class HtmlNode extends Node {
+class HtmlNode extends AbstractNode {
 
 	/**
 	 * Remembers what the innerHtml was if it was scaned previously.

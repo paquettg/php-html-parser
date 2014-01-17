@@ -8,7 +8,7 @@ namespace PHPHtmlParser\Dom;
  *
  * This object is not to be used for any other reason.
  */
-class MockNode extends Node {
+class MockNode extends AbstractNode {
 
 	public function innerHtml() {}
 

@@ -216,7 +216,7 @@ class Dom {
 	/**
 	 * Simple wrapper function that returns the last child.
 	 *
-	 * @return Node
+	 * @return AbstractNode
 	 */
 	public function lastChild()
 	{
@@ -228,7 +228,7 @@ class Dom {
 	 * Simple wrapper function that returns an element by the
 	 * id.
 	 *
-	 * @return Node
+	 * @return AbstractNode
 	 */
 	public function getElementById($id)
 	{

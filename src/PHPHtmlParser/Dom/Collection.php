@@ -26,7 +26,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	public function __call($method, $arguments)
 	{
 		$node = reset($this->collection);
-		if ($node instanceof Node)
+		if ($node instanceof AbstractNode)
 		{
 			return call_user_func_array([$node, $method], $arguments);
 		}
@@ -42,7 +42,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	public function __get($key)
 	{
 		$node = reset($this->collection);
-		if ($node instanceof Node)
+		if ($node instanceof AbstractNode)
 		{
 			return $node->$key;
 		}
@@ -57,7 +57,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	public function __toString()
 	{
 		$node = reset($this->collection);
-		if ($node instanceof Node)
+		if ($node instanceof AbstractNode)
 		{
 			return (string) $node;
 		}

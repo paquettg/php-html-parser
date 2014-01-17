@@ -7,7 +7,7 @@ use stringEncode\Encode;
 /**
  * Dom node object.
  */
-abstract class Node {
+abstract class AbstractNode {
 
 	/**
 	 * Contains the tag name/type
@@ -124,11 +124,11 @@ abstract class Node {
 	/**
 	 * Sets the parent node.
 	 *
-	 * @param Node $parent
+	 * @param AbstractNode $parent
 	 * @chainable
 	 * @throws Exception
 	 */
-   	public function setParent(Node $parent)
+   	public function setParent(AbstractNode $parent)
    	{
    		// check integrity 
    		if ($this->isDescendant($parent->id()))
@@ -190,7 +190,7 @@ abstract class Node {
      * Returns the child by id.
      *
      * @param int $id
-     * @return Node
+     * @return AbstractNode
      * @throw Exception
      */
     public function getChild($id)
@@ -207,10 +207,10 @@ abstract class Node {
 	 * Adds a child node to this node and returns the id of the child for this
 	 * parent.
 	 * 
-	 * @param Node $child
+	 * @param AbstractNode $child
 	 * @return bool
 	 */
-    public function addChild(Node $child)
+    public function addChild(AbstractNode $child)
     {
     	$key     = null;
     	$newKey  = 0;
@@ -291,7 +291,7 @@ abstract class Node {
 	 * Attempts to get the next child.
 	 *
 	 * @param int $id
-	 * @return Node
+	 * @return AbstractNode
 	 * @uses $this->getChild()
  	 */
 	public function nextChild($id)
@@ -305,7 +305,7 @@ abstract class Node {
 	 * Attempts to get the previous child.
 	 *
 	 * @param int $id
-	 * @return Node
+	 * @return AbstractNode
 	 * @uses $this->getChild()
 	 */
 	public function previousChild($id)
@@ -367,7 +367,7 @@ abstract class Node {
 	 * Attempts to get an ancestor node by the given id.
 	 *
 	 * @param int $id
-	 * @return null|Node
+	 * @return null|AbstractNode
 	 */
 	public function getAncestor($id)
 	{
@@ -386,7 +386,7 @@ abstract class Node {
     /**
      * Shortcut to return the first child.
      *
-     * @return Node
+     * @return AbstractNode
      * @uses $this->getChild()
      */
     public function firstChild()
@@ -399,7 +399,7 @@ abstract class Node {
     /**
      * Attempts to get the last child.
      *
-     * @return Node
+     * @return AbstractNode
      */
     public function lastChild()
     {
@@ -411,7 +411,7 @@ abstract class Node {
     /**
      * Attempts to get the next sibling.
      *
-     * @return Node
+     * @return AbstractNode
      * @throws Exception
      */
     public function nextSibling()
@@ -427,7 +427,7 @@ abstract class Node {
 	/**
 	 * Attempts to get the previous sibling
 	 *
-	 * @return Node
+	 * @return AbstractNode
 	 * @throw Exception
 	 */
     public function previousSibling()
@@ -488,7 +488,7 @@ abstract class Node {
      * Function to locate a specific ancestor tag in the path to the root.
      *
      * @param  string $tag
-     * @return Node
+     * @return AbstractNode
      * @throws Exception
      */
     public function ancestorByTag($tag)
