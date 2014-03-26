@@ -6,6 +6,10 @@ use stringEncode\Encode;
 
 /**
  * Dom node object.
+ *
+ * @property string outerhtml
+ * @property string innerhtml
+ * @property string text
  */
 abstract class AbstractNode {
 
