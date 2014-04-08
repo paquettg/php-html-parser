@@ -57,6 +57,14 @@ class Dom {
 	protected $globalOptions = [];
 
 	/**
+	 * A persistent option object to be used for all options in the 
+	 * parsing of the file.
+	 *
+	 * @var Options
+	 */
+	protected $options;
+
+	/**
 	 * A list of tags which will always be self closing
 	 *
 	 * @var array
