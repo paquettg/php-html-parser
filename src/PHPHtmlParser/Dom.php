@@ -1,5 +1,4 @@
 <?php
-
 namespace PHPHtmlParser;
 
 use PHPHtmlParser\Dom\HtmlNode;
@@ -51,6 +50,13 @@ class Dom {
 	protected $size;
 
 	/**
+	 * A global options array to be used by all load calls.
+	 *
+	 * @var array
+	 */
+	protected $globalOptions = [];
+
+	/**
 	 * A list of tags which will always be self closing
 	 *
 	 * @var array
@@ -92,33 +98,35 @@ class Dom {
 	 * Attempts to load the dom from any resource, string, file, or URL.
 	 *
 	 * @param string $str
+	 * @param array $option
 	 * @chainable
 	 */
-	public function load($str)
+	public function load($str, $options = [])
 	{
 		// check if it's a file
 		if (is_file($str))
 		{
-			return $this->loadFromFile($str);
+			return $this->loadFromFile($str, $options);
 		}
 		// check if it's a url
 		if (preg_match("/^https?:\/\//i",$str))
 		{
-			return $this->loadFromUrl($str);
+			return $this->loadFromUrl($str, $options);
 		}
 
-		return $this->loadStr($str);
+		return $this->loadStr($str, $options);
 	}
 
 	/**
 	 * Loads the dom from a document file/url
 	 *
 	 * @param string $file
+	 * @param array $option
 	 * @chainable
 	 */
-	public function loadFromFile($file)
+	public function loadFromFile($file, $options = [])
 	{
-		return $this->loadStr(file_get_contents($file));
+		return $this->loadStr(file_get_contents($file), $options);
 	}
 
 	/**
@@ -126,10 +134,11 @@ class Dom {
 	 * the content from a url.
 	 *
 	 * @param string $url
+	 * @param array $option
 	 * @param CurlInterface $curl
 	 * @chainable
 	 */
-	public function loadFromUrl($url, CurlInterface $curl = null)
+	public function loadFromUrl($url, $options = [], CurlInterface $curl = null)
 	{
 		if (is_null($curl))
 		{
@@ -138,7 +147,19 @@ class Dom {
 		}
 		$content = $curl->get($url);
 
-		return $this->loadStr($content);
+		return $this->loadStr($content, $options);
+	}
+
+	/**
+	 * Sets a global options array to be used by all load calls.
+	 *
+	 * @param array $options
+	 * @chainable
+	 */
+	public function setOptions(array $options)
+	{
+		$this->globalOptions = $options;
+		return $this;
 	}
 
 	/**
@@ -264,11 +285,16 @@ class Dom {
 	 * Parsers the html of the given string. Used for load(), loadFromFile(),
 	 * and loadFromUrl().
 	 *
-	 * @param string
+	 * @param string $str
+	 * @param array $option
 	 * @chainable
 	 */
-	protected function loadStr($str)
+	protected function loadStr($str, $option)
 	{
+		$this->options = new Options;
+		$this->options->setOptions($this->globalOptions)
+		              ->setOptions($option);
+
 		$this->rawSize = strlen($str);
 		$this->raw     = $str;
 
@@ -397,9 +423,10 @@ class Dom {
 					$activeNode = $node;
 				}
 			}
-			else
+			else if ($this->options->whitespaceTextNode or
+				     trim($str) != '')
 			{
-				// we found text
+				// we found text we care about
 				$textNode = new TextNode($str);
 				$activeNode->addChild($textNode);
 			}
