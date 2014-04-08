@@ -57,7 +57,7 @@ final class StaticDom {
 	 */
 	public static function load($str)
 	{
-		$dom       = new Dom;
+		$dom	   = new Dom;
 		self::$dom = $dom;
 		return $dom->load($str);
 	}
@@ -71,7 +71,7 @@ final class StaticDom {
 	 */
 	public static function loadFromFile($file)
 	{
-		$dom       = new Dom;
+		$dom	   = new Dom;
 		self::$dom = $dom;
 		return $dom->loadFromFile($file);
 	}
@@ -86,7 +86,7 @@ final class StaticDom {
 	 */
 	public static function loadFromUrl($url, CurlInterface $curl = null)
 	{
-		$dom       = new Dom;
+		$dom	   = new Dom;
 		self::$dom = $dom;
 		if (is_null($curl))
 		{

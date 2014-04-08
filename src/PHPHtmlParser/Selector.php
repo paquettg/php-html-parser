@@ -5,12 +5,12 @@ use PHPHtmlParser\Dom\Collection;
 
 class Selector {
 
-   	/** 
-   	 * Pattern of CSS selectors, modified from mootools
-   	 *
-   	 * @var string
-   	 */
-  	protected $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
+	/** 
+	 * Pattern of CSS selectors, modified from mootools
+	 *
+	 * @var string
+	 */
+	protected $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
 
 	protected $selectors = [];
 
@@ -80,11 +80,11 @@ class Selector {
 		foreach ($matches as $match)
 		{
 			// default values
-			$tag      = strtolower(trim($match[1]));
+			$tag	  = strtolower(trim($match[1]));
 			$operator = '=';
-			$key      = null;
-			$value    = null;
-			$noKey    = false;
+			$key	  = null;
+			$value	  = null;
+			$noKey	  = false;
 
 			// check for id selector
 			if ( ! empty($match[2]))
@@ -122,8 +122,8 @@ class Selector {
 			}
 
 			$result[] = [
-				'tag'      => $tag,
-				'key'      => $key,
+				'tag'	   => $tag,
+				'key'	   => $key,
 				'value'    => $value,
 				'operator' => $operator,
 				'noKey'    => $noKey,
@@ -131,7 +131,7 @@ class Selector {
 			if (trim($match[7]) == ',')
 			{
 				$this->selectors[] = $result;
-				$result            = [];
+				$result			   = [];
 			}
 		}
 		
@@ -154,7 +154,7 @@ class Selector {
 	{
 		// XPath index
 		if ( ! empty($rule['tag']) AND ! empty($rule['key']) AND
-		    is_numeric($rule['key']))
+			is_numeric($rule['key']))
 		{
 			$count = 0;
 			foreach ($nodes as $node)
@@ -180,7 +180,7 @@ class Selector {
 				continue;
 
 			$children = [];
-			$child    = $node->firstChild();
+			$child	  = $node->firstChild();
 			while ( ! is_null($child))
 			{
 				// wild card, grab all
@@ -221,7 +221,7 @@ class Selector {
 					else
 					{
 						if ($rule['key'] != 'plaintext' and 
-						    is_null($child->getAttribute($rule['key'])))
+							is_null($child->getAttribute($rule['key'])))
 						{
 							$pass = false;
 						}
@@ -230,7 +230,7 @@ class Selector {
 
 				// compare values
 				if ($pass and ! is_null($rule['key']) and
-				     ! is_null($rule['value']) and $rule['value'] != '*')
+					 ! is_null($rule['value']) and $rule['value'] != '*')
 				{
 					if ($rule['key'] == 'plaintext')
 					{
@@ -317,25 +317,25 @@ class Selector {
 	 */
 	protected function match($operator, $pattern, $value)
 	{
-		$value   = strtolower($value);
+		$value	 = strtolower($value);
 		$pattern = strtolower($pattern);
-        switch ($operator) 
-        {
-            case '=':
-                return $value === $pattern;
-            case '!=':
-                return $value !== $pattern;
-            case '^=':
-                return preg_match('/^'.preg_quote($pattern, '/').'/', $value);
-            case '$=':
-                return preg_match('/'.preg_quote($pattern,'/').'$/', $value);
-            case '*=':
-                if ($pattern[0]=='/') 
-                {
-                    return preg_match($pattern, $value);
-                }
-                return preg_match("/".$pattern."/i", $value);
-        }
-        return false;
+		switch ($operator) 
+		{
+			case '=':
+				return $value === $pattern;
+			case '!=':
+				return $value !== $pattern;
+			case '^=':
+				return preg_match('/^'.preg_quote($pattern, '/').'/', $value);
+			case '$=':
+				return preg_match('/'.preg_quote($pattern,'/').'$/', $value);
+			case '*=':
+				if ($pattern[0]=='/') 
+				{
+					return preg_match($pattern, $value);
+				}
+				return preg_match("/".$pattern."/i", $value);
+		}
+		return false;
 	}
 }

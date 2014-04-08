@@ -145,7 +145,7 @@ class Dom {
 	 * Find elements by css selector on the root node.
 	 *
 	 * @param string $selector
-	 * @param int    $nth
+	 * @param int	 $nth
 	 * @return array
 	 */
 	public function find($selector, $nth = null)
@@ -315,28 +315,28 @@ class Dom {
 		// strip the doctype
 		$str = preg_replace("'<!doctype(.*?)>'is", '', $str);
 
-        // strip out comments
-        $str = preg_replace("'<!--(.*?)-->'is", '', $str);
-        
-        // strip out cdata
-        $str = preg_replace("'<!\[CDATA\[(.*?)\]\]>'is", '', $str);
-        
-        // strip out <script> tags
-        $str = preg_replace("'<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>'is", '', $str);
-        $str = preg_replace("'<\s*script\s*>(.*?)<\s*/\s*script\s*>'is", '', $str);
-        
-        // strip out <style> tags
-        $str = preg_replace("'<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>'is", '', $str);
-        $str = preg_replace("'<\s*style\s*>(.*?)<\s*/\s*style\s*>'is", '', $str);
-        
-        // strip out preformatted tags
-        $str = preg_replace("'<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>'is", '', $str);
-        
-        // strip out server side scripts
-        $str = preg_replace("'(<\?)(.*?)(\?>)'s", '', $str);
-        
-        // strip smarty scripts
-        $str = preg_replace("'(\{\w)(.*?)(\})'s", '', $str);
+		// strip out comments
+		$str = preg_replace("'<!--(.*?)-->'is", '', $str);
+		
+		// strip out cdata
+		$str = preg_replace("'<!\[CDATA\[(.*?)\]\]>'is", '', $str);
+		
+		// strip out <script> tags
+		$str = preg_replace("'<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>'is", '', $str);
+		$str = preg_replace("'<\s*script\s*>(.*?)<\s*/\s*script\s*>'is", '', $str);
+		
+		// strip out <style> tags
+		$str = preg_replace("'<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>'is", '', $str);
+		$str = preg_replace("'<\s*style\s*>(.*?)<\s*/\s*style\s*>'is", '', $str);
+		
+		// strip out preformatted tags
+		$str = preg_replace("'<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>'is", '', $str);
+		
+		// strip out server side scripts
+		$str = preg_replace("'(<\?)(.*?)(\?>)'s", '', $str);
+		
+		// strip smarty scripts
+		$str = preg_replace("'(\{\w)(.*?)(\})'s", '', $str);
 
 		return $str;
 	}
@@ -416,7 +416,7 @@ class Dom {
 		$return = [
 			'status'  => false,
 			'closing' => false,
-			'node'    => null,
+			'node'	  => null,
 		];
 		if ($this->content->char() != '<')
 		{
@@ -445,7 +445,7 @@ class Dom {
 			{
 				$return['status']  = true;
 				$return['closing'] = true;
-				$return['tag']     = strtolower($tag);
+				$return['tag']	   = strtolower($tag);
 			}
 			return $return;
 		}
@@ -499,8 +499,8 @@ class Dom {
 						$node->getTag()->$name = $attr;
 						break;
 					default:
-						$attr['doubleQuote'] = true;
-						$attr['value']       = $this->content->copyByToken('attr', true);
+						$attr['doubleQuote']   = true;
+						$attr['value']         = $this->content->copyByToken('attr', true);
 						$node->getTag()->$name = $attr;
 						break;
 				}

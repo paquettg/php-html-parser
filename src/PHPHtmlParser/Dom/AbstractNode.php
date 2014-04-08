@@ -32,28 +32,28 @@ abstract class AbstractNode {
 	 *
 	 * @var array
 	 */
-    protected $children = [];
+	protected $children = [];
 
-    /**
-     * Contains the parent Node.
-     *
-     * @var Node
-     */
-    protected $parent = null;
+	/**
+	 * Contains the parent Node.
+	 *
+	 * @var Node
+	 */
+	protected $parent = null;
 
 	/**
 	 * The unique id of the class. Given by PHP.
 	 *
 	 * @var string
 	 */
-   	protected $id;
+	protected $id;
 
-   	/**
-   	 * The encoding class used to encode strings.
-   	 *
-   	 * @var mixed
-   	 */
-   	protected $encode;
+	/**
+	 * The encoding class used to encode strings.
+	 *
+	 * @var mixed
+	 */
+	protected $encode;
 
 	public function __construct()
 	{
@@ -66,64 +66,64 @@ abstract class AbstractNode {
 	 * @param string $key
 	 * @return mixed
 	 */
-    public function __get($key)
-    {
-    	// check attribute first
-        if ( ! is_null($this->getAttribute($key)))
-        {
-            return $this->getAttribute($key);
-        }
-        switch (strtolower($key))
-        {
-            case 'outerhtml': 
-            	return $this->outerHtml();
-            case 'innerhtml': 
-            	return $this->innerHtml();
-            case 'text': 
-            	return $this->text();
-        }
+	public function __get($key)
+	{
+		// check attribute first
+		if ( ! is_null($this->getAttribute($key)))
+		{
+			return $this->getAttribute($key);
+		}
+		switch (strtolower($key))
+		{
+			case 'outerhtml': 
+				return $this->outerHtml();
+			case 'innerhtml': 
+				return $this->innerHtml();
+			case 'text': 
+				return $this->text();
+		}
 		
-        return null;
-    }
+		return null;
+	}
 
 	/**
 	 * Attempts to clear out any object references.
 	 */
-    public function __destruct()
-    {
+	public function __destruct()
+	{
 		$this->tag      = null;
 		$this->attr     = [];
-        $this->parent   = null;
-        $this->children = [];
-    }
+		$this->parent   = null;
+		$this->children = [];
+	}
 
 	/**
 	 * Simply calls the outer text method.
-     *
-     * @return string
+	 *
+	 * @return string
 	 */
-    public function __toString()
-    {
-        return $this->outerHtml();
-    }
+	public function __toString()
+	{
+		return $this->outerHtml();
+	}
 
 	/**
 	 * Returns the id of this object.
 	 */
-    public function id()
-    {
-    	return $this->id;
-    }
+	public function id()
+	{
+		return $this->id;
+	}
 
 	/**
-     * Returns the parent of node.
-     *
-     * @return Node
-     */
-    public function getParent()
-    {
-    	return $this->parent;
-   	}
+	 * Returns the parent of node.
+	 *
+	 * @return Node
+	 */
+	public function getParent()
+	{
+		return $this->parent;
+	}
 
 	/**
 	 * Sets the parent node.
@@ -132,36 +132,36 @@ abstract class AbstractNode {
 	 * @chainable
 	 * @throws Exception
 	 */
-   	public function setParent(AbstractNode $parent)
-   	{
-   		// check integrity 
-   		if ($this->isDescendant($parent->id()))
-   		{
-   			throw new Exception('Can not add descendant "'.$parent->id().'" as my parent.');
-   		}
-   		
-   		// remove from old parent
-   		if ( ! is_null($this->parent))
-   		{
-   			if ($this->parent->id() == $parent->id())
-   			{
-   				// already the parent
-   				return $this;
-   			}
+	public function setParent(AbstractNode $parent)
+	{
+		// check integrity 
+		if ($this->isDescendant($parent->id()))
+		{
+			throw new Exception('Can not add descendant "'.$parent->id().'" as my parent.');
+		}
+		
+		// remove from old parent
+		if ( ! is_null($this->parent))
+		{
+			if ($this->parent->id() == $parent->id())
+			{
+				// already the parent
+				return $this;
+			}
 
-   			$this->parent->removeChild($this->id);
-   		}
+			$this->parent->removeChild($this->id);
+		}
 
-        $this->parent = $parent;
+		$this->parent = $parent;
 
-        // assign child to parent
-        $this->parent->addChild($this);
+		// assign child to parent
+		$this->parent->addChild($this);
 
 		//clear any cache
-        $this->clear();
+		$this->clear();
 
-        return $this;
-    }
+		return $this;
+	}
 
 	/** 
 	 * Sets the encoding class to this node and propagates it
@@ -169,43 +169,43 @@ abstract class AbstractNode {
 	 *
 	 * @param Encode $encode
 	 */
-    public function propagateEncoding(Encode $encode)
-    {
-    	$this->encode = $encode;
-    	$this->tag->setEncoding($encode);
-    	// check children
-    	foreach ($this->children as $id => $child)
-    	{
-    		$child['node']->propagateEncoding($encode);
-    	}
-    }
+	public function propagateEncoding(Encode $encode)
+	{
+		$this->encode = $encode;
+		$this->tag->setEncoding($encode);
+		// check children
+		foreach ($this->children as $id => $child)
+		{
+			$child['node']->propagateEncoding($encode);
+		}
+	}
 
 	/**
 	 * Checks if this node has children.
 	 *
 	 * @return bool
 	 */
-    public function hasChildren()
-    {
-        return ! empty($this->children);
-    }
+	public function hasChildren()
+	{
+		return ! empty($this->children);
+	}
 
-    /**
-     * Returns the child by id.
-     *
-     * @param int $id
-     * @return AbstractNode
-     * @throw Exception
-     */
-    public function getChild($id)
-    {
-    	if ( ! isset($this->children[$id]))
-    	{
-    		throw new Exception('Child "'.$id.'" not found in this node.');
-    	}
+	/**
+	 * Returns the child by id.
+	 *
+	 * @param int $id
+	 * @return AbstractNode
+	 * @throw Exception
+	 */
+	public function getChild($id)
+	{
+		if ( ! isset($this->children[$id]))
+		{
+			throw new Exception('Child "'.$id.'" not found in this node.');
+		}
 
-        return $this->children[$id]['node'];
-    }
+		return $this->children[$id]['node'];
+	}
 
 	/**
 	 * Adds a child node to this node and returns the id of the child for this
@@ -214,50 +214,50 @@ abstract class AbstractNode {
 	 * @param AbstractNode $child
 	 * @return bool
 	 */
-    public function addChild(AbstractNode $child)
-    {
-    	$key     = null;
-    	$newKey  = 0;
+	public function addChild(AbstractNode $child)
+	{
+		$key	 = null;
+		$newKey  = 0;
 
-   		// check integrity
-   		if ($this->isAncestor($child->id()))
-   		{
-   			throw new Exception('Can not add child. It is my ancestor.');
-   		}
+		// check integrity
+		if ($this->isAncestor($child->id()))
+		{
+			throw new Exception('Can not add child. It is my ancestor.');
+		}
 
-    	// check if child is itself
-    	if ($child->id() == $this->id)
-    	{
-    		throw new Exception('Can not set itself as a child.');
-    	}
+		// check if child is itself
+		if ($child->id() == $this->id)
+		{
+			throw new Exception('Can not set itself as a child.');
+		}
 
-    	if ($this->hasChildren())
-    	{
-    		if (isset($this->children[$child->id()]))
-    		{
-    			// we already have this child
-    			return false;
-    		}
-    		$sibling = $this->lastChild();
-    		$key     = $sibling->id();
-    		$this->children[$key]['next'] = $child->id();
-    	}
+		if ($this->hasChildren())
+		{
+			if (isset($this->children[$child->id()]))
+			{
+				// we already have this child
+				return false;
+			}
+			$sibling = $this->lastChild();
+			$key	 = $sibling->id();
+			$this->children[$key]['next'] = $child->id();
+		}
 
 		// add the child
-    	$this->children[$child->id()] = [
-    		'node' => $child,
-    		'next' => null,
-    		'prev' => $key,
-    	];
+		$this->children[$child->id()] = [
+			'node' => $child,
+			'next' => null,
+			'prev' => $key,
+		];
 
-    	// tell child I am the new parent
-    	$child->setParent($this);
+		// tell child I am the new parent
+		$child->setParent($this);
 
 		//clear any cache
-        $this->clear();
+		$this->clear();
 
-    	return true;
-    }
+		return true;
+	}
 
 	/**
 	 * Removes the child by id.
@@ -286,7 +286,7 @@ abstract class AbstractNode {
 		unset($this->children[$id]);
 
 		//clear any cache
-        $this->clear();
+		$this->clear();
 
 		return $this;
 	}
@@ -297,7 +297,7 @@ abstract class AbstractNode {
 	 * @param int $id
 	 * @return AbstractNode
 	 * @uses $this->getChild()
- 	 */
+	 */
 	public function nextChild($id)
 	{
 		$child = $this->getChild($id);
@@ -387,46 +387,46 @@ abstract class AbstractNode {
 		return null;
 	}
 
-    /**
-     * Shortcut to return the first child.
-     *
-     * @return AbstractNode
-     * @uses $this->getChild()
-     */
-    public function firstChild()
-    {
-    	reset($this->children);
-    	$key = key($this->children);
-    	return $this->getChild($key);
-    }
+	/**
+	 * Shortcut to return the first child.
+	 *
+	 * @return AbstractNode
+	 * @uses $this->getChild()
+	 */
+	public function firstChild()
+	{
+		reset($this->children);
+		$key = key($this->children);
+		return $this->getChild($key);
+	}
 
-    /**
-     * Attempts to get the last child.
-     *
-     * @return AbstractNode
-     */
-    public function lastChild()
-    {
-    	end($this->children);
-    	$key = key($this->children);
-    	return $this->getChild($key);
-    }
+	/**
+	 * Attempts to get the last child.
+	 *
+	 * @return AbstractNode
+	 */
+	public function lastChild()
+	{
+		end($this->children);
+		$key = key($this->children);
+		return $this->getChild($key);
+	}
 
-    /**
-     * Attempts to get the next sibling.
-     *
-     * @return AbstractNode
-     * @throws Exception
-     */
-    public function nextSibling()
-    {
-    	if (is_null($this->parent))
-    	{
-    		throw new Exception('Parent is not set for this node.');
-    	}
+	/**
+	 * Attempts to get the next sibling.
+	 *
+	 * @return AbstractNode
+	 * @throws Exception
+	 */
+	public function nextSibling()
+	{
+		if (is_null($this->parent))
+		{
+			throw new Exception('Parent is not set for this node.');
+		}
 
-    	return $this->parent->nextChild($this->id);
-    }
+		return $this->parent->nextChild($this->id);
+	}
 
 	/**
 	 * Attempts to get the previous sibling
@@ -434,25 +434,25 @@ abstract class AbstractNode {
 	 * @return AbstractNode
 	 * @throw Exception
 	 */
-    public function previousSibling()
-    {
-    	if (is_null($this->parent))
-    	{
-    		throw new Exception('Parent is not set for this node.');
-    	}
+	public function previousSibling()
+	{
+		if (is_null($this->parent))
+		{
+			throw new Exception('Parent is not set for this node.');
+		}
 
-    	return $this->parent->previousChild($this->id);
-    }
+		return $this->parent->previousChild($this->id);
+	}
 
 	/**
 	 * Gets the tag object of this node.
 	 *
 	 * @return Tag
 	 */
-    public function getTag()
-    {
-    	return $this->tag;
-    }
+	public function getTag()
+	{
+		return $this->tag;
+	}
 
 	/**
 	 * A wrapper method that simply calls the getAttribute method
@@ -460,15 +460,15 @@ abstract class AbstractNode {
 	 *
 	 * @return array
 	 */
-    public function getAttributes()
-    {
-    	$attributes = $this->tag->getAttributes();
-    	foreach ($attributes as $name => $info)
-    	{
-    		$attributes[$name] = $info['value'];
-    	}
-    	return $attributes;
-    }
+	public function getAttributes()
+	{
+		$attributes = $this->tag->getAttributes();
+		foreach ($attributes as $name => $info)
+		{
+			$attributes[$name] = $info['value'];
+		}
+		return $attributes;
+	}
 
 	/**
 	 * A wrapper method that simply calls the getAttributes method
@@ -477,160 +477,160 @@ abstract class AbstractNode {
 	 * @param string $key
 	 * @return mixed
 	 */
-    public function getAttribute($key)
-    {
-    	$attribute = $this->tag->getAttribute($key);
-    	if ( ! is_null($attribute))
-    	{
-    		$attribute = $attribute['value'];
-    	}
+	public function getAttribute($key)
+	{
+		$attribute = $this->tag->getAttribute($key);
+		if ( ! is_null($attribute))
+		{
+			$attribute = $attribute['value'];
+		}
 
-    	return $attribute;
-    }
+		return $attribute;
+	}
 
 	/**
-     * Function to locate a specific ancestor tag in the path to the root.
-     *
-     * @param  string $tag
-     * @return AbstractNode
-     * @throws Exception
-     */
-    public function ancestorByTag($tag)
-    {
-        // Start by including ourselves in the comparison.
-        $node = $this;
+	 * Function to locate a specific ancestor tag in the path to the root.
+	 *
+	 * @param  string $tag
+	 * @return AbstractNode
+	 * @throws Exception
+	 */
+	public function ancestorByTag($tag)
+	{
+		// Start by including ourselves in the comparison.
+		$node = $this;
 
-        while ( ! is_null($node))
-        {
-            if ($node->tag->name() == $tag)
-            {
-            	return $node;
-            }
+		while ( ! is_null($node))
+		{
+			if ($node->tag->name() == $tag)
+			{
+				return $node;
+			}
 
-            $node = $node->getParent();
-        }
+			$node = $node->getParent();
+		}
 
-    	throw new Exception('Could not find an ancestor with "'.$tag.'" tag');
-    }
+		throw new Exception('Could not find an ancestor with "'.$tag.'" tag');
+	}
 
-    /**
-     * Find elements by css selector
-     *
-     * @param string $selector
-     * @param int    $nth
-     * @return array
-     */
-    public function find($selector, $nth = null)
-    {
-    	$selector = new Selector($selector);
-    	$nodes    = $selector->find($this);
+	/**
+	 * Find elements by css selector
+	 *
+	 * @param string $selector
+	 * @param int	 $nth
+	 * @return array
+	 */
+	public function find($selector, $nth = null)
+	{
+		$selector = new Selector($selector);
+		$nodes	  = $selector->find($this);
 
-        if ( ! is_null($nth))
-        {
-        	// return nth-element or array
-        	if (isset($nodes[$nth]))
-        		return $nodes[$nth];
-        	
-        	return null;
-        }
+		if ( ! is_null($nth))
+		{
+			// return nth-element or array
+			if (isset($nodes[$nth]))
+				return $nodes[$nth];
+			
+			return null;
+		}
 
-        return $nodes;
-    }
+		return $nodes;
+	}
 
-    /**
-     * Function to try a few tricks to determine the displayed size of an img on the page.
-     * NOTE: This will ONLY work on an IMG tag. Returns FALSE on all other tag types.
-     *
-     * Future enhancement:
-     * Look in the tag to see if there is a class or id specified that has a height or width attribute to it.
-     *
-     * Far future enhancement
-     * Look at all the parent tags of this image to see if they specify a class or id that has an img selector that specifies a height or width
-     * Note that in this case, the class or id will have the img subselector for it to apply to the image.
-     *
-     * ridiculously far future development
-     * If the class or id is specified in a SEPARATE css file thats not on the page, go get it and do what we were just doing for the ones on the page.
-     *
-     * @author John Schlick
-     * @return array an array containing the 'height' and 'width' of the image on the page or -1 if we can't figure it out.
-     */
-    public function get_display_size()
-    {
-        $width = -1;
-        $height = -1;
+	/**
+	 * Function to try a few tricks to determine the displayed size of an img on the page.
+	 * NOTE: This will ONLY work on an IMG tag. Returns FALSE on all other tag types.
+	 *
+	 * Future enhancement:
+	 * Look in the tag to see if there is a class or id specified that has a height or width attribute to it.
+	 *
+	 * Far future enhancement
+	 * Look at all the parent tags of this image to see if they specify a class or id that has an img selector that specifies a height or width
+	 * Note that in this case, the class or id will have the img subselector for it to apply to the image.
+	 *
+	 * ridiculously far future development
+	 * If the class or id is specified in a SEPARATE css file thats not on the page, go get it and do what we were just doing for the ones on the page.
+	 *
+	 * @author John Schlick
+	 * @return array an array containing the 'height' and 'width' of the image on the page or -1 if we can't figure it out.
+	 */
+	public function get_display_size()
+	{
+		$width = -1;
+		$height = -1;
 
-        if ($this->tag->name() != 'img')
-        {
-            return false;
-        }
+		if ($this->tag->name() != 'img')
+		{
+			return false;
+		}
 
-        // See if there is a height or width attribute in the tag itself.
-        if ( ! is_null($this->tag->getAttribute('width')))
-        {
-            $width = $this->tag->getAttribute('width');
-        }
+		// See if there is a height or width attribute in the tag itself.
+		if ( ! is_null($this->tag->getAttribute('width')))
+		{
+			$width = $this->tag->getAttribute('width');
+		}
 
-        if ( ! is_null($this->tag->getAttribute('height')))
-        {
-            $height = $this->tag->getAttribute('height');
-        }
+		if ( ! is_null($this->tag->getAttribute('height')))
+		{
+			$height = $this->tag->getAttribute('height');
+		}
 
-        // Now look for an inline style.
-        if ( ! is_null($this->tag->getAttribute('style')))
-        {
-            // Thanks to user gnarf from stackoverflow for this regular expression.
-            $attributes = [];
-            preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->tag->getAttribute['style'], $matches, PREG_SET_ORDER);
-            foreach ($matches as $match) 
-            {
-            	$attributes[$match[1]] = $match[2];
-            }
+		// Now look for an inline style.
+		if ( ! is_null($this->tag->getAttribute('style')))
+		{
+			// Thanks to user gnarf from stackoverflow for this regular expression.
+			$attributes = [];
+			preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->tag->getAttribute['style'], $matches, PREG_SET_ORDER);
+			foreach ($matches as $match) 
+			{
+				$attributes[$match[1]] = $match[2];
+			}
 
-            // If there is a width in the style attributes:
-            if (isset($attributes['width']) and $width == -1)
-            {
-                // check that the last two characters are px (pixels)
-                if (strtolower(substr($attributes['width'], -2)) == 'px')
-                {
-                    $proposed_width = substr($attributes['width'], 0, -2);
-                    // Now make sure that it's an integer and not something stupid.
-                    if (filter_var($proposed_width, FILTER_VALIDATE_INT))
-                    {
-                        $width = $proposed_width;
-                    }
-                }
-            }
+			// If there is a width in the style attributes:
+			if (isset($attributes['width']) and $width == -1)
+			{
+				// check that the last two characters are px (pixels)
+				if (strtolower(substr($attributes['width'], -2)) == 'px')
+				{
+					$proposed_width = substr($attributes['width'], 0, -2);
+					// Now make sure that it's an integer and not something stupid.
+					if (filter_var($proposed_width, FILTER_VALIDATE_INT))
+					{
+						$width = $proposed_width;
+					}
+				}
+			}
 
-            // If there is a width in the style attributes:
-            if (isset($attributes['height']) and $height == -1)
-            {
-                // check that the last two characters are px (pixels)
-                if (strtolower(substr($attributes['height'], -2)) == 'px')
-                {
-                    $proposed_height = substr($attributes['height'], 0, -2);
-                    // Now make sure that it's an integer and not something stupid.
-                    if (filter_var($proposed_height, FILTER_VALIDATE_INT))
-                    {
-                        $height = $proposed_height;
-                    }
-                }
-            }
+			// If there is a width in the style attributes:
+			if (isset($attributes['height']) and $height == -1)
+			{
+				// check that the last two characters are px (pixels)
+				if (strtolower(substr($attributes['height'], -2)) == 'px')
+				{
+					$proposed_height = substr($attributes['height'], 0, -2);
+					// Now make sure that it's an integer and not something stupid.
+					if (filter_var($proposed_height, FILTER_VALIDATE_INT))
+					{
+						$height = $proposed_height;
+					}
+				}
+			}
 
-        }
+		}
 
-        $result = [
-        	'height' => $height,
-            'width'  => $width
-      	];
-        return $result;
-    }
+		$result = [
+			'height' => $height,
+			'width'  => $width
+		];
+		return $result;
+	}
 
 	/**
 	 * Gets the inner html of this node.
 	 *
 	 * @return string
 	 */
-    abstract public function innerHtml();
+	abstract public function innerHtml();
 
 	/**
 	 * Gets the html of this node, including it's own
@@ -638,14 +638,14 @@ abstract class AbstractNode {
 	 *
 	 * @return string
 	 */
-    abstract public function outerHtml();
+	abstract public function outerHtml();
 
 	/**
 	 * Gets the text of this node (if there is any text).
 	 *
 	 * @return string
 	 */
-    abstract public function text();
+	abstract public function text();
 
 	/**
 	 * Call this when something in the node tree has changed. Like a child has been added
@@ -653,5 +653,5 @@ abstract class AbstractNode {
 	 *
 	 * @return void
 	 */
-    abstract protected function clear();
+	abstract protected function clear();
 }

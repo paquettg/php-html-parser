@@ -29,10 +29,10 @@ class Content {
 	 *
 	 * @var string
 	 */
-    protected $blank = " \t\r\n";
-    protected $equal = ' =/>';
-    protected $slash = " />\r\n\t";
-    protected $attr = ' >';
+	protected $blank = " \t\r\n";
+	protected $equal = ' =/>';
+	protected $slash = " />\r\n\t";
+	protected $attr  = ' >';
 
 	public function __construct($content)
 	{
@@ -110,7 +110,7 @@ class Content {
 		if ($escape)
 		{
 			$position = $this->pos;
-			$found    = false;
+			$found	  = false;
 			while( ! $found)
 			{
 				$position = strpos($this->content, $string, $position);

@@ -54,7 +54,7 @@ class HtmlNode extends AbstractNode {
 			return $this->innerHtml;
 		}
 
-		$child  = $this->firstChild();
+		$child	= $this->firstChild();
 		$string = '';
 
 		// continue to loop until we are out of children
@@ -167,10 +167,10 @@ class HtmlNode extends AbstractNode {
 	 * Call this when something in the node tree has changed. Like a child has been added
 	 * or a parent has been changed.
 	 */
-    protected function clear()
-    {
+	protected function clear()
+	{
 		$this->innerHtml = null;
 		$this->outerHtml = null;
-		$this->text      = null;
-    }
+		$this->text		 = null;
+	}
 }
