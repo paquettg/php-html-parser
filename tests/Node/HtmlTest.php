@@ -155,6 +155,35 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('link', $node->text);
 	}
 
+	public function testTextLookInChildren()
+	{
+		$p = new HtmlNode('p');
+		$a = new HtmlNode('a');
+		$a->addChild(new TextNode('click me'));
+		$p->addChild(new TextNode('Please '));
+		$p->addChild($a);
+		$p->addChild(new TextNode('!'));
+		$node = new HtmlNode('div');
+		$node->addChild($p);
+
+		$this->assertEquals('Please click me!', $node->text(true));
+	}
+
+	public function testTextLookInChildrenAndNoChildren()
+	{
+		$p = new HtmlNode('p');
+		$a = new HtmlNode('a');
+		$a->addChild(new TextNode('click me'));
+		$p->addChild(new TextNode('Please '));
+		$p->addChild($a);
+		$p->addChild(new TextNode('!'));
+
+		$p->text;
+		$p->text(true);
+
+		$this->assertEquals('Please click me!', $p->text(true));
+	}
+
 	public function testGetAttribute()
 	{
 		$node = new HtmlNode('a');
