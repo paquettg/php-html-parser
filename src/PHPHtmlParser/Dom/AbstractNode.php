@@ -2,6 +2,9 @@
 namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\Selector;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use PHPHtmlParser\Exceptions\CircularException;
+use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use stringEncode\Encode;
 
 /**
@@ -130,14 +133,14 @@ abstract class AbstractNode {
 	 *
 	 * @param AbstractNode $parent
 	 * @chainable
-	 * @throws Exception
+	 * @throws CircularException
 	 */
 	public function setParent(AbstractNode $parent)
 	{
 		// check integrity 
 		if ($this->isDescendant($parent->id()))
 		{
-			throw new Exception('Can not add descendant "'.$parent->id().'" as my parent.');
+			throw new CircularException('Can not add descendant "'.$parent->id().'" as my parent.');
 		}
 		
 		// remove from old parent
@@ -195,13 +198,13 @@ abstract class AbstractNode {
 	 *
 	 * @param int $id
 	 * @return AbstractNode
-	 * @throw Exception
+	 * @throws ChildNotFoundException
 	 */
 	public function getChild($id)
 	{
 		if ( ! isset($this->children[$id]))
 		{
-			throw new Exception('Child "'.$id.'" not found in this node.');
+			throw new ChildNotFoundException("Child '$id' not found in this node.");
 		}
 
 		return $this->children[$id]['node'];
@@ -213,6 +216,7 @@ abstract class AbstractNode {
 	 * 
 	 * @param AbstractNode $child
 	 * @return bool
+	 * @throws CircularExceptionException
 	 */
 	public function addChild(AbstractNode $child)
 	{
@@ -222,13 +226,13 @@ abstract class AbstractNode {
 		// check integrity
 		if ($this->isAncestor($child->id()))
 		{
-			throw new Exception('Can not add child. It is my ancestor.');
+			throw new CircularException('Can not add child. It is my ancestor.');
 		}
 
 		// check if child is itself
 		if ($child->id() == $this->id)
 		{
-			throw new Exception('Can not set itself as a child.');
+			throw new CircularException('Can not set itself as a child.');
 		}
 
 		if ($this->hasChildren())
@@ -416,13 +420,13 @@ abstract class AbstractNode {
 	 * Attempts to get the next sibling.
 	 *
 	 * @return AbstractNode
-	 * @throws Exception
+	 * @throws ParentNotFoundException
 	 */
 	public function nextSibling()
 	{
 		if (is_null($this->parent))
 		{
-			throw new Exception('Parent is not set for this node.');
+			throw new ParentNotFoundException('Parent is not set for this node.');
 		}
 
 		return $this->parent->nextChild($this->id);
@@ -432,13 +436,13 @@ abstract class AbstractNode {
 	 * Attempts to get the previous sibling
 	 *
 	 * @return AbstractNode
-	 * @throw Exception
+	 * @throws ParentNotFoundException
 	 */
 	public function previousSibling()
 	{
 		if (is_null($this->parent))
 		{
-			throw new Exception('Parent is not set for this node.');
+			throw new ParentNotFoundException('Parent is not set for this node.');
 		}
 
 		return $this->parent->previousChild($this->id);
@@ -493,7 +497,7 @@ abstract class AbstractNode {
 	 *
 	 * @param  string $tag
 	 * @return AbstractNode
-	 * @throws Exception
+	 * @throws ParentNotFoundException
 	 */
 	public function ancestorByTag($tag)
 	{
@@ -510,7 +514,7 @@ abstract class AbstractNode {
 			$node = $node->getParent();
 		}
 
-		throw new Exception('Could not find an ancestor with "'.$tag.'" tag');
+		throw new ParentNotFoundException('Could not find an ancestor with "'.$tag.'" tag');
 	}
 
 	/**

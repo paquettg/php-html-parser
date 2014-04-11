@@ -1,6 +1,8 @@
 <?php
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Exceptions\CurlException;
+
 class Curl implements CurlInterface {
 	
 	/**
@@ -8,7 +10,7 @@ class Curl implements CurlInterface {
 	 *
 	 * @param string $url
 	 * @return string
-	 * @throws Exception
+	 * @throws CurlException
 	 */
 	public function get($url)
 	{
@@ -22,7 +24,7 @@ class Curl implements CurlInterface {
 		{
 			// there was a problem
 			$error = curl_error($ch);
-			throw new Exception('Error retrieving "'.$url.'" ('.$error.')');
+			throw new CurlException('Error retrieving "'.$url.'" ('.$error.')');
 		}
 
 		return $content;

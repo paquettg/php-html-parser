@@ -1,6 +1,8 @@
 <?php
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Exceptions\NotLoadedException;
+
 final class StaticDom {
 
 	private static $dom = null;
@@ -11,7 +13,7 @@ final class StaticDom {
 	 *
 	 * @param string $method
 	 * @param array $arguments
-	 * @throws Exception
+	 * @throws NotLoadedException
 	 * @return mixed
 	 */
 	public static function __callStatic($method, $arguments)
@@ -22,7 +24,7 @@ final class StaticDom {
 		}
 		else
 		{
-			throw new Exception('The dom is not loaded. Can not call a dom method.');
+			throw new NotLoadedException('The dom is not loaded. Can not call a dom method.');
 		}
 	}
 

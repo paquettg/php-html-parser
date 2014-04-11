@@ -1,6 +1,9 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
+use PHPHtmlParser\Exceptions\UnkownChildTypeException;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
+
 class HtmlNode extends AbstractNode {
 
 	/**
@@ -39,6 +42,7 @@ class HtmlNode extends AbstractNode {
 	 * Gets the inner html of this node.
 	 *
 	 * @return string
+	 * @throws UnkownChildTypeException
 	 */
 	public function innerHtml()
 	{
@@ -70,14 +74,14 @@ class HtmlNode extends AbstractNode {
 			}
 			else
 			{
-				throw new Exception('Error: Unkowne child type "'.get_class($child).'" found in node');
+				throw new UnknownChildTypeException('Unknown child type "'.get_class($child).'" found in node');
 			}
 
 			try
 			{
 				$child = $this->nextChild($child->id());
 			}
-			catch (Exception $e)
+			catch (ChildNotFoundException $e)
 			{
 				// no more children
 				$child = null;

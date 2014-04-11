@@ -3,6 +3,7 @@ namespace PHPHtmlParser;
 
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
+use PHPHtmlParser\Exceptions\NotLoadedException;
 use stringEncode\Encode;
 
 class Dom {
@@ -306,11 +307,6 @@ class Dom {
 		$this->rawSize = strlen($str);
 		$this->raw     = $str;
 
-		// clean out none-html text
-		if ( ! $this instanceof Dom)
-		{
-			throw new \Exception(get_class($this));
-		}
 		$html = $this->clean($str);
 
 		$this->size    = strlen($str);
@@ -325,13 +321,13 @@ class Dom {
 	/**
 	 * Checks if the load methods have been called.
 	 *
-	 * @throws Exception
+	 * @throws NotLoadedException
 	 */
 	protected function isLoaded()
 	{
 		if (is_null($this->content))
 		{
-			throw new Exception('Content is not loaded!');
+			throw new NotLoadedException('Content is not loaded!');
 		}
 	}
 

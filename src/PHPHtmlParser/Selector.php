@@ -2,6 +2,7 @@
 namespace PHPHtmlParser;
 
 use PHPHtmlParser\Dom\Collection;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
 class Selector {
 
@@ -191,7 +192,7 @@ class Selector {
 					{
 						$child = $node->nextChild($child->id());
 					}
-					catch (Dom\Exception $e)
+					catch (ChildNotFoundException $e)
 					{
 						// no more children
 						$child = null;
@@ -286,7 +287,7 @@ class Selector {
 					// get next child
 					$child = $node->nextChild($child->id());
 				}
-				catch (Dom\Exception $e)
+				catch (ChildNotFoundException $e)
 				{
 					// no more children
 					$child = null;
