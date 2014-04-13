@@ -26,9 +26,9 @@ $a = $dom->find('a')[0];
 echo $a->text; // "click here"
 ```
 
-The above will output "click here". Simple no? There are many ways to get the same result from the dome, such as $dom->getElementsbyTag('a')[0] or $dom->find('a', 0) which can all be found in the tests or in the code itself.
+The above will output "click here". Simple no? There are many ways to get the same result from the dome, such as `$dom->getElementsbyTag('a')[0]` or `$dom->find('a', 0)` which can all be found in the tests or in the code itself.
 
-Example With Files
+Loading Files
 ------------------
 
 You may also seamlessly load a file into the dom instead of a string, which is much more convinient and is how I except most developers will be loading the html. The following example is taken from our test and uses the "big.html" file found there.
@@ -57,9 +57,9 @@ foreach ($contents as $content)
 
 This example loads the html from big.html, a real page found online, and gets all the content-border classes to process. It also shows a few things you can do with a node but it is not an exhaustive list of methods that a node has avaiable.
 
-Alternativly, you can always use the load() method to load the file. It will attempt to find the file using file_exists and, if succesfull, will call loadFromFile() for you. The same applies to a URL and loadFromUrl() method.
+Alternativly, you can always use the `load()` method to load the file. It will attempt to find the file using `file_exists` and, if succesfull, will call `loadFromFile()` for you. The same applies to a URL and `loadFromUrl()` method.
 
-Example With Url
+Loading Url
 ----------------
 
 Loading a url is very similar to the way you would load the html from a file. 
@@ -76,7 +76,7 @@ $dom->load('http://google.com');
 $html = $dom->outerHtml; // same result as the first example
 ```
 
-What makes the loadFromUrl method note worthy is the PHPHtmlParser\CurlInterface parameter, an optional second parameter. By default, we use the PHPHtmlParser\Curl class to get the contents of the url. On the other hand, though, you can inject your own implementation of CurlInterface and we will attempt to load the url using what ever tool/settings you want, up to you.
+What makes the loadFromUrl method note worthy is the `PHPHtmlParser\CurlInterface` parameter, an optional second parameter. By default, we use the `PHPHtmlParser\Curl` class to get the contents of the url. On the other hand, though, you can inject your own implementation of CurlInterface and we will attempt to load the url using what ever tool/settings you want, up to you.
 
 ```php
 use PHPHtmlParser\Dom;
@@ -87,7 +87,31 @@ $dom->loadFromUrl('http://google.com', new Connector);
 $html = $dom->outerHtml;
 ```
 
-As long as the Connector object implements the PHPHtmlParser\CurlInterface interface properly it will use that object to get the content of the url instead of the default PHPHtmlParser\Curl class.
+As long as the Connector object implements the `PHPHtmlParser\CurlInterface` interface properly it will use that object to get the content of the url instead of the default `PHPHtmlParser\Curl` class.
+
+Options
+-------
+
+You can also set parsing option that will effect the behavior of the parsing engine. You can set a global option array using the `setOptions` method in the `Dom` object or a instance specific option by adding it to the `load` method as an extra (optional) parameter.
+
+```php
+use PHPHtmlParser\Dom;
+
+$dom = new Dom;
+$dom->setOptions([
+	'strict' => true, // Set a global option to enable strict html parsing.
+]);
+
+$dom->load('http://google.com', [
+	'whitespaceTextNode' => false, // Only applies to this load.
+]);
+
+$dom->load('http://gmail.com'); // will not have whitespaceTextNode set to false.
+```
+
+At the moment we support 2 options, strict and whitespaceTextNode. Strict, by default false, will throw a `StrickException` if it find that the html is not strict complient (all tags must have a clossing tag, no attribute with out a value, etc.). 
+
+The whitespaceTextNode, by default true, option tells the parser to save textnodes even if the content of the node is empty (only whitespace). Setting it to false will ignore all whitespace only text node found in the document.
 
 Static Facade
 ------------
