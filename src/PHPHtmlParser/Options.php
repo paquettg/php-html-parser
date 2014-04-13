@@ -10,6 +10,7 @@ class Options {
 	 */
 	protected $defaults = [
 		'whitespaceTextNode' => true,
+		'strict'             => false,
 	];
 
 	/**

@@ -4,6 +4,7 @@ namespace PHPHtmlParser;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Exceptions\NotLoadedException;
+use PHPHtmlParser\Exceptions\StrictException;
 use stringEncode\Encode;
 
 class Dom {
@@ -539,6 +540,12 @@ class Dom {
 			else
 			{
 				// no value attribute
+				if ($this->options->strict)
+				{
+					// can't have this in strict html
+					$character = $this->content->getPosition();
+					throw new StrictException("Tag '$tag' has an attribute '$name' with out a value! (character #$character)");
+				}
 				$node->getTag()->$name = [
 					'value'       => null,
 					'doubleQuote' => true,
@@ -556,6 +563,14 @@ class Dom {
 		}
 		elseif (in_array($tag, $this->selfClosing))
 		{
+			
+			// Should be a self closing tag, check if we are strict
+			if ( $this->options->strict)
+			{
+				$character = $this->content->getPosition();
+				throw new StrictException("Tag '$tag' is not self clossing! (character #$character)");
+			}
+
 			// We force self closing on this tag.
 			$node->getTag()->selfClosing();
 		}

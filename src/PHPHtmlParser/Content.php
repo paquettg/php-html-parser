@@ -41,6 +41,11 @@ class Content {
 		$this->pos     = 0;
 	}
 
+	public function getPosition()
+	{
+		return $this->pos;
+	}
+
 	/**
 	 * Gets the current character we are at.
 	 *
