@@ -2,7 +2,7 @@
     "name": "paquettg/php-html-parser",
     "type": "library",
     "description": "An HTML DOM parser. It allows you to manipulate HTML. Find tags on an HTML page with selectors just like jQuery.",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "keywords": ["html", "dom", "parser"],
     "homepage": "https://github.com/paquettg/php-html-parser",
     "license": "MIT",
