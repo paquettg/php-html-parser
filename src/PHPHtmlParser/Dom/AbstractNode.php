@@ -252,7 +252,7 @@ abstract class AbstractNode {
 			'node' => $child,
 			'next' => null,
 			'prev' => $key,
-        );
+		);
 
 		// tell child I am the new parent
 		$child->setParent($this);
@@ -625,7 +625,7 @@ abstract class AbstractNode {
 		$result = array(
 			'height' => $height,
 			'width'  => $width
-        );
+		);
 		return $result;
 	}
 

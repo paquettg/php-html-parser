@@ -81,7 +81,7 @@ class Dom {
 		'base',
 		'embed',
 		'spacer',
-    );
+	);
 
 	/**
 	 * Returns the inner html of the root node.
@@ -449,7 +449,7 @@ class Dom {
 			'status'  => false,
 			'closing' => false,
 			'node'	  => null,
-        );
+		);
 		if ($this->content->char() != '<')
 		{
 			// we are not at the beginning of a tag
@@ -549,7 +549,7 @@ class Dom {
 				$node->getTag()->$name = array(
 					'value'       => null,
 					'doubleQuote' => true,
-                );
+				);
 				$this->content->rewind(1);
 			}
 		}

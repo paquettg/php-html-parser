@@ -128,7 +128,7 @@ class Selector {
 				'value'    => $value,
 				'operator' => $operator,
 				'noKey'    => $noKey,
-            );
+			);
 			if (trim($match[7]) == ',')
 			{
 				$this->selectors[] = $result;

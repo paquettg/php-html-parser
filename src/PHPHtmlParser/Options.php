@@ -11,7 +11,7 @@ class Options {
 	protected $defaults = array(
 		'whitespaceTextNode' => true,
 		'strict'             => false,
-    );
+	);
 
 	/**
 	 * The list of all current options set.
