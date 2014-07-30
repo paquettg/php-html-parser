@@ -28,14 +28,14 @@ abstract class AbstractNode {
 	 *
 	 * @var array
 	 */
-	protected $attr = [];
+	protected $attr = array();
 
 	/**
 	 * An array of all the children.
 	 *
 	 * @var array
 	 */
-	protected $children = [];
+	protected $children = array();
 
 	/**
 	 * Contains the parent Node.
@@ -95,9 +95,9 @@ abstract class AbstractNode {
 	public function __destruct()
 	{
 		$this->tag      = null;
-		$this->attr     = [];
+		$this->attr     = array();
 		$this->parent   = null;
-		$this->children = [];
+		$this->children = array();
 	}
 
 	/**
@@ -248,11 +248,11 @@ abstract class AbstractNode {
 		}
 
 		// add the child
-		$this->children[$child->id()] = [
+		$this->children[$child->id()] = array(
 			'node' => $child,
 			'next' => null,
 			'prev' => $key,
-		];
+        );
 
 		// tell child I am the new parent
 		$child->setParent($this);
@@ -583,7 +583,7 @@ abstract class AbstractNode {
 		if ( ! is_null($this->tag->getAttribute('style')))
 		{
 			// Thanks to user gnarf from stackoverflow for this regular expression.
-			$attributes = [];
+			$attributes = array();
 			preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->tag->getAttribute['style'], $matches, PREG_SET_ORDER);
 			foreach ($matches as $match) 
 			{
@@ -622,10 +622,10 @@ abstract class AbstractNode {
 
 		}
 
-		$result = [
+		$result = array(
 			'height' => $height,
 			'width'  => $width
-		];
+        );
 		return $result;
 	}
 

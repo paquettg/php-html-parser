@@ -13,7 +13,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 *
 	 * @param array
 	 */
-	protected $collection = [];
+	protected $collection = array();
 
 	/**
 	 * Attempts to call the method on the first node in
@@ -28,7 +28,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 		$node = reset($this->collection);
 		if ($node instanceof AbstractNode)
 		{
-			return call_user_func_array([$node, $method], $arguments);
+			return call_user_func_array(array($node, $method), $arguments);
 		}
 	}
 

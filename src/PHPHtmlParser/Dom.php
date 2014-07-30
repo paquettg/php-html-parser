@@ -56,7 +56,7 @@ class Dom {
 	 *
 	 * @var array
 	 */
-	protected $globalOptions = [];
+	protected $globalOptions = array();
 
 	/**
 	 * A persistent option object to be used for all options in the 
@@ -71,7 +71,7 @@ class Dom {
 	 *
 	 * @var array
 	 */
-	protected $selfClosing = [
+	protected $selfClosing = array(
 		'img',
 		'br',
 		'input',
@@ -81,7 +81,7 @@ class Dom {
 		'base',
 		'embed',
 		'spacer',
-	];
+    );
 
 	/**
 	 * Returns the inner html of the root node.
@@ -111,7 +111,7 @@ class Dom {
 	 * @param array $option
 	 * @chainable
 	 */
-	public function load($str, $options = [])
+	public function load($str, $options = array())
 	{
 		// check if it's a file
 		if (is_file($str))
@@ -134,7 +134,7 @@ class Dom {
 	 * @param array $option
 	 * @chainable
 	 */
-	public function loadFromFile($file, $options = [])
+	public function loadFromFile($file, $options = array())
 	{
 		return $this->loadStr(file_get_contents($file), $options);
 	}
@@ -148,7 +148,7 @@ class Dom {
 	 * @param CurlInterface $curl
 	 * @chainable
 	 */
-	public function loadFromUrl($url, $options = [], CurlInterface $curl = null)
+	public function loadFromUrl($url, $options = array(), CurlInterface $curl = null)
 	{
 		if (is_null($curl))
 		{
@@ -196,7 +196,7 @@ class Dom {
 	{
 		if ( ! is_array($tag))
 		{
-			$tag = [$tag];
+			$tag = array($tag);
 		}
 		foreach ($tag as $value)
 		{
@@ -216,7 +216,7 @@ class Dom {
 	{
 		if ( ! is_array($tag))
 		{
-			$tag = [$tag];
+			$tag = array($tag);
 		}
 		$this->selfClosing = array_diff($this->selfClosing, $tag);
 		return $this;
@@ -229,7 +229,7 @@ class Dom {
 	 */
 	public function clearSelfClosingTags()
 	{
-		$this->selfClosing = [];
+		$this->selfClosing = array();
 		return $this;
 	}
 
@@ -341,7 +341,7 @@ class Dom {
 	protected function clean($str)
 	{
 		// clean out the \n\r
-		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
+		$str = str_replace(array("\r\n", "\r", "\n"), ' ', $str);
 
 		// strip the doctype
 		$str = preg_replace("'<!doctype(.*?)>'is", '', $str);
@@ -445,11 +445,11 @@ class Dom {
 	 */
 	protected function parseTag()
 	{
-		$return = [
+		$return = array( 
 			'status'  => false,
 			'closing' => false,
 			'node'	  => null,
-		];
+        );
 		if ($this->content->char() != '<')
 		{
 			// we are not at the beginning of a tag
@@ -511,7 +511,7 @@ class Dom {
 			$this->content->skipByToken('blank');
 			if ($this->content->char() == '=')
 			{
-				$attr = [];
+				$attr = array();
 				$this->content->fastForward(1)
 				              ->skipByToken('blank');
 				switch ($this->content->char())
@@ -546,10 +546,10 @@ class Dom {
 					$character = $this->content->getPosition();
 					throw new StrictException("Tag '$tag' has an attribute '$name' with out a value! (character #$character)");
 				}
-				$node->getTag()->$name = [
+				$node->getTag()->$name = array(
 					'value'       => null,
 					'doubleQuote' => true,
-				];
+                );
 				$this->content->rewind(1);
 			}
 		}
@@ -608,7 +608,7 @@ class Dom {
 			$this->root->propagateEncoding($encode);
 			return false;
 		}
-		$matches = [];
+		$matches = array();
 		if (preg_match('/charset=(.+)/', $content, $matches))
 		{
 			$encode->from(trim($matches[1]));

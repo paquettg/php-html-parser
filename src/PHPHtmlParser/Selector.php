@@ -13,7 +13,7 @@ class Selector {
 	 */
 	protected $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
 
-	protected $selectors = [];
+	protected $selectors = array();
 
 	/**
 	 * Constructs with the selector string
@@ -47,7 +47,7 @@ class Selector {
 		$results = new Collection;
 		foreach ($this->selectors as $selector)
 		{
-			$nodes = [$node];
+			$nodes = array($node);
 			if (count($selector) == 0)
 				continue;
 
@@ -73,11 +73,11 @@ class Selector {
 	 */
 	protected function parseSelectorString($selector)
 	{
-		$matches = [];
+		$matches = array();
 		preg_match_all($this->pattern, trim($selector).' ', $matches, PREG_SET_ORDER);
 		
 		// skip tbody
-		$result = [];
+		$result = array();
 		foreach ($matches as $match)
 		{
 			// default values
@@ -122,17 +122,17 @@ class Selector {
 				$noKey = true;
 			}
 
-			$result[] = [
+			$result[] = array( 
 				'tag'	   => $tag,
 				'key'	   => $key,
 				'value'    => $value,
 				'operator' => $operator,
 				'noKey'    => $noKey,
-			];
+            );
 			if (trim($match[7]) == ',')
 			{
 				$this->selectors[] = $result;
-				$result			   = [];
+				$result			   = array();
 			}
 		}
 		
@@ -166,21 +166,21 @@ class Selector {
 					if ($count == $rule['key'])
 					{
 						// found the node we wanted
-						return [$node];
+						return array($node);
 					}
 				}
 			}
-			return [];
+			return array();
 		}
 
-		$return = [];
+		$return = array();
 		foreach ($nodes as $node)
 		{
 			// check if we are a leaf
 			if ( ! $node->hasChildren())
 				continue;
 
-			$children = [];
+			$children = array();
 			$child	  = $node->firstChild();
 			while ( ! is_null($child))
 			{

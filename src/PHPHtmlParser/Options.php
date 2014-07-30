@@ -8,17 +8,17 @@ class Options {
 	 * 
 	 * @param array
 	 */
-	protected $defaults = [
+	protected $defaults = array(
 		'whitespaceTextNode' => true,
 		'strict'             => false,
-	];
+    );
 
 	/**
 	 * The list of all current options set.
 	 *
 	 * @param array
 	 */
-	protected $options = [];
+	protected $options = array();
 
 	/**
 	 * Sets the default options in the options array
