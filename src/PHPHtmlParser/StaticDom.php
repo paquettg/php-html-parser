@@ -20,7 +20,7 @@ final class StaticDom {
 	{
 		if (self::$dom instanceof Dom)
 		{
-			return call_user_func_array([self::$dom, $method], $arguments);
+			return call_user_func_array(array(self::$dom, $method), $arguments);
 		}
 		else
 		{

@@ -18,7 +18,7 @@ class Tag {
 	 *
 	 * @var array
 	 */
-	protected $attr = [];
+	protected $attr = array();
 
 	/**
 	 * Is this tag self closing.
@@ -138,7 +138,7 @@ class Tag {
 	 */
 	public function getAttributes()
 	{
-		$return = [];
+		$return = array();
 		foreach ($this->attr as $attr => $info)
 		{
 			$return[$attr] = $this->getAttribute($attr);
