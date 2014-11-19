@@ -9,6 +9,19 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 		StaticDom::mount();
 	}
 
+	public function tearDown()
+	{
+		StaticDom::unload();
+	}
+
+	public function testMountWithDom()
+	{
+		$dom = new PHPHtmlParser\Dom;
+		StaticDom::unload();
+		$status = StaticDom::mount('newDom', $dom);
+		$this->assertTrue($status);
+	}
+
 	public function testLoad()
 	{
 		$dom = Dom::load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
@@ -26,6 +39,14 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 	{
 		Dom::load('tests/horrible.html');
 		$this->assertEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', Dom::find('table input', 1)->outerHtml);
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
+	 */
+	public function testFindNoLoad()
+	{
+		Dom::find('.post-user font', 0);
 	}
 
 	public function testFindI()

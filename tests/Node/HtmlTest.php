@@ -35,6 +35,36 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("<a href='http://google.com'>link</a><br />", $parent->innerHtml());
 	}
 
+	public function testInnerHtmlTwice()
+	{
+		$div = new Tag('div');
+		$div->setAttributes([
+			'class' => [
+				'value'       => 'all',
+				'doubleQuote' => true,
+			],
+		]);
+		$a = new Tag('a');
+		$a->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+		]);
+		$br = new Tag('br');
+		$br->selfClosing();
+
+		$parent  = new HtmlNode($div);
+		$childa  = new HtmlNode($a);
+		$childbr = new HtmlNode($br);
+		$parent->addChild($childa);
+		$parent->addChild($childbr);
+		$childa->addChild(new TextNode('link'));
+
+		$inner = $parent->innerHtml();
+		$this->assertEquals($inner, $parent->innerHtml());
+	}
+
 	public function testInnerHtmlMagic()
 	{
 		$parent  = new HtmlNode('div');
@@ -90,6 +120,36 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<div class="all"><a href=\'http://google.com\'>link</a><br /></div>', $parent->outerHtml());
 	}
 
+	public function testOuterHtmlTwice()
+	{
+		$div = new Tag('div');
+		$div->setAttributes([
+			'class' => [
+				'value'       => 'all',
+				'doubleQuote' => true,
+			],
+		]);
+		$a = new Tag('a');
+		$a->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+		]);
+		$br = new Tag('br');
+		$br->selfClosing();
+
+		$parent  = new HtmlNode($div);
+		$childa  = new HtmlNode($a);
+		$childbr = new HtmlNode($br);
+		$parent->addChild($childa);
+		$parent->addChild($childbr);
+		$childa->addChild(new TextNode('link'));
+
+		$outer = $parent->outerHtml();
+		$this->assertEquals($outer, $parent->outerHtml());
+	}
+
 	public function testOuterHtmlEmpty()
 	{
 		$a = new Tag('a');
@@ -137,6 +197,16 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$node->addChild(new TextNode('link'));
 		
 		$this->assertEquals('link', $node->text());
+	}
+
+	public function testTextTwice()
+	{
+		$a    = new Tag('a');
+		$node = new HtmlNode($a);
+		$node->addChild(new TextNode('link'));
+		
+		$text = $node->text();
+		$this->assertEquals($text, $node->text());
 	}
 
 	public function testTextNone()

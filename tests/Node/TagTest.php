@@ -25,6 +25,12 @@ class NodeTagTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('http://google.com', $tag->getAttribute('href')['value']);
 	}
 
+	public function testNoise()
+	{
+		$tag = new Tag('a');
+		$this->assertTrue($tag->noise('noise') instanceof Tag);
+	}
+
 	public function testGetAttributeMagic()
 	{
 		$attr = [

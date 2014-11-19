@@ -31,6 +31,14 @@ class ContentTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('b', $content->char());
 	}
 
+	public function testRewindNegative()
+	{
+		$content = new Content('abcde');
+		$content->fastForward(2)
+		        ->rewind(100);
+		$this->assertEquals('a', $content->char());
+	}
+
 	public function testCopyUntil()
 	{
 		$content = new Content('abcdeedcba');
@@ -47,6 +55,12 @@ class ContentTest extends PHPUnit_Framework_TestCase {
 	{
 		$content = new Content('foo\"bar"bax');
 		$this->assertEquals('foo\"bar', $content->copyUntil('"', false, true));
+	}
+
+	public function testCopyUntilNotFound()
+	{
+		$content = new Content('foo\"bar"bax');
+		$this->assertEquals('foo\"bar"bax', $content->copyUntil('baz'));
 	}
 
 	public function testCopyByToken()

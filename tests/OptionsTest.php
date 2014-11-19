@@ -33,5 +33,11 @@ class OptionsTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertFalse($options->get('whitespaceTextNode'));
 	}
+
+	public function testGettingNoOption()
+	{
+		$options = new Options;
+		$this->assertEquals(null, $options->get('doesnotexist'));
+	}
 }
 

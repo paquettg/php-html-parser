@@ -98,4 +98,12 @@ final class StaticDom {
 
 		return $dom->loadFromUrl($url, $curl);
 	}
+
+	/**
+	 * Sets the $dom variable to null.
+	 */
+	public static function unload()
+	{
+		self::$dom = null;
+	}
 }

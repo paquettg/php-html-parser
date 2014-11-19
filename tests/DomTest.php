@@ -12,12 +12,37 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $div->outerHtml);
 	}
 
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
+	 */
+	public function testNotLoaded()
+	{
+		$dom = new Dom;
+		$div = $dom->find('div', 0);
+	}
+
+	public function testIncorrectAccess()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+		$div = $dom->find('div', 0);
+		$this->assertEquals(null, $div->foo);
+	}
+
 	public function testLoadSelfclosingAttr()
 	{
 		$dom = new Dom;
 		$dom->load("<div class='all'><br  foo  bar  />baz</div>");
 		$br = $dom->find('br', 0);
 		$this->assertEquals('<br foo bar />', $br->outerHtml);
+	}
+
+	public function testLoadSelfclosingAttrToString()
+	{
+		$dom = new Dom;
+		$dom->load("<div class='all'><br  foo  bar  />baz</div>");
+		$br = $dom->find('br', 0);
+		$this->assertEquals('<br foo bar />', (string) $br);
 	}
 
 	public function testLoadEscapeQuotes()
@@ -56,6 +81,41 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$dom = new Dom;
 		$dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
 		$this->assertEquals('<br /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
+	}
+
+	public function testLoadClosingTagAddSelfClosingTag()
+	{
+		$dom = new Dom;
+		$dom->addSelfClosingTag('mytag');
+		$dom->load('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></mytag></div>');
+		$this->assertEquals('<mytag /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
+	}
+
+	public function testLoadClosingTagAddSelfClosingTagArray()
+	{
+		$dom = new Dom;
+		$dom->addSelfClosingTag([
+			'mytag',
+			'othertag'
+		]);
+		$dom->load('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a><othertag></div>');
+		$this->assertEquals('<mytag /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a><othertag /></p>', $dom->find('div', 0)->innerHtml);
+	}
+
+	public function testLoadClosingTagRemoveSelfClosingTag()
+	{
+		$dom = new Dom;
+		$dom->removeSelfClosingTag('br');
+		$dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+		$this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></br>', $dom->find('div', 0)->innerHtml);
+	}
+
+	public function testLoadClosingTagClearSelfClosingTag()
+	{
+		$dom = new Dom;
+		$dom->clearSelfClosingTags();
+		$dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+		$this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></br>', $dom->find('div', 0)->innerHtml);
 	}
 
 	public function testLoadUpperCase()
