@@ -1,7 +1,7 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-use PHPHtmlParser\Exceptions\UnkownChildTypeException;
+use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
 class HtmlNode extends AbstractNode {
