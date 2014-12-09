@@ -128,21 +128,21 @@ class DomTest extends PHPUnit_Framework_TestCase {
 	public function testLoadWithFile()
 	{
 		$dom = new Dom;
-		$dom->loadFromFile('tests/small.html');
+		$dom->loadFromFile('tests/files/small.html');
 		$this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
 	}
 
 	public function testLoadFromFile()
 	{
 		$dom = new Dom;
-		$dom->loadFromFile('tests/small.html');
+		$dom->loadFromFile('tests/files/small.html');
 		$this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
 	}
 
 	public function testLoadFromFileFind()
 	{
 		$dom = new Dom;
-		$dom->loadFromFile('tests/small.html');
+		$dom->loadFromFile('tests/files/small.html');
 		$this->assertEquals('VonBurgermeister', $dom->find('.post-row div .post-user font', 0)->text);
 	}
 
@@ -156,14 +156,14 @@ class DomTest extends PHPUnit_Framework_TestCase {
 	public function testLoadFileBig()
 	{
 		$dom = new Dom;
-		$dom->loadFromFile('tests/big.html');
+		$dom->loadFromFile('tests/files/big.html');
 		$this->assertEquals(10, count($dom->find('.content-border')));
 	}
 
 	public function testLoadFileBigTwice()
 	{
 		$dom = new Dom;
-		$dom->loadFromFile('tests/big.html');
+		$dom->loadFromFile('tests/files/big.html');
 		$post = $dom->find('.post-row', 0);
 		$this->assertEquals(' <p>Журчанье воды<br /> Черно-белые тени<br /> Вновь на фонтане</p> ', $post->find('.post-message', 0)->innerHtml);
 	}

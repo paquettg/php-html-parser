@@ -31,13 +31,13 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 
 	public function testLoadWithFile()
 	{
-		$dom = Dom::load('tests/small.html');
+		$dom = Dom::load('tests/files/small.html');
 		$this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
 	}
 
 	public function testFind()
 	{
-		Dom::load('tests/horrible.html');
+		Dom::load('tests/files/horrible.html');
 		$this->assertEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', Dom::find('table input', 1)->outerHtml);
 	}
 
@@ -51,7 +51,7 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 
 	public function testFindI()
 	{
-		Dom::load('tests/horrible.html');
+		Dom::load('tests/files/horrible.html');
 		$this->assertEquals('[ Досие бр:12928 ]', Dom::find('i')[0]->innerHtml);
 	}
 }
