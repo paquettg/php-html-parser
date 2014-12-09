@@ -1,7 +1,7 @@
 PHP Html Parser
 ==========================
 
-Version 1.6.3
+Version 1.6.4
 
 [![Build Status](https://travis-ci.org/paquettg/php-html-parser.png)](https://travis-ci.org/paquettg/php-html-parser)
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
