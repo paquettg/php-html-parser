@@ -4,6 +4,11 @@ use PHPHtmlParser\Dom;
 
 class DomTest extends PHPUnit_Framework_TestCase {
 
+	public function tearDown()
+	{
+		Mockery::close();
+	}
+
 	public function testLoad()
 	{
 		$dom = new Dom;
@@ -168,6 +173,19 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(' <p>Журчанье воды<br /> Черно-белые тени<br /> Вновь на фонтане</p> ', $post->find('.post-message', 0)->innerHtml);
 	}
 
+	public function testLoadFromUrl()
+	{
+		$curl = Mockery::mock('PHPHtmlParser\CurlInterface');
+		$curl->shouldReceive('get')
+		     ->once()
+		     ->with('http://google.com')
+		     ->andReturn(file_get_contents('tests/files/small.html'));
+		
+		$dom = new Dom;
+		$dom->loadFromUrl('http://google.com', [], $curl);
+		$this->assertEquals('VonBurgermeister', $dom->find('.post-row div .post-user font', 0)->text);
+	}
+
 	public function testToStringMagic()
 	{
 		$dom = new Dom;
@@ -215,5 +233,14 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$dom = new Dom;
 		$dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
 		$this->assertEquals('<p>Hey bro, <a href="google.com" id="78">click here</a></p>', $dom->getElementsByClass('all')[0]->innerHtml);
+	}
+
+	public function testEnforceEncoding()
+	{
+		$dom = new Dom;
+		$dom->load('tests/files/horrible.html', [
+			'enforceEncoding' => 'UTF-8',
+		]);
+		$this->assertNotEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', $dom->find('table input', 1)->outerHtml);
 	}
 }

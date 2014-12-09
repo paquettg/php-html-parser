@@ -110,9 +110,11 @@ $dom->load('http://google.com', [
 $dom->load('http://gmail.com'); // will not have whitespaceTextNode set to false.
 ```
 
-At the moment we support 2 options, strict and whitespaceTextNode. Strict, by default false, will throw a `StrickException` if it find that the html is not strict complient (all tags must have a clossing tag, no attribute with out a value, etc.). 
+At the moment we support 3 options, strict, whitespaceTextNode and enforceEncoding. Strict, by default false, will throw a `StrickException` if it find that the html is not strict complient (all tags must have a clossing tag, no attribute with out a value, etc.). 
 
 The whitespaceTextNode, by default true, option tells the parser to save textnodes even if the content of the node is empty (only whitespace). Setting it to false will ignore all whitespace only text node found in the document.
+
+The enforceEncoding, by default null, option will enforce an charater set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
 
 Static Facade
 ------------
