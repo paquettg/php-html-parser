@@ -594,6 +594,14 @@ class Dom {
 		$encode->from($this->defaultCharset);
 		$encode->to($this->defaultCharset);
 
+		if ( ! is_null($this->options->enforceEncoding))
+		{
+			//  they want to enforce the given encoding
+			$encode->from($this->options->enforceEncoding);
+			$encode->to($this->options->enforceEncoding);
+			return false;
+		}
+
 		$meta = $this->root->find('meta[http-equiv=Content-Type]', 0);
 		if (is_null($meta))
 		{
