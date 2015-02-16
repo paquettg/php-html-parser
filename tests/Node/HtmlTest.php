@@ -338,4 +338,11 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals('outerlink rounded', $node->getAttributes()['class']);
 	}
+
+	public function testSetAttribute()
+	{
+		$node = new HtmlNode('a');
+		$node->setAttribute('class', 'foo');
+		$this->assertEquals('foo', $node->getAttribute('class'));
+	}
 }

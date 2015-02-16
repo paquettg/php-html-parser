@@ -117,7 +117,7 @@ The whitespaceTextNode, by default true, option tells the parser to save textnod
 The enforceEncoding, by default null, option will enforce an charater set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
 
 Static Facade
-------------
+-------------
 
 You can also mount a static facade for the Dom object.
 
@@ -130,3 +130,27 @@ $objects = Dom::find('.content-border');
 ```
 
 The above php block does the same find and load as the first example but it is done using the static facade, which supports all public methods found in the Dom object.
+
+Modifying The Dom
+-----------------
+
+You can always modify the dom that was created from any loading method. To change the attribute of any node you can just call the `setAttribute` method.
+
+```php
+$dom = new Dom;
+$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$a = $dom->find('a')[0];
+$a->setAttribute('class', 'foo');
+echo $a->getAttribute('class'); // "foo"
+```
+
+You may also get the `PHPHtmlParser\Dom\Tag` class directly and manipulate it as you see fit.
+
+```php
+$dom = new Dom;
+$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$a   = $dom->find('a')[0];
+$tag = $a->getTag();
+$tag->setAttribute('class', 'foo');
+echo $a->getAttribute('class'); // "foo"
+```

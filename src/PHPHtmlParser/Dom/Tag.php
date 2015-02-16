@@ -111,7 +111,15 @@ class Tag {
 	public function setAttribute($key, $value)
 	{
 		$key = strtolower($key);
+		if ( ! is_array($value))
+		{
+			$value = [
+				'value'       => $value,
+				'doubleQuote' => true,
+			];
+		}
 		$this->attr[$key] = $value;
+
 		return $this;
 	}
 

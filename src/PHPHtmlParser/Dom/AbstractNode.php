@@ -475,7 +475,7 @@ abstract class AbstractNode {
 	}
 
 	/**
-	 * A wrapper method that simply calls the getAttributes method
+	 * A wrapper method that simply calls the getAttribute method
 	 * on the tag of this node.
 	 *
 	 * @param string $key
@@ -490,6 +490,20 @@ abstract class AbstractNode {
 		}
 
 		return $attribute;
+	}
+
+	/**
+	 * A wrapper method that simply calls the setAttribute method
+	 * on the tag of this node.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @chainable
+	 */
+	public function setAttribute($key, $value)
+	{
+		$this->tag->setAttribute($key, $value);
+		return $this;
 	}
 
 	/**
