@@ -84,7 +84,7 @@ use PHPHtmlParser\Dom;
 use App\Services\Connector;
 
 $dom = new Dom;
-$dom->loadFromUrl('http://google.com', new Connector);
+$dom->loadFromUrl('http://google.com', [], new Connector);
 $html = $dom->outerHtml;
 ```
 
