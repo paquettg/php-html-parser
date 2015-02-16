@@ -15,7 +15,11 @@ class Curl implements CurlInterface {
 	public function get($url)
 	{
 		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		
+		if(!ini_get('open_basedir')) {
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		}
+		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 
