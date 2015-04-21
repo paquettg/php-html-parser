@@ -123,6 +123,20 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></br>', $dom->find('div', 0)->innerHtml);
 	}
 
+	public function testLoadNoValueAttribute()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="content"><div class="grid-container" ui-view>Main content here</div></div>');
+		$this->assertEquals('<div class="content"><div class="grid-container" ui-view>Main content here</div></div>', $dom->innerHtml);
+	}
+
+	public function testLoadNoValueAttributeBefore()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="content"><div ui-view class="grid-container">Main content here</div></div>');
+		$this->assertEquals('<div class="content"><div ui-view class="grid-container">Main content here</div></div>', $dom->innerHtml);
+	}
+
 	public function testLoadUpperCase()
 	{
 		$dom = new Dom;

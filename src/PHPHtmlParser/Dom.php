@@ -372,7 +372,7 @@ class Dom {
 		return $str;
 	}
 
-	/**
+	/**<?php
 	 * Attempts to parse the html in content.
 	 */
 	protected function parse()
@@ -550,7 +550,10 @@ class Dom {
 					'value'       => null,
 					'doubleQuote' => true,
 				];
-				$this->content->rewind(1);
+				if ($this->content->char() != '>')
+				{
+					$this->content->rewind(1);
+				}
 			}
 		}
 

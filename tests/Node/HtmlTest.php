@@ -224,6 +224,29 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<div class="all"><a href=\'http://google.com\'>link</a><br /></div>', $parent->outerHtml);
 	}
 
+	public function testOuterHtmlNoValueAttribute()
+	{
+		$parent  = new HtmlNode('div');
+		$parent->setAttribute('class', [
+			'value'       => 'all',
+			'doubleQuote' => true,
+		]);
+		$childa  = new HtmlNode('a');
+		$childa->setAttribute('href', [
+			'value'       => 'http://google.com',
+			'doubleQuote' => false,
+		]);
+		$childa->setAttribute('ui-view', null);
+		$childbr = new HtmlNode('br');
+		$childbr->getTag()->selfClosing();
+
+		$parent->addChild($childa);
+		$parent->addChild($childbr);
+		$childa->addChild(new TextNode('link'));
+
+		$this->assertEquals('<div class="all"><a href=\'http://google.com\' ui-view>link</a><br /></div>', $parent->outerHtml);
+	}
+
 	public function testText()
 	{
 		$a    = new Tag('a');
