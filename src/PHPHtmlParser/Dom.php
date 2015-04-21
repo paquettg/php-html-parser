@@ -161,6 +161,34 @@ class Dom {
 	}
 
 	/**
+	 * Parsers the html of the given string. Used for load(), loadFromFile(),
+	 * and loadFromUrl().
+	 *
+	 * @param string $str
+	 * @param array $option
+	 * @chainable
+	 */
+	public function loadStr($str, $option)
+	{
+		$this->options = new Options;
+		$this->options->setOptions($this->globalOptions)
+		              ->setOptions($option);
+
+		$this->rawSize = strlen($str);
+		$this->raw     = $str;
+
+		$html = $this->clean($str);
+
+		$this->size    = strlen($str);
+		$this->content = new Content($html);
+
+		$this->parse();
+		$this->detectCharset();
+
+		return $this;
+	}
+
+	/**
 	 * Sets a global options array to be used by all load calls.
 	 *
 	 * @param array $options
@@ -289,34 +317,6 @@ class Dom {
 	{
 		$this->isLoaded();
 		return $this->find('.'.$class);
-	}
-
-	/**
-	 * Parsers the html of the given string. Used for load(), loadFromFile(),
-	 * and loadFromUrl().
-	 *
-	 * @param string $str
-	 * @param array $option
-	 * @chainable
-	 */
-	protected function loadStr($str, $option)
-	{
-		$this->options = new Options;
-		$this->options->setOptions($this->globalOptions)
-		              ->setOptions($option);
-
-		$this->rawSize = strlen($str);
-		$this->raw     = $str;
-
-		$html = $this->clean($str);
-
-		$this->size    = strlen($str);
-		$this->content = new Content($html);
-
-		$this->parse();
-		$this->detectCharset();
-
-		return $this;
 	}
 
 	/**
