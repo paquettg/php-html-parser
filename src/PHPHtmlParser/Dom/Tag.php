@@ -46,7 +46,7 @@ class Tag {
 
 	public function __get($key)
 	{
-		return $this->getAttribute($key);
+		return$this->getAttribute($key);
 	}
 
 	public function __set($key, $value)
@@ -133,7 +133,7 @@ class Tag {
 	{
 		foreach ($attr as $key => $value)
 		{
-			$this->attr[$key] = $value;
+			$this->setAttribute($key, $value);
 		}
 
 		return $this;

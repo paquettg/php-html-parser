@@ -25,6 +25,25 @@ class NodeTagTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('http://google.com', $tag->getAttribute('href')['value']);
 	}
 
+	public function testSetAttributeNoArray()
+	{
+		$tag = new Tag('a');
+		$tag->setAttribute('href', 'http://google.com');
+		$this->assertEquals('http://google.com', $tag->getAttribute('href')['value']);
+	}
+
+	public function testSetAttributesNoDoubleArray()
+	{
+		$attr = [
+			'href'  => 'http://google.com',
+			'class' => 'funtimes',
+		];
+
+		$tag = new Tag('a');
+		$tag->setAttributes($attr);
+		$this->assertEquals('funtimes', $tag->class['value']);
+	}
+
 	public function testNoise()
 	{
 		$tag = new Tag('a');
@@ -42,6 +61,13 @@ class NodeTagTest extends PHPUnit_Framework_TestCase {
 
 		$tag = new Tag('a');
 		$tag->setAttributes($attr);
+		$this->assertEquals('http://google.com', $tag->href['value']);
+	}
+
+	public function testSetAttributeMagic()
+	{
+		$tag = new Tag('a');
+		$tag->href = 'http://google.com';
 		$this->assertEquals('http://google.com', $tag->href['value']);
 	}
 
