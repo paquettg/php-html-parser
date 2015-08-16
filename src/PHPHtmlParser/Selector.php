@@ -11,7 +11,7 @@ class Selector {
 	 *
 	 * @var string
 	 */
-	protected $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
+	protected $pattern = "/([\w-:\*>]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
 
 	protected $selectors = [];
 
@@ -51,9 +51,17 @@ class Selector {
 			if (count($selector) == 0)
 				continue;
 
+			$options = [];
 			foreach ($selector as $rule)
 			{
-				$nodes = $this->seek($nodes, $rule);
+				if ($rule['alterNext'])
+				{
+					$options[] = $this->alterNext($rule);
+					continue;
+				}
+				$nodes = $this->seek($nodes, $rule, $options);
+				// clear the options
+				$options = [];
 			}
 
 			// this is the final set of nodes
@@ -81,11 +89,18 @@ class Selector {
 		foreach ($matches as $match)
 		{
 			// default values
-			$tag	  = strtolower(trim($match[1]));
-			$operator = '=';
-			$key	  = null;
-			$value	  = null;
-			$noKey	  = false;
+			$tag	   = strtolower(trim($match[1]));
+			$operator  = '=';
+			$key	   = null;
+			$value	   = null;
+			$noKey	   = false;
+			$alterNext = false;
+
+			// check for elements that alter the behavior of the next element
+			if ($tag == '>')
+			{
+				$alterNext = true;
+			}
 
 			// check for id selector
 			if ( ! empty($match[2]))
@@ -123,11 +138,12 @@ class Selector {
 			}
 
 			$result[] = [
-				'tag'	   => $tag,
-				'key'	   => $key,
-				'value'    => $value,
-				'operator' => $operator,
-				'noKey'    => $noKey,
+				'tag'	    => $tag,
+				'key'	    => $key,
+				'value'     => $value,
+				'operator'  => $operator,
+				'noKey'     => $noKey,
+				'alterNext' => $alterNext,
 			];
 			if (trim($match[7]) == ',')
 			{
@@ -149,9 +165,10 @@ class Selector {
 	 *
 	 * @param array $nodes
 	 * @param array $rule
+	 * @param array $options
 	 * @recursive
 	 */
-	protected function seek(array $nodes, array $rule)
+	protected function seek(array $nodes, array $rule, array $options)
 	{
 		// XPath index
 		if ( ! empty($rule['tag']) AND ! empty($rule['key']) AND
@@ -172,6 +189,8 @@ class Selector {
 			}
 			return [];
 		}
+
+		$options = $this->flattenOptions($options);
 
 		$return = [];
 		foreach ($nodes as $node)
@@ -256,7 +275,7 @@ class Selector {
 							{
 								$check = $this->match($rule['operator'], $rule['value'], $class);
 							}
-							if ($check) 
+							if ($check)
 								break;
 						}
 					}
@@ -294,10 +313,12 @@ class Selector {
 				}
 			}
 
-			if (count($children) > 0)
+			if ((! isset($options['checkGrandChildren']) ||
+			    $options['checkGrandChildren'])
+			    && count($children) > 0)
 			{
 				// we have children that failed but are not leaves.
-				$matches = $this->seek($children, $rule);
+				$matches = $this->seek($children, $rule, $options);
 				foreach ($matches as $match)
 				{
 					$return[] = $match;
@@ -338,5 +359,43 @@ class Selector {
 				return preg_match("/".$pattern."/i", $value);
 		}
 		return false;
+	}
+
+	/**
+	 * Attempts to figure out what the alteration will be for
+	 * the next element.
+	 *
+	 * @param array $rule
+	 * @return array
+	 */
+	protected function alterNext($rule)
+	{
+		$options = [];
+		if ($rule['tag'] == '>')
+		{
+			$options['checkGrandChildren'] = false;
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Flattens the option array.
+	 * 
+	 * @param array $optionsArray
+	 * @return array
+	 */
+	protected function flattenOptions(array $optionsArray)
+	{
+		$options = [];
+		foreach ($optionsArray as $optionArray)
+		{
+			foreach ($optionArray as $key => $option)
+			{
+				$options[$key] = $option;
+			}
+		}
+
+		return $options;
 	}
 }

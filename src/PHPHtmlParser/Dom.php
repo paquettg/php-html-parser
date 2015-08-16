@@ -372,7 +372,7 @@ class Dom {
 		return $str;
 	}
 
-	/**<?php
+	/**
 	 * Attempts to parse the html in content.
 	 */
 	protected function parse()

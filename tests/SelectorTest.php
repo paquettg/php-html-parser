@@ -157,4 +157,50 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 		$selector = new Selector('div[1]');
 		$this->assertEquals($parent->id(), $selector->find($parent)[0]->id());
 	}
+
+	public function testFindChildMultipleLevelsDeep()
+	{
+	    $root   = new HtmlNode(new Tag('root'));
+	    $parent = new HtmlNode(new Tag('div'));
+	    $child1 = new HtmlNode(new Tag('ul'));
+	    $child2 = new HtmlNode(new Tag('li'));
+	    $root->addChild($parent);
+	    $parent->addChild($child1);
+	    $child1->addChild($child2);
+
+	    $selector = new Selector('div li');
+	    $this->assertEquals(1, count($selector->find($root)));
+	}
+
+	public function testFindAllChildren()
+	{
+	    $root   = new HtmlNode(new Tag('root'));
+	    $parent = new HtmlNode(new Tag('div'));
+	    $child1 = new HtmlNode(new Tag('ul'));
+	    $child2 = new HtmlNode(new Tag('span'));
+	    $child3 = new HtmlNode(new Tag('ul'));
+	    $root->addChild($parent);
+	    $parent->addChild($child1);
+	    $child2->addChild($child3);
+	    $parent->addChild($child2);
+
+	    $selector = new Selector('div ul');
+	    $this->assertEquals(2, count($selector->find($root)));
+	}
+
+	public function testFindChildUsingChildSelector()
+	{
+	    $root   = new HtmlNode(new Tag('root'));
+	    $parent = new HtmlNode(new Tag('div'));
+	    $child1 = new HtmlNode(new Tag('ul'));
+	    $child2 = new HtmlNode(new Tag('span'));
+	    $child3 = new HtmlNode(new Tag('ul'));
+	    $root->addChild($parent);
+	    $parent->addChild($child1);
+	    $child2->addChild($child3);
+	    $parent->addChild($child2);
+
+	    $selector = new Selector('div > ul');
+	    $this->assertEquals(1, count($selector->find($root)));
+	}
 }
