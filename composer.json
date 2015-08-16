@@ -18,7 +18,7 @@
         "paquettg/string-encode": "0.1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.4.*",
+        "phpunit/phpunit": "4.8.*",
         "satooshi/php-coveralls": "0.6.*",
         "mockery/mockery": "0.9.*"
     },
