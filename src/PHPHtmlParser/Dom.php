@@ -344,30 +344,30 @@ class Dom {
 		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
 
 		// strip the doctype
-		$str = preg_replace("'<!doctype(.*?)>'is", '', $str);
+		$str = mb_eregi_replace("<!doctype(.*?)>", '', $str);
 
 		// strip out comments
-		$str = preg_replace("'<!--(.*?)-->'is", '', $str);
+		$str = mb_eregi_replace("<!--(.*?)-->", '', $str);
 		
 		// strip out cdata
-		$str = preg_replace("'<!\[CDATA\[(.*?)\]\]>'is", '', $str);
+		$str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
 		
 		// strip out <script> tags
-		$str = preg_replace("'<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>'is", '', $str);
-		$str = preg_replace("'<\s*script\s*>(.*?)<\s*/\s*script\s*>'is", '', $str);
+		$str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
+		$str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
 		
 		// strip out <style> tags
-		$str = preg_replace("'<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>'is", '', $str);
-		$str = preg_replace("'<\s*style\s*>(.*?)<\s*/\s*style\s*>'is", '', $str);
+		$str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
+		$str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
 		
 		// strip out preformatted tags
-		$str = preg_replace("'<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>'is", '', $str);
+		$str = mb_eregi_replace("<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>", '', $str);
 		
 		// strip out server side scripts
-		$str = preg_replace("'(<\?)(.*?)(\?>)'s", '', $str);
+		$str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
 		
 		// strip smarty scripts
-		$str = preg_replace("'(\{\w)(.*?)(\})'s", '', $str);
+		$str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
 
 		return $str;
 	}

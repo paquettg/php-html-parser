@@ -32,7 +32,7 @@ class TextNode extends AbstractNode {
 	public function __construct($text)
 	{
 		// remove double spaces
-		$text = preg_replace('/\s+/', ' ', $text);
+		$text = mb_ereg_replace('\s+', ' ', $text);
 
 		$this->text = $text;
 		$this->tag	= new Tag('text');
