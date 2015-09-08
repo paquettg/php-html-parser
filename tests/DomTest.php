@@ -257,4 +257,18 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		]);
 		$this->assertNotEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', $dom->find('table input', 1)->outerHtml);
 	}
+
+	public function testScriptCleanerScriptTag()
+	{
+		$dom = new Dom;
+		$dom->load('
+		<p>.....</p>
+		<script>
+		Some code ... 
+		document.write("<script src=\'some script\'><\/script>") 
+		Some code ... 
+		</script>
+		<p>....</p>');
+		$this->assertEquals('....', $dom->getElementsByTag('p')[1]->innerHtml);
+	}
 }
