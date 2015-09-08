@@ -114,7 +114,7 @@ class Dom {
 	public function load($str, $options = [])
 	{
 		// check if it's a file
-		if (is_file($str))
+		if (strpos($str, "\n") === FALSE && is_file($str))
 		{
 			return $this->loadFromFile($str, $options);
 		}
