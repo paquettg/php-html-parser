@@ -7,19 +7,19 @@ use PHPHtmlParser\Exceptions\ChildNotFoundException;
 class HtmlNode extends ArrayNode {
 
 	/**
-	 * Remembers what the innerHtml was if it was scaned previously.
+	 * Remembers what the innerHtml was if it was scanned previously.
 	 */
 	protected $innerHtml = null;
 
 	/**
-	 * Remembers what the outerHtml was if it was scaned previously.
+	 * Remembers what the outerHtml was if it was scanned previously.
 	 *
 	 * @var string
 	 */
 	protected $outerHtml = null;
 
 	/**
-	 * Remembers what the text was if it was scaned previously.
+	 * Remembers what the text was if it was scanned previously.
 	 *
 	 * @var string
 	 */
@@ -35,7 +35,9 @@ class HtmlNode extends ArrayNode {
 
 	/**
 	 * Sets up the tag of this node.
-	 */
+     *
+     * @param $tag
+     */
 	public function __construct($tag)
 	{
 		if ( ! $tag instanceof Tag)

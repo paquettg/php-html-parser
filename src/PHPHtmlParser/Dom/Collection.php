@@ -5,6 +5,7 @@ use Countable;
 use ArrayAccess;
 use ArrayIterator;
 use IteratorAggregate;
+use PHPHtmlParser\Exceptions\EmptyCollectionException;
 
 class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	
@@ -22,7 +23,8 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 * @param string $method
 	 * @param array $arguments
 	 * @return mixed;
-	 */
+     * @throws EmptyCollectionException
+     */
 	public function __call($method, $arguments)
 	{
 		$node = reset($this->collection);
@@ -30,6 +32,10 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 		{
 			return call_user_func_array([$node, $method], $arguments);
 		}
+        else
+        {
+            throw new EmptyCollectionException('The collection does not contain any Nodes.');
+        }
 	}
 
 	/**
@@ -38,7 +44,8 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 *
 	 * @param mixed $key
 	 * @return mixed
-	 */
+     * @throws EmptyCollectionException
+     */
 	public function __get($key)
 	{
 		$node = reset($this->collection);
@@ -46,6 +53,10 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 		{
 			return $node->$key;
 		}
+        else
+        {
+            throw new EmptyCollectionException('The collection does not contain any Nodes.');
+        }
 	}
 
 	/** 
@@ -53,7 +64,8 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 * the collection.
 	 *
 	 * @return string
-	 */
+     * @throws EmptyCollectionException
+     */
 	public function __toString()
 	{
 		$node = reset($this->collection);
@@ -61,6 +73,10 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 		{
 			return (string) $node;
 		}
+        else
+        {
+            throw new EmptyCollectionException('The collection does not contain any Nodes.');
+        }
 	}
 
 	/** 
@@ -126,9 +142,9 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 * Gets a node at the given offset, or null
 	 *
 	 * @param mixed $offset
-	 * @return $offset
+	 * @return mixed
 	 */
-	public function offsetGet($offset) 
+	public function offsetGet($offset)
 	{
 		return isset($this->collection[$offset]) ? $this->collection[$offset] : null;
 	}

@@ -55,7 +55,7 @@ final class StaticDom {
 	 * new object.
 	 *
 	 * @param string $str
-	 * @chainable
+	 * @return $this
 	 */
 	public static function load($str)
 	{
@@ -69,7 +69,7 @@ final class StaticDom {
 	 * new object.
 
 	 * @param string $file
-	 * @chainable
+	 * @return $this
 	 */
 	public static function loadFromFile($file)
 	{
@@ -84,7 +84,7 @@ final class StaticDom {
 	 *
 	 * @param string $url
 	 * @param CurlInterface $curl
-	 * @chainable
+	 * @return $this
 	 */
 	public static function loadFromUrl($url, CurlInterface $curl = null)
 	{

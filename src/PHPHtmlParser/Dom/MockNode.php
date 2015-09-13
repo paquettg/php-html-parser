@@ -4,7 +4,7 @@ namespace PHPHtmlParser\Dom;
 /**
  * This mock object is used solely for testing the abstract
  * class Node with out any potential side effects caused
- * by testing a supperclass of Node.
+ * by testing a supper class of Node.
  *
  * This object is not to be used for any other reason.
  */

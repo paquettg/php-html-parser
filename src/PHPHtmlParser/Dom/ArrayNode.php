@@ -4,7 +4,6 @@ namespace PHPHtmlParser\Dom;
 use Countable;
 use ArrayIterator;
 use IteratorAggregate;
-use PHPHtmlParser\Exceptions\IncorrectChildMethodException;
 
 /**
  * Dom node object which will allow users to use it as

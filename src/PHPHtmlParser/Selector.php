@@ -1,6 +1,7 @@
 <?php
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
@@ -39,10 +40,10 @@ class Selector {
 	 * Attempts to find the selectors starting from the given
 	 * node object.
 	 *
-	 * @param Node $noda
-	 * @return array
-	 */
-	public function find($node)
+     * @param AbstractNode $node
+     * @return array|Collection
+     */
+	public function find(AbstractNode $node)
 	{
 		$results = new Collection;
 		foreach ($this->selectors as $selector)
@@ -166,6 +167,7 @@ class Selector {
 	 * @param array $nodes
 	 * @param array $rule
 	 * @param array $options
+     * @return array
 	 * @recursive
 	 */
 	protected function seek(array $nodes, array $rule, array $options)

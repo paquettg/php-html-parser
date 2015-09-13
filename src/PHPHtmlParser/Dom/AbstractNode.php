@@ -19,7 +19,7 @@ abstract class AbstractNode {
 	/**
 	 * Contains the tag name/type
 	 *
-	 * @var string
+	 * @var \PHPHtmlParser\Dom\Tag
 	 */
 	protected $tag;
 
@@ -40,7 +40,7 @@ abstract class AbstractNode {
 	/**
 	 * Contains the parent Node.
 	 *
-	 * @var Node
+	 * @var AbstractNode
 	 */
 	protected $parent = null;
 
@@ -121,7 +121,7 @@ abstract class AbstractNode {
 	/**
 	 * Returns the parent of node.
 	 *
-	 * @return Node
+	 * @return AbstractNode
 	 */
 	public function getParent()
 	{
@@ -132,7 +132,7 @@ abstract class AbstractNode {
 	 * Sets the parent node.
 	 *
 	 * @param AbstractNode $parent
-	 * @chainable
+	 * @return $this
 	 * @throws CircularException
 	 */
 	public function setParent(AbstractNode $parent)
@@ -251,12 +251,11 @@ abstract class AbstractNode {
 	 * 
 	 * @param AbstractNode $child
 	 * @return bool
-	 * @throws CircularExceptionException
+     * @throws CircularException
 	 */
 	public function addChild(AbstractNode $child)
 	{
-		$key	 = null;
-		$newKey  = 0;
+		$key = null;
 
 		// check integrity
 		if ($this->isAncestor($child->id()))
@@ -302,7 +301,7 @@ abstract class AbstractNode {
 	 * Removes the child by id.
 	 *
 	 * @param int $id
-	 * @chainable
+	 * @return $this
 	 */
 	public function removeChild($id)
 	{
@@ -533,7 +532,7 @@ abstract class AbstractNode {
 	 *
 	 * @param string $key
 	 * @param string $value
-	 * @chainable
+	 * @return $this
 	 */
 	public function setAttribute($key, $value)
 	{

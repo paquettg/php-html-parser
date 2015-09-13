@@ -72,7 +72,7 @@ class Content {
 	 * Moves the current position forward.
 	 *
 	 * @param int $count
-	 * @chainable
+	 * @return $this
 	 */
 	public function fastForward($count)
 	{
@@ -84,7 +84,7 @@ class Content {
 	 * Moves the current position backward.
 	 *
 	 * @param int $count
-	 * @chainable
+	 * @return $this
 	 */
 	public function rewind($count)
 	{

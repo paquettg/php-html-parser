@@ -1,6 +1,13 @@
 <?php
 namespace PHPHtmlParser;
 
+/**
+ * Class Options
+ * @package PHPHtmlParser
+ * @property bool whitespaceTextNode
+ * @property bool strict
+ * @property bool enforceEncoding
+ */
 class Options {
 
 	/**
@@ -45,7 +52,7 @@ class Options {
 	 * Sets a new options param to override the current option array.
 	 *
 	 * @param array $options
-	 * @chainable
+	 * @return $this
 	 */
 	public function setOptions(array $options)
 	{

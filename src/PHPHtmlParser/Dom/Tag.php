@@ -67,7 +67,7 @@ class Tag {
 	/**
 	 * Sets the tag to be self closing.
 	 *
-	 * @chainable
+	 * @return $this
 	 */
 	public function selfClosing()
 	{
@@ -93,7 +93,8 @@ class Tag {
 	/**
 	 * Sets the noise for this tag (if any)
 	 *
-	 * @chainable
+     * @param $noise
+	 * @return $this
 	 */
 	public function noise($noise)
 	{
@@ -106,7 +107,7 @@ class Tag {
 	 *
 	 * @param string $key
 	 * @param mixed $value
-	 * @chainable
+	 * @return $this
 	 */
 	public function setAttribute($key, $value)
 	{
@@ -127,7 +128,7 @@ class Tag {
 	 * Sets the attributes for this tag
 	 *
 	 * @param array $attr
-	 * @chainable
+	 * @return $this
 	 */
 	public function setAttributes(array $attr)
 	{

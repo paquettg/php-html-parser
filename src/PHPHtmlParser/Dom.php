@@ -108,8 +108,8 @@ class Dom {
 	 * Attempts to load the dom from any resource, string, file, or URL.
 	 *
 	 * @param string $str
-	 * @param array $option
-	 * @chainable
+	 * @param array $options
+	 * @return $this
 	 */
 	public function load($str, $options = [])
 	{
@@ -131,8 +131,8 @@ class Dom {
 	 * Loads the dom from a document file/url
 	 *
 	 * @param string $file
-	 * @param array $option
-	 * @chainable
+	 * @param array $options
+	 * @return $this
 	 */
 	public function loadFromFile($file, $options = [])
 	{
@@ -144,9 +144,9 @@ class Dom {
 	 * the content from a url.
 	 *
 	 * @param string $url
-	 * @param array $option
+	 * @param array $options
 	 * @param CurlInterface $curl
-	 * @chainable
+	 * @return $this
 	 */
 	public function loadFromUrl($url, $options = [], CurlInterface $curl = null)
 	{
@@ -166,7 +166,7 @@ class Dom {
 	 *
 	 * @param string $str
 	 * @param array $option
-	 * @chainable
+	 * @return $this
 	 */
 	public function loadStr($str, $option)
 	{
@@ -192,7 +192,7 @@ class Dom {
 	 * Sets a global options array to be used by all load calls.
 	 *
 	 * @param array $options
-	 * @chainable
+	 * @return $this
 	 */
 	public function setOptions(array $options)
 	{
@@ -218,7 +218,7 @@ class Dom {
 	 * be self closing.
 	 *
 	 * @param string|array $tag
-	 * @chainable
+	 * @return $this
 	 */
 	public function addSelfClosingTag($tag)
 	{
@@ -238,7 +238,7 @@ class Dom {
 	 * always be self closing.
 	 *
 	 * @param string|array $tag
-	 * @chainable
+	 * @return $this
 	 */
 	public function removeSelfClosingTag($tag)
 	{
@@ -253,7 +253,7 @@ class Dom {
 	/**
 	 * Sets the list of self closing tags to empty.
 	 *
-	 * @chainable
+	 * @return $this
 	 */
 	public function clearSelfClosingTags()
 	{
@@ -264,7 +264,7 @@ class Dom {
 	/**
 	 * Simple wrapper function that returns the first child.
 	 *
-	 * @return Node
+	 * @return \PHPHtmlParser\Dom\AbstractNode
 	 */
 	public function firstChild()
 	{
@@ -275,7 +275,7 @@ class Dom {
 	/**
 	 * Simple wrapper function that returns the last child.
 	 *
-	 * @return AbstractNode
+	 * @return \PHPHtmlParser\Dom\AbstractNode
 	 */
 	public function lastChild()
 	{
@@ -287,7 +287,8 @@ class Dom {
 	 * Simple wrapper function that returns an element by the
 	 * id.
 	 *
-	 * @return AbstractNode
+     * @param string $id
+	 * @return \PHPHtmlParser\Dom\AbstractNode
 	 */
 	public function getElementById($id)
 	{
@@ -298,7 +299,8 @@ class Dom {
 	/**
 	 * Simple wrapper function that returns all elements by 
 	 * tag name.
-	 *
+     *
+     * @param string $name
 	 * @return array
 	 */
 	public function getElementsByTag($name)
@@ -311,6 +313,7 @@ class Dom {
 	 * Simple wrapper function that returns all elements by
 	 * class name.
 	 *
+     * @param string $class
 	 * @return array
 	 */
 	public function getElementsByClass($class)
@@ -442,7 +445,8 @@ class Dom {
 	 * Attempt to parse a tag out of the content.
 	 *
 	 * @return array
-	 */
+     * @throws StrictException
+     */
 	protected function parseTag()
 	{
 		$return = [
