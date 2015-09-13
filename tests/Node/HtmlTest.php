@@ -1,5 +1,6 @@
 <?php
 
+
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Dom\MockNode;
@@ -367,5 +368,67 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$node = new HtmlNode('a');
 		$node->setAttribute('class', 'foo');
 		$this->assertEquals('foo', $node->getAttribute('class'));
+	}
+
+	public function testCountable()
+	{
+		$div = new Tag('div');
+		$div->setAttributes([
+			'class' => [
+				'value'       => 'all',
+				'doubleQuote' => true,
+			],
+		]);
+		$a = new Tag('a');
+		$a->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+		]);
+		$br = new Tag('br');
+		$br->selfClosing();
+
+		$parent  = new HtmlNode($div);
+		$childa  = new HtmlNode($a);
+		$childbr = new HtmlNode($br);
+		$parent->addChild($childa);
+		$parent->addChild($childbr);
+		$childa->addChild(new TextNode('link'));
+
+		$this->assertEquals(count($parent->getChildren()), count($parent));
+	}
+
+	public function testIterator()
+	{
+		$div = new Tag('div');
+		$div->setAttributes([
+			'class' => [
+				'value'       => 'all',
+				'doubleQuote' => true,
+			],
+		]);
+		$a = new Tag('a');
+		$a->setAttributes([
+			'href' => [
+				'value'       => 'http://google.com',
+				'doubleQuote' => false,
+			],
+		]);
+		$br = new Tag('br');
+		$br->selfClosing();
+
+		$parent  = new HtmlNode($div);
+		$childa  = new HtmlNode($a);
+		$childbr = new HtmlNode($br);
+		$parent->addChild($childa);
+		$parent->addChild($childbr);
+		$childa->addChild(new TextNode('link'));
+
+		$children = 0;
+		foreach ($parent as $child) {
+			++$children;
+		}
+		$this->assertEquals(2, $children);
 	}
 }

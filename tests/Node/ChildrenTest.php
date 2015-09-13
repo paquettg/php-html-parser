@@ -41,4 +41,24 @@ class NodeChildTest extends PHPUnit_Framework_TestCase {
 		$child2->setParent($parent);
 		$this->assertEquals($child->id(), $child2->previousSibling()->id());
 	}
+
+	public function testGetChildren()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$child->setParent($parent);
+		$child2->setParent($parent);
+		$this->assertEquals($child->id(), $parent->getChildren()[0]->id());
+	}
+
+	public function testCountChildren()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$child->setParent($parent);
+		$child2->setParent($parent);
+		$this->assertEquals(2, $parent->countChildren());
+	}
 }
