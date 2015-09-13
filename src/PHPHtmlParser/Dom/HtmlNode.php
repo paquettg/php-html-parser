@@ -50,7 +50,7 @@ class HtmlNode extends AbstractNode {
 	 * Gets the inner html of this node.
 	 *
 	 * @return string
-	 * @throws UnkownChildTypeException
+	 * @throws UnknownChildTypeException
 	 */
 	public function innerHtml()
 	{
