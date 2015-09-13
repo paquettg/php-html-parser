@@ -211,6 +211,41 @@ abstract class AbstractNode {
 	}
 
 	/**
+	 * Returns a new array of child nodes
+	 *
+	 * @return array
+	 */
+	public function getChildren() 
+	{
+		$nodes = [];
+		try
+		{
+			$child = $this->firstChild();
+			do
+			{
+				$nodes[] = $child;
+				$child   = $this->nextChild($child->id());
+			} while ( ! is_null($child));
+		}
+		catch (ChildNotFoundException $e)
+		{
+			// we are done looking for children
+		}
+
+		return $nodes;
+	}
+
+	/**
+	 * Counts children
+	 *
+	 * @return int
+	 */
+	public function countChildren() 
+	{
+		return count($this->children);
+	}
+
+	/**
 	 * Adds a child node to this node and returns the id of the child for this
 	 * parent.
 	 * 
