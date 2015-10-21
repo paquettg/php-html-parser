@@ -358,6 +358,26 @@ abstract class AbstractNode {
 	}
 
 	/**
+	 * Checks if the given node id is a child of the 
+	 * current node.
+	 *
+	 * @param int $id
+	 * @return bool
+	 */
+	public function isChild ($id)
+	{
+		foreach ($this->children as $childId => $child)
+		{
+			if ($id == $childId)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Checks if the given node id is a decendant of the 
 	 * current node.
 	 *
@@ -366,13 +386,14 @@ abstract class AbstractNode {
 	 */
 	public function isDescendant($id)
 	{
+		if ($this->isChild ($id))
+		{
+			return true;
+		}
+
 		foreach ($this->children as $childId => $child)
 		{
-			if ($id == $childId)
-			{
-				return true;
-			}
-			elseif ($child['node']->hasChildren())
+			if ($child['node']->hasChildren())
 			{
 				if ($child['node']->isDescendant($id))
 				{
