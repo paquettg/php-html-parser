@@ -12,13 +12,16 @@ class Options {
 
 	/**
 	 * The default options array
-	 * 
+	 *
 	 * @param array
 	 */
 	protected $defaults = [
 		'whitespaceTextNode' => true,
 		'strict'             => false,
 		'enforceEncoding'    => null,
+		'cleanupInput'       => true,
+		'removeScripts'      => true,
+		'removeStyles'       => true
 	];
 
 	/**
@@ -76,7 +79,7 @@ class Options {
 		{
 			return $this->options[$key];
 		}
-		
+
 		return null;
 	}
 }

@@ -8,7 +8,7 @@ use PHPHtmlParser\Exceptions\StrictException;
 use stringEncode\Encode;
 
 class Dom {
-	
+
 	/**
 	 * The charset we would like the output to be in.
 	 *
@@ -43,7 +43,7 @@ class Dom {
 	 * @var int
 	 */
 	protected $rawSize;
-	
+
 	/**
 	 * The size of the document after it is cleaned.
 	 *
@@ -59,7 +59,7 @@ class Dom {
 	protected $globalOptions = [];
 
 	/**
-	 * A persistent option object to be used for all options in the 
+	 * A persistent option object to be used for all options in the
 	 * parsing of the file.
 	 *
 	 * @var Options
@@ -232,7 +232,7 @@ class Dom {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * Removes the tag (or tags in an array) from the list of tags that will
 	 * always be self closing.
@@ -297,7 +297,7 @@ class Dom {
 	}
 
 	/**
-	 * Simple wrapper function that returns all elements by 
+	 * Simple wrapper function that returns all elements by
 	 * tag name.
      *
      * @param string $name
@@ -343,6 +343,12 @@ class Dom {
 	 */
 	protected function clean($str)
 	{
+		if ($this->options->get('cleanupInput') != true)
+		{
+			// skip entire cleanup step
+			return $str;
+		}
+
 		// clean out the \n\r
 		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
 
@@ -351,24 +357,30 @@ class Dom {
 
 		// strip out comments
 		$str = mb_eregi_replace("<!--(.*?)-->", '', $str);
-		
+
 		// strip out cdata
 		$str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
-		
+
 		// strip out <script> tags
-		$str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
-		$str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
-		
+		if ($this->options->get('removeScripts') == true)
+		{
+			$str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
+			$str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
+		}
+
 		// strip out <style> tags
-		$str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
-		$str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
-		
+		if ($this->options->get('removeStyles') == true)
+		{
+			$str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
+			$str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
+		}
+
 		// strip out preformatted tags
 		$str = mb_eregi_replace("<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>", '', $str);
-		
+
 		// strip out server side scripts
 		$str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
-		
+
 		// strip smarty scripts
 		$str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
 
@@ -469,7 +481,7 @@ class Dom {
 			// move to end of tag
 			$this->content->copyUntil('>');
 			$this->content->fastForward(1);
-			
+
 			// check if this closing tag counts
 			$tag = strtolower($tag);
 			if (in_array($tag, $this->selfClosing))
@@ -570,7 +582,7 @@ class Dom {
 		}
 		elseif (in_array($tag, $this->selfClosing))
 		{
-			
+
 			// Should be a self closing tag, check if we are strict
 			if ( $this->options->strict)
 			{
@@ -581,7 +593,7 @@ class Dom {
 			// We force self closing on this tag.
 			$node->getTag()->selfClosing();
 		}
-		
+
 		$this->content->fastForward(1);
 
 		$return['status'] = true;
@@ -630,7 +642,7 @@ class Dom {
 			$this->root->propagateEncoding($encode);
 			return true;
 		}
-		
+
 		// no charset found
 		$this->root->propagateEncoding($encode);
 		return false;
