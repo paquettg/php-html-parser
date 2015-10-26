@@ -498,12 +498,12 @@ class Dom {
 			$space = $this->content->skipByToken('blank', true);
 			if (empty($space))
 			{
-				break;
+				$this->content->fastForward(1);
+				continue;
 			}
 
 			$name = $this->content->copyByToken('equal', true);
-			if ($name == '/' OR
-			    empty($name))
+			if ($name == '/')
 			{
 				break;
 			}
@@ -525,14 +525,26 @@ class Dom {
 					case '"':
 						$attr['doubleQuote'] = true;
 						$this->content->fastForward(1);
-						$attr['value'] = $this->content->copyUntil('"', false, true);
+						$string = $this->content->copyUntil('"', true, true);
+						do
+						{
+							$moreString = $this->content->copyUntilUnless('"', '=>');
+							$string .= $moreString;
+						} while( ! empty($moreString));
+						$attr['value'] = $string;
 						$this->content->fastForward(1);
 						$node->getTag()->$name = $attr;
 						break;
 					case "'":
 						$attr['doubleQuote'] = false;
 						$this->content->fastForward(1);
-						$attr['value'] = $this->content->copyUntil("'", false, true);
+						$string = $this->content->copyUntil("'", true, true);
+						do
+						{
+							$moreString = $this->content->copyUntilUnless("'", '=>');
+							$string .= $moreString;
+						} while( ! empty($moreString));
+						$attr['value'] = $string;
 						$this->content->fastForward(1);
 						$node->getTag()->$name = $attr;
 						break;

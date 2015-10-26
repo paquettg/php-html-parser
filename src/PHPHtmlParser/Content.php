@@ -34,11 +34,6 @@ class Content {
 	protected $slash = " />\r\n\t";
 	protected $attr  = ' >';
 
-	/**
-	 * Sets up the content block with its content.
-	 *
-	 * @param $content
-	 */
 	public function __construct($content)
 	{
 		$this->content = $content;
@@ -46,11 +41,6 @@ class Content {
 		$this->pos     = 0;
 	}
 
-	/**
-	 * Returns the current position of the parser.
-	 *
-	 * @return int
-	 */
 	public function getPosition()
 	{
 		return $this->pos;
@@ -163,17 +153,41 @@ class Content {
 			$this->pos = $this->size;
 			return $return;
 		}
-		
+
 		if ($position == $this->pos)
 		{
 			// we are at the right place
 			return '';
 		}
-		
+
 		$return = substr($this->content, $this->pos, $position - $this->pos);
 		// set the new position
 		$this->pos = $position;
 		return $return;
+	}
+
+	/**
+	 * Copies the content until the string is found and return it
+	 * unless the 'unless' is found in the substring.
+	 *
+	 * @param string $string
+	 * @param string $unless
+	 * @return string
+	 */
+	public function copyUntilUnless($string, $unless)
+	{
+		$lastPos = $this->pos;
+		$this->fastForward(1);
+		$foundString = $this->copyUntil($string, true, true);
+
+		$position = strcspn($foundString, $unless);
+		if ($position == strlen($foundString))
+		{
+			return $string.$foundString;
+		}
+		// rewind changes and return nothing
+		$this->pos = $lastPos;
+		return '';
 	}
 
 	/**
@@ -202,7 +216,7 @@ class Content {
 	{
 		$len = strspn($this->content, $string, $this->pos);
 		
-		// make it chain-able if they don't want a copy
+		// make it chainable if they don't want a copy
 		$return = $this;
 		if ($copy)
 		{

@@ -271,4 +271,18 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		<p>....</p>');
 		$this->assertEquals('....', $dom->getElementsByTag('p')[1]->innerHtml);
 	}
+
+	public function testMultipleDoubleQuotes()
+	{
+		$dom = new Dom;
+		$dom->load('<a title="This is a "test" of double quotes" href="http://www.example.com">Hello</a>');
+		$this->assertEquals('This is a "test" of double quotes', $dom->getElementsByTag('a')[0]->title);
+	}
+
+	public function testMultipleSingleQuotes()
+	{
+		$dom = new Dom;
+		$dom->load("<a title='Ain't this the best' href=\"http://www.example.com\">Hello</a>");
+		$this->assertEquals("Ain't this the best", $dom->getElementsByTag('a')[0]->title);
+	}
 }
