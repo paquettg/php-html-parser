@@ -30,7 +30,7 @@ class StrictTest extends PHPUnit_Framework_TestCase {
 		}
 		catch (StrictException $e)
 		{
-			$this->assertEquals("Tag 'br' is not self clossing! (character #31)", $e->getMessage());
+			$this->assertEquals("Tag 'br' is not self closing! (character #31)", $e->getMessage());
 		}
 	}
 

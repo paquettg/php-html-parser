@@ -170,14 +170,16 @@ class HtmlNode extends ArrayNode {
 		$text = '';
 		foreach ($this->children as $child)
 		{
-			if ($child['node'] instanceof TextNode)
+			/** @var AbstractNode $node */
+			$node = $child['node'];
+			if ($node instanceof TextNode)
 			{
 				$text .= $child['node']->text;
 			}
 			elseif($lookInChildren and
-			       $child['node'] instanceof HtmlNode)
+			       $node instanceof HtmlNode)
 			{
-				$text .= $child['node']->text($lookInChildren);
+				$text .= $node->text($lookInChildren);
 			}
 		}
 

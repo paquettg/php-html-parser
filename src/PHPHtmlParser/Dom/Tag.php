@@ -25,7 +25,7 @@ class Tag {
 	 *
 	 * @var bool
 	 */
-	protected $selfclosing = false;
+	protected $selfClosing = false;
 
 	/**
 	 * Tag noise
@@ -39,16 +39,33 @@ class Tag {
 	 */
 	protected $encode = null;
 
+	/**
+	 * Sets up the tag with a name.
+	 *
+	 * @param $name
+	 */
 	public function __construct($name)
 	{
 		$this->name = $name;
 	}
 
+	/**
+	 * Magic method to get any of the attributes.
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
 	public function __get($key)
 	{
 		return$this->getAttribute($key);
 	}
 
+	/**
+	 * Magic method to set any attribute.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 */
 	public function __set($key, $value)
 	{
 		$this->setAttribute($key, $value);
@@ -71,7 +88,7 @@ class Tag {
 	 */
 	public function selfClosing()
 	{
-		$this->selfclosing = true;
+		$this->selfClosing = true;
 		return $this;
 	}
 
@@ -82,9 +99,14 @@ class Tag {
 	 */
 	public function isSelfClosing()
 	{
-		return $this->selfclosing;
+		return $this->selfClosing;
 	}
 
+	/**
+	 * Sets the encoding type to be used.
+	 *
+	 * @param Encode $encode
+	 */
 	public function setEncoding(Encode $encode)
 	{
 		$this->encode = $encode;
@@ -205,7 +227,7 @@ class Tag {
 			}
 		}
 
-		if ($this->selfclosing)
+		if ($this->selfClosing)
 		{
 			return $return.' />';
 		}
@@ -222,7 +244,7 @@ class Tag {
 	 */
 	public function makeClosingTag()
 	{
-		if ($this->selfclosing)
+		if ($this->selfClosing)
 		{
 			return '';
 		}

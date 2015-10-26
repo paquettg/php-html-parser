@@ -34,6 +34,11 @@ class Content {
 	protected $slash = " />\r\n\t";
 	protected $attr  = ' >';
 
+	/**
+	 * Sets up the content block with its content.
+	 *
+	 * @param $content
+	 */
 	public function __construct($content)
 	{
 		$this->content = $content;
@@ -41,6 +46,11 @@ class Content {
 		$this->pos     = 0;
 	}
 
+	/**
+	 * Returns the current position of the parser.
+	 *
+	 * @return int
+	 */
 	public function getPosition()
 	{
 		return $this->pos;
@@ -192,7 +202,7 @@ class Content {
 	{
 		$len = strspn($this->content, $string, $this->pos);
 		
-		// make it chainable if they don't want a copy
+		// make it chain-able if they don't want a copy
 		$return = $this;
 		if ($copy)
 		{

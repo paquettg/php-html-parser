@@ -8,7 +8,7 @@ use PHPHtmlParser\Exceptions\ChildNotFoundException;
 class Selector {
 
 	/** 
-	 * Pattern of CSS selectors, modified from mootools
+	 * Pattern of CSS selectors, modified from 'mootools'
 	 *
 	 * @var string
 	 */
@@ -117,7 +117,7 @@ class Selector {
 				$value = $match[3];
 			}
 
-			// and final attribute selecter
+			// and final attribute selector
 			if ( ! empty($match[4]))
 			{
 				$key = strtolower($match[4]);
@@ -177,6 +177,7 @@ class Selector {
 			is_numeric($rule['key']))
 		{
 			$count = 0;
+			/** @var AbstractNode $node */
 			foreach ($nodes as $node)
 			{
 				if ($rule['tag'] == '*' OR $rule['tag'] == $node->getTag()->name())
@@ -195,6 +196,7 @@ class Selector {
 		$options = $this->flattenOptions($options);
 
 		$return = [];
+		/** @var AbstractNode $node */
 		foreach ($nodes as $node)
 		{
 			// check if we are a leaf
@@ -226,7 +228,7 @@ class Selector {
 				if ( ! empty($rule['tag']) AND $rule['tag'] != $child->getTag()->name() AND
 					$rule['tag'] != '*')
 				{
-					// child faild tag check
+					// child failed tag check
 					$pass = false;
 				}
 				

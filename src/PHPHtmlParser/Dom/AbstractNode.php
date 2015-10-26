@@ -58,6 +58,9 @@ abstract class AbstractNode {
 	 */
 	protected $encode;
 
+	/**
+	 * Creates a unique spl hash for this node.
+	 */
 	public function __construct()
 	{
 		$this->id = spl_object_hash($this);
@@ -179,7 +182,9 @@ abstract class AbstractNode {
 		// check children
 		foreach ($this->children as $id => $child)
 		{
-			$child['node']->propagateEncoding($encode);
+			/** @var AbstractNode $node */
+			$node = $child['node'];
+			$node->propagateEncoding($encode);
 		}
 	}
 
@@ -378,7 +383,7 @@ abstract class AbstractNode {
 	}
 
 	/**
-	 * Checks if the given node id is a decendant of the 
+	 * Checks if the given node id is a descendant of the
 	 * current node.
 	 *
 	 * @param int $id
@@ -393,12 +398,12 @@ abstract class AbstractNode {
 
 		foreach ($this->children as $childId => $child)
 		{
-			if ($child['node']->hasChildren())
+			/** @var AbstractNode $node */
+			$node = $child['node'];
+			if ($node->hasChildren() &&
+				$node->isDescendant($id))
 			{
-				if ($child['node']->isDescendant($id))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 
@@ -591,7 +596,7 @@ abstract class AbstractNode {
 	 *
 	 * @param string $selector
 	 * @param int	 $nth
-	 * @return array
+	 * @return array|AbstractNode
 	 */
 	public function find($selector, $nth = null)
 	{
@@ -619,10 +624,10 @@ abstract class AbstractNode {
 	 *
 	 * Far future enhancement
 	 * Look at all the parent tags of this image to see if they specify a class or id that has an img selector that specifies a height or width
-	 * Note that in this case, the class or id will have the img subselector for it to apply to the image.
+	 * Note that in this case, the class or id will have the img sub-selector for it to apply to the image.
 	 *
 	 * ridiculously far future development
-	 * If the class or id is specified in a SEPARATE css file thats not on the page, go get it and do what we were just doing for the ones on the page.
+	 * If the class or id is specified in a SEPARATE css file that's not on the page, go get it and do what we were just doing for the ones on the page.
 	 *
 	 * @author John Schlick
 	 * @return array an array containing the 'height' and 'width' of the image on the page or -1 if we can't figure it out.
@@ -651,9 +656,9 @@ abstract class AbstractNode {
 		// Now look for an inline style.
 		if ( ! is_null($this->tag->getAttribute('style')))
 		{
-			// Thanks to user gnarf from stackoverflow for this regular expression.
+			// Thanks to user 'gnarf' from stackoverflow for this regular expression.
 			$attributes = [];
-			preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->tag->getAttribute['style'], $matches, PREG_SET_ORDER);
+			preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->tag->getAttribute('style'), $matches, PREG_SET_ORDER);
 			foreach ($matches as $match) 
 			{
 				$attributes[$match[1]] = $match[2];

@@ -1,6 +1,7 @@
 <?php
 namespace PHPHtmlParser;
 
+use PHPHtmlPArser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Exceptions\NotLoadedException;
@@ -363,7 +364,7 @@ class Dom {
 		$str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
 		$str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
 		
-		// strip out preformatted tags
+		// strip out pre-formatted tags
 		$str = mb_eregi_replace("<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>", '', $str);
 		
 		// strip out server side scripts
@@ -422,6 +423,7 @@ class Dom {
 					continue;
 				}
 
+				/** @var AbstractNode $node */
 				$node = $info['node'];
 				$activeNode->addChild($node);
 
@@ -575,7 +577,7 @@ class Dom {
 			if ( $this->options->strict)
 			{
 				$character = $this->content->getPosition();
-				throw new StrictException("Tag '$tag' is not self clossing! (character #$character)");
+				throw new StrictException("Tag '$tag' is not self closing! (character #$character)");
 			}
 
 			// We force self closing on this tag.
