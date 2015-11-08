@@ -20,6 +20,9 @@ class Options {
 		'whitespaceTextNode' => true,
 		'strict'             => false,
 		'enforceEncoding'    => null,
+		'cleanupInput'       => true,
+		'removeScripts'      => true,
+		'removeStyles'       => true
 	];
 
 	/**
