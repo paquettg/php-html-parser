@@ -1,8 +1,13 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
+/**
+ * Class TextNode
+ *
+ * @package PHPHtmlParser\Dom
+ */
 class TextNode extends AbstractNode {
-	
+
 	/**
 	 * This is a text node.
 	 *
@@ -35,7 +40,7 @@ class TextNode extends AbstractNode {
 		$text = mb_ereg_replace('\s+', ' ', $text);
 
 		$this->text = $text;
-		$this->tag	= new Tag('text');
+		$this->tag  = new Tag('text');
 		parent::__construct();
 	}
 
@@ -55,7 +60,7 @@ class TextNode extends AbstractNode {
 				return $this->convertedText;
 			}
 			$text = $this->encode->convert($this->text);
-			
+
 			// remember the conversion
 			$this->convertedText = $text;
 

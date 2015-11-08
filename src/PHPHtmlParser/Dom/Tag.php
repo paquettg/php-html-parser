@@ -4,6 +4,11 @@ namespace PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom;
 use stringEncode\Encode;
 
+/**
+ * Class Tag
+ *
+ * @package PHPHtmlParser\Dom
+ */
 class Tag {
 
 	/**
@@ -57,7 +62,7 @@ class Tag {
 	 */
 	public function __get($key)
 	{
-		return$this->getAttribute($key);
+		return $this->getAttribute($key);
 	}
 
 	/**
@@ -89,6 +94,7 @@ class Tag {
 	public function selfClosing()
 	{
 		$this->selfClosing = true;
+
 		return $this;
 	}
 
@@ -115,14 +121,15 @@ class Tag {
 	/**
 	 * Sets the noise for this tag (if any)
 	 *
-     * @param $noise
+	 * @param $noise
 	 * @return $this
 	 */
 	public function noise($noise)
 	{
 		$this->noise = $noise;
+
 		return $this;
-	}		
+	}
 
 	/**
 	 * Set an attribute for this tag.
@@ -174,6 +181,7 @@ class Tag {
 		{
 			$return[$attr] = $this->getAttribute($attr);
 		}
+
 		return $return;
 	}
 

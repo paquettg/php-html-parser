@@ -1,6 +1,11 @@
 <?php
 namespace PHPHtmlParser;
 
+/**
+ * Class Content
+ *
+ * @package PHPHtmlParser
+ */
 class Content {
 
 	/**
@@ -32,8 +37,13 @@ class Content {
 	protected $blank = " \t\r\n";
 	protected $equal = ' =/>';
 	protected $slash = " />\r\n\t";
-	protected $attr  = ' >';
+	protected $attr = ' >';
 
+	/**
+	 * Content constructor.
+	 *
+	 * @param $content
+	 */
 	public function __construct($content)
 	{
 		$this->content = $content;
@@ -41,6 +51,11 @@ class Content {
 		$this->pos     = 0;
 	}
 
+	/**
+	 * Returns the current position of the content.
+	 *
+	 * @return int
+	 */
 	public function getPosition()
 	{
 		return $this->pos;
@@ -77,6 +92,7 @@ class Content {
 	public function fastForward($count)
 	{
 		$this->pos += $count;
+
 		return $this;
 	}
 
@@ -93,6 +109,7 @@ class Content {
 		{
 			$this->pos = 0;
 		}
+
 		return $this;
 	}
 
@@ -115,8 +132,8 @@ class Content {
 		if ($escape)
 		{
 			$position = $this->pos;
-			$found	  = false;
-			while( ! $found)
+			$found    = false;
+			while ( ! $found)
 			{
 				$position = strpos($this->content, $string, $position);
 				if ($position === false)
@@ -138,7 +155,7 @@ class Content {
 		}
 		elseif ($char)
 		{
-			$position  = strcspn($this->content, $string, $this->pos);
+			$position = strcspn($this->content, $string, $this->pos);
 			$position += $this->pos;
 		}
 		else
@@ -151,6 +168,7 @@ class Content {
 			// could not find character, just return the remaining of the content
 			$return    = substr($this->content, $this->pos, $this->size - $this->pos);
 			$this->pos = $this->size;
+
 			return $return;
 		}
 
@@ -163,6 +181,7 @@ class Content {
 		$return = substr($this->content, $this->pos, $position - $this->pos);
 		// set the new position
 		$this->pos = $position;
+
 		return $return;
 	}
 
@@ -187,6 +206,7 @@ class Content {
 		}
 		// rewind changes and return nothing
 		$this->pos = $lastPos;
+
 		return '';
 	}
 
@@ -202,6 +222,7 @@ class Content {
 	public function copyByToken($token, $char = false, $escape = false)
 	{
 		$string = $this->$token;
+
 		return $this->copyUntil($string, $char, $escape);
 	}
 
@@ -215,7 +236,7 @@ class Content {
 	public function skip($string, $copy = false)
 	{
 		$len = strspn($this->content, $string, $this->pos);
-		
+
 		// make it chainable if they don't want a copy
 		$return = $this;
 		if ($copy)
@@ -240,6 +261,7 @@ class Content {
 	public function skipByToken($token, $copy = false)
 	{
 		$string = $this->$token;
+
 		return $this->skip($string, $copy);
 	}
 }

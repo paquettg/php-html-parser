@@ -8,8 +8,13 @@ use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\Exceptions\StrictException;
 use stringEncode\Encode;
 
+/**
+ * Class Dom
+ *
+ * @package PHPHtmlParser
+ */
 class Dom {
-	
+
 	/**
 	 * The charset we would like the output to be in.
 	 *
@@ -44,7 +49,7 @@ class Dom {
 	 * @var int
 	 */
 	protected $rawSize;
-	
+
 	/**
 	 * The size of the document after it is cleaned.
 	 *
@@ -60,7 +65,7 @@ class Dom {
 	protected $globalOptions = [];
 
 	/**
-	 * A persistent option object to be used for all options in the 
+	 * A persistent option object to be used for all options in the
 	 * parsing of the file.
 	 *
 	 * @var Options
@@ -115,12 +120,12 @@ class Dom {
 	public function load($str, $options = [])
 	{
 		// check if it's a file
-		if (strpos($str, "\n") === FALSE && is_file($str))
+		if (strpos($str, "\n") === false && is_file($str))
 		{
 			return $this->loadFromFile($str, $options);
 		}
 		// check if it's a url
-		if (preg_match("/^https?:\/\//i",$str))
+		if (preg_match("/^https?:\/\//i", $str))
 		{
 			return $this->loadFromUrl($str, $options);
 		}
@@ -198,6 +203,7 @@ class Dom {
 	public function setOptions(array $options)
 	{
 		$this->globalOptions = $options;
+
 		return $this;
 	}
 
@@ -205,12 +211,13 @@ class Dom {
 	 * Find elements by css selector on the root node.
 	 *
 	 * @param string $selector
-	 * @param int	 $nth
+	 * @param int $nth
 	 * @return array
 	 */
 	public function find($selector, $nth = null)
 	{
 		$this->isLoaded();
+
 		return $this->root->find($selector, $nth);
 	}
 
@@ -231,9 +238,10 @@ class Dom {
 		{
 			$this->selfClosing[] = $value;
 		}
+
 		return $this;
 	}
-	
+
 	/**
 	 * Removes the tag (or tags in an array) from the list of tags that will
 	 * always be self closing.
@@ -248,6 +256,7 @@ class Dom {
 			$tag = [$tag];
 		}
 		$this->selfClosing = array_diff($this->selfClosing, $tag);
+
 		return $this;
 	}
 
@@ -259,6 +268,7 @@ class Dom {
 	public function clearSelfClosingTags()
 	{
 		$this->selfClosing = [];
+
 		return $this;
 	}
 
@@ -270,6 +280,7 @@ class Dom {
 	public function firstChild()
 	{
 		$this->isLoaded();
+
 		return $this->root->firstChild();
 	}
 
@@ -281,6 +292,7 @@ class Dom {
 	public function lastChild()
 	{
 		$this->isLoaded();
+
 		return $this->root->lastChild();
 	}
 
@@ -288,25 +300,27 @@ class Dom {
 	 * Simple wrapper function that returns an element by the
 	 * id.
 	 *
-     * @param string $id
+	 * @param string $id
 	 * @return \PHPHtmlParser\Dom\AbstractNode
 	 */
 	public function getElementById($id)
 	{
 		$this->isLoaded();
+
 		return $this->find('#'.$id, 0);
 	}
 
 	/**
-	 * Simple wrapper function that returns all elements by 
+	 * Simple wrapper function that returns all elements by
 	 * tag name.
-     *
-     * @param string $name
+	 *
+	 * @param string $name
 	 * @return array
 	 */
 	public function getElementsByTag($name)
 	{
 		$this->isLoaded();
+
 		return $this->find($name);
 	}
 
@@ -314,12 +328,13 @@ class Dom {
 	 * Simple wrapper function that returns all elements by
 	 * class name.
 	 *
-     * @param string $class
+	 * @param string $class
 	 * @return array
 	 */
 	public function getElementsByClass($class)
 	{
 		$this->isLoaded();
+
 		return $this->find('.'.$class);
 	}
 
@@ -352,24 +367,24 @@ class Dom {
 
 		// strip out comments
 		$str = mb_eregi_replace("<!--(.*?)-->", '', $str);
-		
+
 		// strip out cdata
 		$str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
-		
+
 		// strip out <script> tags
 		$str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
 		$str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
-		
+
 		// strip out <style> tags
 		$str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
 		$str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
-		
+
 		// strip out pre-formatted tags
 		$str = mb_eregi_replace("<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>", '', $str);
-		
+
 		// strip out server side scripts
 		$str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
-		
+
 		// strip smarty scripts
 		$str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
 
@@ -434,7 +449,8 @@ class Dom {
 				}
 			}
 			else if ($this->options->whitespaceTextNode or
-				     trim($str) != '')
+				trim($str) != ''
+			)
 			{
 				// we found text we care about
 				$textNode = new TextNode($str);
@@ -447,14 +463,14 @@ class Dom {
 	 * Attempt to parse a tag out of the content.
 	 *
 	 * @return array
-     * @throws StrictException
-     */
+	 * @throws StrictException
+	 */
 	protected function parseTag()
 	{
 		$return = [
 			'status'  => false,
 			'closing' => false,
-			'node'	  => null,
+			'node'    => null,
 		];
 		if ($this->content->char() != '<')
 		{
@@ -471,29 +487,31 @@ class Dom {
 			// move to end of tag
 			$this->content->copyUntil('>');
 			$this->content->fastForward(1);
-			
+
 			// check if this closing tag counts
 			$tag = strtolower($tag);
 			if (in_array($tag, $this->selfClosing))
 			{
 				$return['status'] = true;
+
 				return $return;
 			}
 			else
 			{
 				$return['status']  = true;
 				$return['closing'] = true;
-				$return['tag']	   = strtolower($tag);
+				$return['tag']     = strtolower($tag);
 			}
+
 			return $return;
 		}
 
-		$tag   = strtolower($this->content->copyByToken('slash', true));
-		$node  = new HtmlNode($tag);
+		$tag  = strtolower($this->content->copyByToken('slash', true));
+		$node = new HtmlNode($tag);
 
 		// attributes
 		while ($this->content->char() != '>' and
-		       $this->content->char() != '/')
+			$this->content->char() != '/')
 		{
 			$space = $this->content->skipByToken('blank', true);
 			if (empty($space))
@@ -530,7 +548,7 @@ class Dom {
 						{
 							$moreString = $this->content->copyUntilUnless('"', '=>');
 							$string .= $moreString;
-						} while( ! empty($moreString));
+						} while ( ! empty($moreString));
 						$attr['value'] = $string;
 						$this->content->fastForward(1);
 						$node->getTag()->$name = $attr;
@@ -543,7 +561,7 @@ class Dom {
 						{
 							$moreString = $this->content->copyUntilUnless("'", '=>');
 							$string .= $moreString;
-						} while( ! empty($moreString));
+						} while ( ! empty($moreString));
 						$attr['value'] = $string;
 						$this->content->fastForward(1);
 						$node->getTag()->$name = $attr;
@@ -584,9 +602,9 @@ class Dom {
 		}
 		elseif (in_array($tag, $this->selfClosing))
 		{
-			
+
 			// Should be a self closing tag, check if we are strict
-			if ( $this->options->strict)
+			if ($this->options->strict)
 			{
 				$character = $this->content->getPosition();
 				throw new StrictException("Tag '$tag' is not self closing! (character #$character)");
@@ -595,11 +613,12 @@ class Dom {
 			// We force self closing on this tag.
 			$node->getTag()->selfClosing();
 		}
-		
+
 		$this->content->fastForward(1);
 
 		$return['status'] = true;
 		$return['node']   = $node;
+
 		return $return;
 	}
 
@@ -620,6 +639,7 @@ class Dom {
 			//  they want to enforce the given encoding
 			$encode->from($this->options->enforceEncoding);
 			$encode->to($this->options->enforceEncoding);
+
 			return false;
 		}
 
@@ -628,6 +648,7 @@ class Dom {
 		{
 			// could not find meta tag
 			$this->root->propagateEncoding($encode);
+
 			return false;
 		}
 		$content = $meta->content;
@@ -635,6 +656,7 @@ class Dom {
 		{
 			// could not find content
 			$this->root->propagateEncoding($encode);
+
 			return false;
 		}
 		$matches = [];
@@ -642,11 +664,13 @@ class Dom {
 		{
 			$encode->from(trim($matches[1]));
 			$this->root->propagateEncoding($encode);
+
 			return true;
 		}
-		
+
 		// no charset found
 		$this->root->propagateEncoding($encode);
+
 		return false;
 	}
 }

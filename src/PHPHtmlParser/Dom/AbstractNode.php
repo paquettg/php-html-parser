@@ -81,14 +81,14 @@ abstract class AbstractNode {
 		}
 		switch (strtolower($key))
 		{
-			case 'outerhtml': 
+			case 'outerhtml':
 				return $this->outerHtml();
-			case 'innerhtml': 
+			case 'innerhtml':
 				return $this->innerHtml();
-			case 'text': 
+			case 'text':
 				return $this->text();
 		}
-		
+
 		return null;
 	}
 
@@ -145,7 +145,7 @@ abstract class AbstractNode {
 		{
 			throw new CircularException('Can not add descendant "'.$parent->id().'" as my parent.');
 		}
-		
+
 		// remove from old parent
 		if ( ! is_null($this->parent))
 		{
@@ -169,7 +169,7 @@ abstract class AbstractNode {
 		return $this;
 	}
 
-	/** 
+	/**
 	 * Sets the encoding class to this node and propagates it
 	 * to all its children.
 	 *
@@ -220,7 +220,7 @@ abstract class AbstractNode {
 	 *
 	 * @return array
 	 */
-	public function getChildren() 
+	public function getChildren()
 	{
 		$nodes = [];
 		try
@@ -245,7 +245,7 @@ abstract class AbstractNode {
 	 *
 	 * @return int
 	 */
-	public function countChildren() 
+	public function countChildren()
 	{
 		return count($this->children);
 	}
@@ -253,10 +253,10 @@ abstract class AbstractNode {
 	/**
 	 * Adds a child node to this node and returns the id of the child for this
 	 * parent.
-	 * 
+	 *
 	 * @param AbstractNode $child
 	 * @return bool
-     * @throws CircularException
+	 * @throws CircularException
 	 */
 	public function addChild(AbstractNode $child)
 	{
@@ -281,8 +281,8 @@ abstract class AbstractNode {
 				// we already have this child
 				return false;
 			}
-			$sibling = $this->lastChild();
-			$key	 = $sibling->id();
+			$sibling                      = $this->lastChild();
+			$key                          = $sibling->id();
 			$this->children[$key]['next'] = $child->id();
 		}
 
@@ -311,7 +311,9 @@ abstract class AbstractNode {
 	public function removeChild($id)
 	{
 		if ( ! isset($this->children[$id]))
+		{
 			return $this;
+		}
 
 		// handle moving next and previous assignments.
 		$next = $this->children[$id]['next'];
@@ -324,7 +326,7 @@ abstract class AbstractNode {
 		{
 			$this->children[$prev]['next'] = $next;
 		}
-		
+
 		// remove the child
 		unset($this->children[$id]);
 
@@ -345,6 +347,7 @@ abstract class AbstractNode {
 	{
 		$child = $this->getChild($id);
 		$next  = $this->children[$child->id()]['next'];
+
 		return $this->getChild($next);
 	}
 
@@ -359,17 +362,18 @@ abstract class AbstractNode {
 	{
 		$child = $this->getchild($id);
 		$next  = $this->children[$child->id()]['prev'];
+
 		return $this->getChild($next);
 	}
 
 	/**
-	 * Checks if the given node id is a child of the 
+	 * Checks if the given node id is a child of the
 	 * current node.
 	 *
 	 * @param int $id
 	 * @return bool
 	 */
-	public function isChild ($id)
+	public function isChild($id)
 	{
 		foreach ($this->children as $childId => $child)
 		{
@@ -391,7 +395,7 @@ abstract class AbstractNode {
 	 */
 	public function isDescendant($id)
 	{
-		if ($this->isChild ($id))
+		if ($this->isChild($id))
 		{
 			return true;
 		}
@@ -401,7 +405,8 @@ abstract class AbstractNode {
 			/** @var AbstractNode $node */
 			$node = $child['node'];
 			if ($node->hasChildren() &&
-				$node->isDescendant($id))
+				$node->isDescendant($id)
+			)
 			{
 				return true;
 			}
@@ -425,6 +430,7 @@ abstract class AbstractNode {
 			{
 				return true;
 			}
+
 			return $this->parent->isAncestor($id);
 		}
 
@@ -445,6 +451,7 @@ abstract class AbstractNode {
 			{
 				return $this->parent;
 			}
+
 			return $this->parent->getAncestor($id);
 		}
 
@@ -461,6 +468,7 @@ abstract class AbstractNode {
 	{
 		reset($this->children);
 		$key = key($this->children);
+
 		return $this->getChild($key);
 	}
 
@@ -473,6 +481,7 @@ abstract class AbstractNode {
 	{
 		end($this->children);
 		$key = key($this->children);
+
 		return $this->getChild($key);
 	}
 
@@ -531,6 +540,7 @@ abstract class AbstractNode {
 		{
 			$attributes[$name] = $info['value'];
 		}
+
 		return $attributes;
 	}
 
@@ -563,6 +573,7 @@ abstract class AbstractNode {
 	public function setAttribute($key, $value)
 	{
 		$this->tag->setAttribute($key, $value);
+
 		return $this;
 	}
 
@@ -595,20 +606,22 @@ abstract class AbstractNode {
 	 * Find elements by css selector
 	 *
 	 * @param string $selector
-	 * @param int	 $nth
+	 * @param int $nth
 	 * @return array|AbstractNode
 	 */
 	public function find($selector, $nth = null)
 	{
 		$selector = new Selector($selector);
-		$nodes	  = $selector->find($this);
+		$nodes    = $selector->find($this);
 
 		if ( ! is_null($nth))
 		{
 			// return nth-element or array
 			if (isset($nodes[$nth]))
+			{
 				return $nodes[$nth];
-			
+			}
+
 			return null;
 		}
 
@@ -634,7 +647,7 @@ abstract class AbstractNode {
 	 */
 	public function get_display_size()
 	{
-		$width = -1;
+		$width  = -1;
 		$height = -1;
 
 		if ($this->tag->name() != 'img')
@@ -659,7 +672,7 @@ abstract class AbstractNode {
 			// Thanks to user 'gnarf' from stackoverflow for this regular expression.
 			$attributes = [];
 			preg_match_all("/([\w-]+)\s*:\s*([^;]+)\s*;?/", $this->tag->getAttribute('style'), $matches, PREG_SET_ORDER);
-			foreach ($matches as $match) 
+			foreach ($matches as $match)
 			{
 				$attributes[$match[1]] = $match[2];
 			}
@@ -698,8 +711,9 @@ abstract class AbstractNode {
 
 		$result = [
 			'height' => $height,
-			'width'  => $width
+			'width'  => $width,
 		];
+
 		return $result;
 	}
 

@@ -1,4 +1,10 @@
 <?php
 namespace PHPHtmlParser\Exceptions;
 
-final class ParentNotFoundException extends \Exception {}
+/**
+ * Class ParentNotFoundException
+ *
+ * @package PHPHtmlParser\Exceptions
+ */
+final class ParentNotFoundException extends \Exception {
+}

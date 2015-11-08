@@ -19,7 +19,7 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
 	abstract protected function getIteratorArray();
 
 	/**
-	 * Gets the iterator 
+	 * Gets the iterator
 	 *
 	 * @return ArrayIterator
 	 */

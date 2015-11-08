@@ -7,8 +7,13 @@ use ArrayIterator;
 use IteratorAggregate;
 use PHPHtmlParser\Exceptions\EmptyCollectionException;
 
+/**
+ * Class Collection
+ *
+ * @package PHPHtmlParser\Dom
+ */
 class Collection implements IteratorAggregate, ArrayAccess, Countable {
-	
+
 	/**
 	 * The collection of Nodes.
 	 *
@@ -23,8 +28,8 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 * @param string $method
 	 * @param array $arguments
 	 * @return mixed;
-     * @throws EmptyCollectionException
-     */
+	 * @throws EmptyCollectionException
+	 */
 	public function __call($method, $arguments)
 	{
 		$node = reset($this->collection);
@@ -32,10 +37,10 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 		{
 			return call_user_func_array([$node, $method], $arguments);
 		}
-        else
-        {
-            throw new EmptyCollectionException('The collection does not contain any Nodes.');
-        }
+		else
+		{
+			throw new EmptyCollectionException('The collection does not contain any Nodes.');
+		}
 	}
 
 	/**
@@ -44,8 +49,8 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 *
 	 * @param mixed $key
 	 * @return mixed
-     * @throws EmptyCollectionException
-     */
+	 * @throws EmptyCollectionException
+	 */
 	public function __get($key)
 	{
 		$node = reset($this->collection);
@@ -53,33 +58,33 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 		{
 			return $node->$key;
 		}
-        else
-        {
-            throw new EmptyCollectionException('The collection does not contain any Nodes.');
-        }
+		else
+		{
+			throw new EmptyCollectionException('The collection does not contain any Nodes.');
+		}
 	}
 
-	/** 
+	/**
 	 * Applies the magic string method to the first node in
 	 * the collection.
 	 *
 	 * @return string
-     * @throws EmptyCollectionException
-     */
+	 * @throws EmptyCollectionException
+	 */
 	public function __toString()
 	{
 		$node = reset($this->collection);
 		if ($node instanceof AbstractNode)
 		{
-			return (string) $node;
+			return (string)$node;
 		}
-        else
-        {
-            throw new EmptyCollectionException('The collection does not contain any Nodes.');
-        }
+		else
+		{
+			throw new EmptyCollectionException('The collection does not contain any Nodes.');
+		}
 	}
 
-	/** 
+	/**
 	 * Returns the count of the collection.
 	 *
 	 * @return int
@@ -89,7 +94,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 		return count($this->collection);
 	}
 
-	/** 
+	/**
 	 * Returns an iterator for the collection.
 	 *
 	 * @return ArrayIterator
@@ -105,13 +110,13 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 * @param mixed $offset
 	 * @param mixed $value
 	 */
-	public function offsetSet($offset, $value) 
+	public function offsetSet($offset, $value)
 	{
-		if (is_null($offset)) 
+		if (is_null($offset))
 		{
 			$this->collection[] = $value;
-		} 
-		else 
+		}
+		else
 		{
 			$this->collection[$offset] = $value;
 		}
@@ -123,7 +128,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 * @param mixed $offset
 	 * @return bool
 	 */
-	public function offsetExists($offset) 
+	public function offsetExists($offset)
 	{
 		return isset($this->collection[$offset]);
 	}
@@ -133,7 +138,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable {
 	 *
 	 * @param mixed $offset
 	 */
-	public function offsetUnset($offset) 
+	public function offsetUnset($offset)
 	{
 		unset($this->collection[$offset]);
 	}

@@ -1,4 +1,10 @@
 <?php
 namespace PHPHtmlParser\Exceptions;
 
-final class EmptyCollectionException extends \Exception {}
+/**
+ * Class EmptyCollectionException
+ *
+ * @package PHPHtmlParser\Exceptions
+ */
+final class EmptyCollectionException extends \Exception {
+}

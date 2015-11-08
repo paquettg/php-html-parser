@@ -10,11 +10,19 @@ namespace PHPHtmlParser\Dom;
  */
 class MockNode extends AbstractNode {
 
-	public function innerHtml() {}
+	public function innerHtml()
+	{
+	}
 
-	public function outerHtml() {}
+	public function outerHtml()
+	{
+	}
 
-	public function text() {}
+	public function text()
+	{
+	}
 
-	protected function clear() {}
+	protected function clear()
+	{
+	}
 }

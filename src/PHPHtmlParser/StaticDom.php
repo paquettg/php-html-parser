@@ -3,6 +3,11 @@ namespace PHPHtmlParser;
 
 use PHPHtmlParser\Exceptions\NotLoadedException;
 
+/**
+ * Class StaticDom
+ *
+ * @package PHPHtmlParser
+ */
 final class StaticDom {
 
 	private static $dom = null;
@@ -47,6 +52,7 @@ final class StaticDom {
 		{
 			self::$dom = $dom;
 		}
+
 		return true;
 	}
 
@@ -59,22 +65,24 @@ final class StaticDom {
 	 */
 	public static function load($str)
 	{
-		$dom	   = new Dom;
+		$dom       = new Dom;
 		self::$dom = $dom;
+
 		return $dom->load($str);
 	}
 
 	/**
 	 * Creates a new dom object and calls loadFromFile() on the
 	 * new object.
-
+	 *
 	 * @param string $file
 	 * @return $this
 	 */
 	public static function loadFromFile($file)
 	{
-		$dom	   = new Dom;
+		$dom       = new Dom;
 		self::$dom = $dom;
+
 		return $dom->loadFromFile($file);
 	}
 
@@ -88,7 +96,7 @@ final class StaticDom {
 	 */
 	public static function loadFromUrl($url, CurlInterface $curl = null)
 	{
-		$dom	   = new Dom;
+		$dom       = new Dom;
 		self::$dom = $dom;
 		if (is_null($curl))
 		{

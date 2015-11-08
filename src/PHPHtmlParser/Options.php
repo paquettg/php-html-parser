@@ -3,6 +3,7 @@ namespace PHPHtmlParser;
 
 /**
  * Class Options
+ *
  * @package PHPHtmlParser
  * @property bool whitespaceTextNode
  * @property bool strict
@@ -12,7 +13,7 @@ class Options {
 
 	/**
 	 * The default options array
-	 * 
+	 *
 	 * @param array
 	 */
 	protected $defaults = [
@@ -60,6 +61,7 @@ class Options {
 		{
 			$this->options[$key] = $option;
 		}
+
 		return $this;
 	}
 
@@ -76,7 +78,7 @@ class Options {
 		{
 			return $this->options[$key];
 		}
-		
+
 		return null;
 	}
 }

@@ -4,6 +4,11 @@ namespace PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
+/**
+ * Class HtmlNode
+ *
+ * @package PHPHtmlParser\Dom
+ */
 class HtmlNode extends ArrayNode {
 
 	/**
@@ -35,9 +40,9 @@ class HtmlNode extends ArrayNode {
 
 	/**
 	 * Sets up the tag of this node.
-     *
-     * @param $tag
-     */
+	 *
+	 * @param $tag
+	 */
 	public function __construct($tag)
 	{
 		if ( ! $tag instanceof Tag)
@@ -68,11 +73,11 @@ class HtmlNode extends ArrayNode {
 			return $this->innerHtml;
 		}
 
-		$child	= $this->firstChild();
+		$child  = $this->firstChild();
 		$string = '';
 
 		// continue to loop until we are out of children
-		while( ! is_null($child))
+		while ( ! is_null($child))
 		{
 			if ($child instanceof TextNode)
 			{
@@ -97,7 +102,7 @@ class HtmlNode extends ArrayNode {
 				$child = null;
 			}
 		}
-		
+
 		// remember the results
 		$this->innerHtml = $string;
 
@@ -113,7 +118,7 @@ class HtmlNode extends ArrayNode {
 	public function outerHtml()
 	{
 		// special handling for root
-		if ( $this->tag->name() == 'root')
+		if ($this->tag->name() == 'root')
 		{
 			return $this->innerHtml();
 		}
@@ -160,7 +165,7 @@ class HtmlNode extends ArrayNode {
 				return $this->textWithChildren;
 			}
 		}
-		elseif( ! is_null($this->text))
+		elseif ( ! is_null($this->text))
 		{
 			// we already know the results.
 			return $this->text;
@@ -176,8 +181,9 @@ class HtmlNode extends ArrayNode {
 			{
 				$text .= $child['node']->text;
 			}
-			elseif($lookInChildren and
-			       $node instanceof HtmlNode)
+			elseif ($lookInChildren and
+				$node instanceof HtmlNode
+			)
 			{
 				$text .= $node->text($lookInChildren);
 			}
@@ -204,12 +210,12 @@ class HtmlNode extends ArrayNode {
 	{
 		$this->innerHtml = null;
 		$this->outerHtml = null;
-		$this->text		 = null;
+		$this->text      = null;
 	}
 
 	/**
 	 * Returns all children of this html node.
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getIteratorArray()

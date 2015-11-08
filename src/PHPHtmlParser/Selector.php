@@ -5,9 +5,14 @@ use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
+/**
+ * Class Selector
+ *
+ * @package PHPHtmlParser
+ */
 class Selector {
 
-	/** 
+	/**
 	 * Pattern of CSS selectors, modified from 'mootools'
 	 *
 	 * @var string
@@ -40,9 +45,9 @@ class Selector {
 	 * Attempts to find the selectors starting from the given
 	 * node object.
 	 *
-     * @param AbstractNode $node
-     * @return array|Collection
-     */
+	 * @param AbstractNode $node
+	 * @return array|Collection
+	 */
 	public function find(AbstractNode $node)
 	{
 		$results = new Collection;
@@ -50,7 +55,9 @@ class Selector {
 		{
 			$nodes = [$node];
 			if (count($selector) == 0)
+			{
 				continue;
+			}
 
 			$options = [];
 			foreach ($selector as $rule)
@@ -84,17 +91,17 @@ class Selector {
 	{
 		$matches = [];
 		preg_match_all($this->pattern, trim($selector).' ', $matches, PREG_SET_ORDER);
-		
+
 		// skip tbody
 		$result = [];
 		foreach ($matches as $match)
 		{
 			// default values
-			$tag	   = strtolower(trim($match[1]));
+			$tag       = strtolower(trim($match[1]));
 			$operator  = '=';
-			$key	   = null;
-			$value	   = null;
-			$noKey	   = false;
+			$key       = null;
+			$value     = null;
+			$noKey     = false;
 			$alterNext = false;
 
 			// check for elements that alter the behavior of the next element
@@ -113,7 +120,7 @@ class Selector {
 			// check for class selector
 			if ( ! empty($match[3]))
 			{
-				$key = 'class';
+				$key   = 'class';
 				$value = $match[3];
 			}
 
@@ -130,17 +137,17 @@ class Selector {
 			{
 				$value = $match[6];
 			}
-			
+
 			// check for elements that do not have a specified attribute
-			if ( isset($key[0]) AND $key[0] == '!')
+			if (isset($key[0]) AND $key[0] == '!')
 			{
 				$key   = substr($key, 1);
 				$noKey = true;
 			}
 
 			$result[] = [
-				'tag'	    => $tag,
-				'key'	    => $key,
+				'tag'       => $tag,
+				'key'       => $key,
 				'value'     => $value,
 				'operator'  => $operator,
 				'noKey'     => $noKey,
@@ -149,10 +156,10 @@ class Selector {
 			if (trim($match[7]) == ',')
 			{
 				$this->selectors[] = $result;
-				$result			   = [];
+				$result            = [];
 			}
 		}
-		
+
 		// save last results
 		if (count($result) > 0)
 		{
@@ -161,20 +168,21 @@ class Selector {
 	}
 
 	/**
-	 * Attempts to find all children that match the rule 
+	 * Attempts to find all children that match the rule
 	 * given.
 	 *
 	 * @param array $nodes
 	 * @param array $rule
 	 * @param array $options
-     * @return array
+	 * @return array
 	 * @recursive
 	 */
 	protected function seek(array $nodes, array $rule, array $options)
 	{
 		// XPath index
 		if ( ! empty($rule['tag']) AND ! empty($rule['key']) AND
-			is_numeric($rule['key']))
+			is_numeric($rule['key'])
+		)
 		{
 			$count = 0;
 			/** @var AbstractNode $node */
@@ -190,6 +198,7 @@ class Selector {
 					}
 				}
 			}
+
 			return [];
 		}
 
@@ -201,10 +210,12 @@ class Selector {
 		{
 			// check if we are a leaf
 			if ( ! $node->hasChildren())
+			{
 				continue;
+			}
 
 			$children = [];
-			$child	  = $node->firstChild();
+			$child    = $node->firstChild();
 			while ( ! is_null($child))
 			{
 				// wild card, grab all
@@ -226,12 +237,13 @@ class Selector {
 				$pass = true;
 				// check tag
 				if ( ! empty($rule['tag']) AND $rule['tag'] != $child->getTag()->name() AND
-					$rule['tag'] != '*')
+					$rule['tag'] != '*'
+				)
 				{
 					// child failed tag check
 					$pass = false;
 				}
-				
+
 				// check key
 				if ($pass AND ! is_null($rule['key']))
 				{
@@ -244,8 +256,9 @@ class Selector {
 					}
 					else
 					{
-						if ($rule['key'] != 'plaintext' and 
-							is_null($child->getAttribute($rule['key'])))
+						if ($rule['key'] != 'plaintext' and
+							is_null($child->getAttribute($rule['key']))
+						)
 						{
 							$pass = false;
 						}
@@ -254,7 +267,8 @@ class Selector {
 
 				// compare values
 				if ($pass and ! is_null($rule['key']) and
-					 ! is_null($rule['value']) and $rule['value'] != '*')
+					! is_null($rule['value']) and $rule['value'] != '*'
+				)
 				{
 					if ($rule['key'] == 'plaintext')
 					{
@@ -280,7 +294,9 @@ class Selector {
 								$check = $this->match($rule['operator'], $rule['value'], $class);
 							}
 							if ($check)
+							{
 								break;
+							}
 						}
 					}
 
@@ -317,9 +333,10 @@ class Selector {
 				}
 			}
 
-			if ((! isset($options['checkGrandChildren']) ||
-			    $options['checkGrandChildren'])
-			    && count($children) > 0)
+			if (( ! isset($options['checkGrandChildren']) ||
+					$options['checkGrandChildren'])
+				&& count($children) > 0
+			)
 			{
 				// we have children that failed but are not leaves.
 				$matches = $this->seek($children, $rule, $options);
@@ -343,9 +360,9 @@ class Selector {
 	 */
 	protected function match($operator, $pattern, $value)
 	{
-		$value	 = strtolower($value);
+		$value   = strtolower($value);
 		$pattern = strtolower($pattern);
-		switch ($operator) 
+		switch ($operator)
 		{
 			case '=':
 				return $value === $pattern;
@@ -354,14 +371,16 @@ class Selector {
 			case '^=':
 				return preg_match('/^'.preg_quote($pattern, '/').'/', $value);
 			case '$=':
-				return preg_match('/'.preg_quote($pattern,'/').'$/', $value);
+				return preg_match('/'.preg_quote($pattern, '/').'$/', $value);
 			case '*=':
-				if ($pattern[0]=='/') 
+				if ($pattern[0] == '/')
 				{
 					return preg_match($pattern, $value);
 				}
+
 				return preg_match("/".$pattern."/i", $value);
 		}
+
 		return false;
 	}
 
@@ -385,7 +404,7 @@ class Selector {
 
 	/**
 	 * Flattens the option array.
-	 * 
+	 *
 	 * @param array $optionsArray
 	 * @return array
 	 */
