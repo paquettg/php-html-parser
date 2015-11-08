@@ -359,6 +359,12 @@ class Dom {
 	 */
 	protected function clean($str)
 	{
+		if ($this->options->get('cleanupInput') != true)
+		{
+			// skip entire cleanup step
+			return $str;
+		}
+
 		// clean out the \n\r
 		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
 
@@ -372,14 +378,20 @@ class Dom {
 		$str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
 
 		// strip out <script> tags
-		$str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
-		$str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
+		if ($this->options->get('removeScripts') == true)
+		{
+			$str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
+			$str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
+		}
 
 		// strip out <style> tags
-		$str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
-		$str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
+		if ($this->options->get('removeStyles') == true)
+		{
+			$str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
+			$str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
+		}
 
-		// strip out pre-formatted tags
+		// strip out preformatted tags
 		$str = mb_eregi_replace("<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>", '', $str);
 
 		// strip out server side scripts
