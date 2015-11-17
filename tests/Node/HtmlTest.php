@@ -271,7 +271,7 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 	{
 		$a    = new Tag('a');
 		$node = new HtmlNode($a);
-		
+
 		$this->assertEmpty($node->text());
 	}
 
@@ -430,5 +430,15 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 			++$children;
 		}
 		$this->assertEquals(2, $children);
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\ParentNotFoundException
+	 */
+	public function testAncestorByTagFailure()
+	{
+		$a    = new Tag('a');
+		$node = new HtmlNode($a);
+		$node->ancestorByTag('div');
 	}
 }

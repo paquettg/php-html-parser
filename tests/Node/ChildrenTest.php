@@ -32,6 +32,26 @@ class NodeChildTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($child2->id(), $child->nextSibling()->id());
 	}
 
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\ChildNotFoundException
+	 */
+	public function testNextSiblingNotFound()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child->setParent($parent);
+		$child->nextSibling();
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\ParentNotFoundException
+	 */
+	public function testNextSiblingNoParent()
+	{
+		$child = new Node;
+		$child->nextSibling();
+	}
+
 	public function testPreviousSibling()
 	{
 		$parent = new Node;
@@ -40,6 +60,26 @@ class NodeChildTest extends PHPUnit_Framework_TestCase {
 		$child->setParent($parent);
 		$child2->setParent($parent);
 		$this->assertEquals($child->id(), $child2->previousSibling()->id());
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\ChildNotFoundException
+	 */
+	public function testPreviousSiblingNotFound()
+	{
+		$parent = new Node;
+		$node = new Node;
+		$node->setParent($parent);
+		$node->previousSibling();
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\ParentNotFoundException
+	 */
+	public function testPreviousSiblingNoParent()
+	{
+		$child = new Node;
+		$child->previousSibling();
 	}
 
 	public function testGetChildren()

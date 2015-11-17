@@ -54,6 +54,13 @@ class NodeParentTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($parent->hasChildren());
 	}
 
+	public function testRemoveChildNotExists()
+	{
+		$parent = new Node;
+		$parent->removeChild(1);
+		$this->assertFalse($parent->hasChildren());
+	}
+
 	public function testNextChild()
 	{
 		$parent = new Node;
@@ -128,5 +135,72 @@ class NodeParentTest extends PHPUnit_Framework_TestCase {
 		$parent->addChild($child3);
 
 		$this->assertEquals($child3->id(), $parent->lastChild()->id());
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\CircularException
+	 */
+	public function testSetParentDescendantException()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$parent->addChild($child);
+		$parent->setParent($child);
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\CircularException
+	 */
+	public function testAddChildAncestorException()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$parent->addChild($child);
+		$child->addChild($parent);
+	}
+
+	/**
+	 * @expectedException PHPHtmlParser\Exceptions\CircularException
+	 */
+	public function testAddItselfAsChild()
+	{
+		$parent = new Node;
+		$parent->addChild($parent);
+	}
+
+
+	public function testIsAncestorParent()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$parent->addChild($child);
+		$this->assertTrue($child->isAncestor($parent->id()));
+	}
+
+	public function testGetAncestor()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$parent->addChild($child);
+		$ancestor = $child->getAncestor($parent->id());
+		$this->assertEquals($parent->id(), $ancestor->id());
+	}
+
+	public function testGetGreatAncestor()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$parent->addChild($child);
+		$child->addChild($child2);
+		$ancestor = $child2->getAncestor($parent->id());
+		$this->assertEquals($parent->id(), $ancestor->id());
+	}
+
+	public function testGetAncestorNotFound()
+	{
+		$parent = new Node;
+		$ancestor = $parent->getAncestor(1);
+		$this->assertNull($ancestor);
 	}
 }
