@@ -366,7 +366,12 @@ class Dom {
 		}
 
 		// clean out the \n\r
-		$str = str_replace(["\r\n", "\r", "\n"], ' ', $str);
+		$replace = ' ';
+		if ($this->options->get('preserveLineBreaks'))
+		{
+			$replace = '&#10';
+		}
+		$str = str_replace(["\r\n", "\r", "\n"], $replace, $str);
 
 		// strip the doctype
 		$str = mb_eregi_replace("<!doctype(.*?)>", '', $str);

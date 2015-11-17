@@ -39,6 +39,9 @@ class TextNode extends AbstractNode {
 		// remove double spaces
 		$text = mb_ereg_replace('\s+', ' ', $text);
 
+		// restore line breaks
+		$text = str_replace('&#10', "\n", $text);
+
 		$this->text = $text;
 		$this->tag  = new Tag('text');
 		parent::__construct();
