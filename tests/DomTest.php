@@ -187,6 +187,16 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(' <p>Журчанье воды<br /> Черно-белые тени<br /> Вновь на фонтане</p> ', $post->find('.post-message', 0)->innerHtml);
 	}
 
+	public function testLoadFileBigTwicePreserveOption()
+	{
+		$dom = new Dom;
+		$dom->loadFromFile('tests/files/big.html', ['preserveLineBreaks' => true]);
+		$post = $dom->find('.post-row', 0);
+		$this->assertEquals('<p>Журчанье воды<br />
+Черно-белые тени<br />
+Вновь на фонтане</p>', trim($post->find('.post-message', 0)->innerHtml));
+	}
+
 	public function testLoadFromUrl()
 	{
 		$curl = Mockery::mock('PHPHtmlParser\CurlInterface');

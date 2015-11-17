@@ -125,11 +125,35 @@ $dom->load('http://google.com', [
 $dom->load('http://gmail.com'); // will not have whitespaceTextNode set to false.
 ```
 
-At the moment we support 3 options, strict, whitespaceTextNode and enforceEncoding. Strict, by default false, will throw a `StrickException` if it find that the html is not strict complient (all tags must have a clossing tag, no attribute with out a value, etc.). 
+At the moment we support 7 options.
+
+**Strict**
+
+Strict, by default false, will throw a `StrickException` if it find that the html is not strict complient (all tags must have a clossing tag, no attribute with out a value, etc.).
+
+**whitespaceTextNode**
 
 The whitespaceTextNode, by default true, option tells the parser to save textnodes even if the content of the node is empty (only whitespace). Setting it to false will ignore all whitespace only text node found in the document.
 
+**enforceEncoding
+
 The enforceEncoding, by default null, option will enforce an charater set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
+
+**cleanupInput**
+
+Set this to `true` to skip the entire clean up phase of the parser. If this is set to true the next 3 options will be ignored. Defaults to `false`.
+
+**removeScripts**
+
+Set this to `false` to skip removing the script tags from the document body. This might have adverse effects. Defaults to `true`.
+
+**removeStyles**
+
+Set this to `false` to skip removing of style tags from the document body. This might have adverse effects. Defaults to `true`.
+
+**preserveLineBreaks**
+
+Preserves Line Breaks if set to `true`. If set to `false` line breaks are cleaned up as part of the input clean up process. Defaults to `false`.
 
 Static Facade
 -------------

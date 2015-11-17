@@ -22,7 +22,8 @@ class Options {
 		'enforceEncoding'    => null,
 		'cleanupInput'       => true,
 		'removeScripts'      => true,
-		'removeStyles'       => true
+		'removeStyles'       => true,
+		'preserveLineBreaks' => false,
 	];
 
 	/**
