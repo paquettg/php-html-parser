@@ -41,6 +41,30 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', Dom::find('table input', 1)->outerHtml);
 	}
 
+  public function testSpaceInOpeningTag()
+  {
+    $dom = Dom::load('<tr ><td >cell 1 1</td><td >cell 2 1</td></tr><tr ><td>cell 1 2</td><td></td></tr>');
+    $this->assertEquals(2, count($dom->find('tr')));
+  }
+
+  public function testTabInOpeningTag()
+  {
+    $dom = Dom::load("<tr\t><td >cell 1 1</td><td\t>cell 2 1</td></tr><tr\t><td>cell 1 2</td><td></td></tr>");
+    $this->assertEquals(2, count($dom->find('tr')));
+  }
+
+  public function testLineFeedInOpeningTag()
+  {
+    $dom = Dom::load("<tr\n><td >cell 1 1</td><td\n>cell 2 1</td></tr><tr\n><td>cell 1 2</td><td></td></tr>");
+    $this->assertEquals(2, count($dom->find('tr')));
+  }
+
+  public function testCarriageReturnInOpeningTag()
+  {
+    $dom = Dom::load("<tr\r><td >cell 1 1</td><td\r>cell 2 1</td></tr><tr\r><td>cell 1 2</td><td></td></tr>");
+    $this->assertEquals(2, count($dom->find('tr')));
+  }
+
 	/**
 	 * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
 	 */
