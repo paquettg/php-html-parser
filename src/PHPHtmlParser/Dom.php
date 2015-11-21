@@ -531,7 +531,6 @@ class Dom {
 			$this->content->char() != '/')
 		{
 			$space = $this->content->skipByToken('blank', true);
-
 			if (empty($space))
 			{
 				$this->content->fastForward(1);
