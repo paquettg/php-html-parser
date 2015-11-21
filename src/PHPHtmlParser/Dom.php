@@ -537,6 +537,11 @@ class Dom {
 				continue;
 			}
 
+			if($this->content->char() == '>')
+			{
+				break;
+			}
+
 			$name = $this->content->copyByToken('equal', true);
 			if ($name == '/')
 			{
