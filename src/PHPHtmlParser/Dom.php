@@ -531,10 +531,16 @@ class Dom {
 			$this->content->char() != '/')
 		{
 			$space = $this->content->skipByToken('blank', true);
+
 			if (empty($space))
 			{
 				$this->content->fastForward(1);
 				continue;
+			}
+
+			if($this->content->char() == '>')
+			{
+				break;
 			}
 
 			$name = $this->content->copyByToken('equal', true);
