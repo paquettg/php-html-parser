@@ -135,7 +135,7 @@ Strict, by default false, will throw a `StrickException` if it find that the htm
 
 The whitespaceTextNode, by default true, option tells the parser to save textnodes even if the content of the node is empty (only whitespace). Setting it to false will ignore all whitespace only text node found in the document.
 
-**enforceEncoding
+**enforceEncoding**
 
 The enforceEncoding, by default null, option will enforce an charater set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
 
