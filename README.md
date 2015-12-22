@@ -99,7 +99,7 @@ Loading a string directly, with out the checks in `load()` is also easely done.
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
-$dom->loadStr('<html>String</html>', [])
+$dom->loadStr('<html>String</html>', []);
 $html = $dom->outerHtml;
 ```
 
