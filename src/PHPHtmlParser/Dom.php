@@ -690,4 +690,14 @@ class Dom {
 
 		return false;
 	}
+	
+	/**
+	 * Returns the raw html
+	 * 
+	 * @return string
+	 */
+	public function getRaw()
+	{
+		return $this->raw;
+	}
 }
