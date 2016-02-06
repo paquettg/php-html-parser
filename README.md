@@ -19,6 +19,8 @@ Usage
 You can find many examples of how to use the dom parser and any of its parts (which you will most likely never touch) in the tests directory. The tests are done using PHPUnit and are very small, a few lines each, and are a great place to start. Given that, I'll still be showing a few examples of how the package should be used. The following example is a very simplistic usage of the package.
 
 ```php
+// Assuming you installed from Composer:
+require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
