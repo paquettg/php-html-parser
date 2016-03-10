@@ -6,13 +6,14 @@ namespace PHPHtmlParser;
  *
  * @package PHPHtmlParser
  */
-interface CurlInterface {
+interface CurlInterface
+{
 
-	/**
-	 * This method should return the content of the url in a string
-	 *
-	 * @param string $url
-	 * @return string
-	 */
-	public function get($url);
+    /**
+     * This method should return the content of the url in a string
+     *
+     * @param string $url
+     * @return string
+     */
+    public function get($url);
 }
