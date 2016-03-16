@@ -548,6 +548,34 @@ abstract class AbstractNode
     }
 
     /**
+     * A wrapper method that simply calls the removeAttribute method
+     * on the tag of this node.
+     *
+     * @param string $key
+     * @return $this
+     */
+    public function removeAttribute($key)
+    {
+        $this->tag->removeAttribute($key);
+
+        return $this;
+    }
+
+    /**
+     * A wrapper method that simply calls the removeAttributes method
+     * on the tag of this node.
+     *
+     * @param array $keys
+     * @return $this
+     */
+    public function removeAttributes($keys)
+    {
+        $this->tag->removeAttributes($keys);
+
+        return $this;
+    }
+
+    /**
      * Function to locate a specific ancestor tag in the path to the root.
      *
      * @param  string $tag

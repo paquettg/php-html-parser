@@ -204,6 +204,39 @@ class Tag
     }
 
     /**
+     * Removes an attribute for this tag
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function removeAttribute($key)
+    {
+        $key = strtolower($key);
+        unset($this->attr[$key]);
+
+        return $this;
+    }
+
+    /**
+     * Removes all attributes for this tag except the ones in the $keys array
+     *
+     * @param array $keys
+     * @return mixed
+     */
+    public function removeAttributes($keys)
+    {
+        $attributes = $this->getAttributes();
+        foreach($attributes as $key => $attribute) {
+            $key = strtolower($key);
+            if(!in_array($key, $keys)) {
+                unset($this->attr[$key]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Generates the opening tag for this object.
      *
      * @return string
