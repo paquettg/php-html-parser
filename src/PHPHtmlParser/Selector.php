@@ -128,7 +128,7 @@ class Selector
             }
 
             // check for elements that do not have a specified attribute
-            if (isset($key[0]) AND $key[0] == '!') {
+            if (isset($key[0]) && $key[0] == '!') {
                 $key   = substr($key, 1);
                 $noKey = true;
             }
@@ -166,13 +166,15 @@ class Selector
     protected function seek(array $nodes, array $rule, array $options)
     {
         // XPath index
-        if ( ! empty($rule['tag']) AND ! empty($rule['key']) AND
+        if (count($rule['tag']) > 0 &&
+            count($rule['key']) > 0 &&
             is_numeric($rule['key'])
         ) {
             $count = 0;
             /** @var AbstractNode $node */
             foreach ($nodes as $node) {
-                if ($rule['tag'] == '*' OR $rule['tag'] == $node->getTag()->name()) {
+                if ($rule['tag'] == '*' ||
+                    $rule['tag'] == $node->getTag()->name()) {
                     ++$count;
                     if ($count == $rule['key']) {
                         // found the node we wanted
@@ -198,7 +200,7 @@ class Selector
             $child    = $node->firstChild();
             while ( ! is_null($child)) {
                 // wild card, grab all
-                if ($rule['tag'] == '*' AND is_null($rule['key'])) {
+                if ($rule['tag'] == '*' && is_null($rule['key'])) {
                     $return[] = $child;
                     try {
                         $child = $node->nextChild($child->id());
@@ -211,7 +213,7 @@ class Selector
 
                 $pass = true;
                 // check tag
-                if ( ! empty($rule['tag']) AND $rule['tag'] != $child->getTag()->name() AND
+                if ( ! empty($rule['tag']) && $rule['tag'] != $child->getTag()->name() &&
                     $rule['tag'] != '*'
                 ) {
                     // child failed tag check
@@ -219,13 +221,13 @@ class Selector
                 }
 
                 // check key
-                if ($pass AND ! is_null($rule['key'])) {
+                if ($pass && ! is_null($rule['key'])) {
                     if ($rule['noKey']) {
                         if ( ! is_null($child->getAttribute($rule['key']))) {
                             $pass = false;
                         }
                     } else {
-                        if ($rule['key'] != 'plaintext' and
+                        if ($rule['key'] != 'plaintext' &&
                             is_null($child->getAttribute($rule['key']))
                         ) {
                             $pass = false;
@@ -234,8 +236,8 @@ class Selector
                 }
 
                 // compare values
-                if ($pass and ! is_null($rule['key']) and
-                    ! is_null($rule['value']) and $rule['value'] != '*'
+                if ($pass && ! is_null($rule['key']) &&
+                    ! is_null($rule['value']) && $rule['value'] != '*'
                 ) {
                     if ($rule['key'] == 'plaintext') {
                         // plaintext search
@@ -248,7 +250,7 @@ class Selector
                     $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
 
                     // handle multiple classes
-                    if ( ! $check and $rule['key'] == 'class') {
+                    if ( ! $check && $rule['key'] == 'class') {
                         $childClasses = explode(' ', $child->getAttribute('class'));
                         foreach ($childClasses as $class) {
                             if ( ! empty($class)) {

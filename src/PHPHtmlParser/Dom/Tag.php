@@ -195,7 +195,7 @@ class Tag
             return null;
         }
         $value = $this->attr[$key]['value'];
-        if (is_string($value) AND ! is_null($this->encode)) {
+        if (is_string($value) && ! is_null($this->encode)) {
             // convert charset
             $this->attr[$key]['value'] = $this->encode->convert($value);
         }

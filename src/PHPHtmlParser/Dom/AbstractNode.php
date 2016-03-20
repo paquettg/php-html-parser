@@ -402,12 +402,8 @@ abstract class AbstractNode
      */
     public function isAncestor($id)
     {
-        if ( ! is_null($this->parent)) {
-            if ($this->parent->id() == $id) {
-                return true;
-            }
-
-            return $this->parent->isAncestor($id);
+        if ( ! is_null($this->getAncestor($id))) {
+            return true;
         }
 
         return false;
@@ -639,30 +635,8 @@ abstract class AbstractNode
                 $attributes[$match[1]] = $match[2];
             }
 
-            // If there is a width in the style attributes:
-            if (isset($attributes['width']) and $width == -1) {
-                // check that the last two characters are px (pixels)
-                if (strtolower(substr($attributes['width'], -2)) == 'px') {
-                    $proposed_width = substr($attributes['width'], 0, -2);
-                    // Now make sure that it's an integer and not something stupid.
-                    if (filter_var($proposed_width, FILTER_VALIDATE_INT)) {
-                        $width = $proposed_width;
-                    }
-                }
-            }
-
-            // If there is a width in the style attributes:
-            if (isset($attributes['height']) and $height == -1) {
-                // check that the last two characters are px (pixels)
-                if (strtolower(substr($attributes['height'], -2)) == 'px') {
-                    $proposed_height = substr($attributes['height'], 0, -2);
-                    // Now make sure that it's an integer and not something stupid.
-                    if (filter_var($proposed_height, FILTER_VALIDATE_INT)) {
-                        $height = $proposed_height;
-                    }
-                }
-            }
-
+            $width = $this->getLength($attributes, $width, 'width');
+            $height = $this->getLength($attributes, $width, 'height');
         }
 
         $result = [
@@ -671,6 +645,30 @@ abstract class AbstractNode
         ];
 
         return $result;
+    }
+
+    /**
+     * If there is a length in the style attributes use it.
+     *
+     * @param array $attributes
+     * @param int $length
+     * @param string $key
+     * @return int
+     */
+    protected function getLength(array $attributes, $length, $key)
+    {
+        if (isset($attributes[$key]) && $length == -1) {
+            // check that the last two characters are px (pixels)
+            if (strtolower(substr($attributes[$key], -2)) == 'px') {
+                $proposed_length = substr($attributes[$key], 0, -2);
+                // Now make sure that it's an integer and not something stupid.
+                if (filter_var($proposed_length, FILTER_VALIDATE_INT)) {
+                    $length = $proposed_length;
+                }
+            }
+        }
+
+        return $length;
     }
 
     /**

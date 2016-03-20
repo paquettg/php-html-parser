@@ -445,7 +445,7 @@ class Dom
                 if ( ! $node->getTag()->isSelfClosing()) {
                     $activeNode = $node;
                 }
-            } else if ($this->options->whitespaceTextNode or
+            } else if ($this->options->whitespaceTextNode ||
                 trim($str) != ''
             ) {
                 // we found text we care about
@@ -501,7 +501,7 @@ class Dom
         $node = new HtmlNode($tag);
 
         // attributes
-        while ($this->content->char() != '>' and
+        while ($this->content->char() != '>' &&
             $this->content->char() != '/') {
             $space = $this->content->skipByToken('blank', true);
             if (empty($space)) {
