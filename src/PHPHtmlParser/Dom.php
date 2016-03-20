@@ -358,6 +358,10 @@ class Dom
             return $str;
         }
 
+        // remove white space before closing tags
+        $str = mb_eregi_replace("'\s+>", "'>", $str);
+        $str = mb_eregi_replace('"\s+>', '">', $str);
+
         // clean out the \n\r
         $replace = ' ';
         if ($this->options->get('preserveLineBreaks')) {

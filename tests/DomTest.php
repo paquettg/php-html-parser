@@ -295,4 +295,11 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$dom->load("<a title='Ain't this the best' href=\"http://www.example.com\">Hello</a>");
 		$this->assertEquals("Ain't this the best", $dom->getElementsByTag('a')[0]->title);
 	}
+
+	public function testBeforeClosingTag()
+	{
+		$dom = new Dom;
+		$dom->load("<div class=\"stream-container \"  > <div class=\"stream-item js-new-items-bar-container\"> </div> <div class=\"stream\">");
+		$this->assertEquals("<div class=\"stream-container \"> <div class=\"stream-item js-new-items-bar-container\"> </div> <div class=\"stream\"></div></div>", (string) $dom);
+	}
 }
