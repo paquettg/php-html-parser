@@ -1,5 +1,16 @@
 ### Development
 
+## 1.6.9
+
+- Added Changelog
+- Fixed issue with spaces befor closing tag Fixes #45
+- Fixed some code quality issues found by scrutinizer
+- Added Scrutinizer to README
+- Reformated code to comply with PSR-1/2
+- Added preserve line break option. Defaults to false. fixes #40
+- Updated the tests
+- Added options: cleanupInput, removeScripts and removeStyles
+
 ## 1.6.8
 
 - Added comments and reformated some code
