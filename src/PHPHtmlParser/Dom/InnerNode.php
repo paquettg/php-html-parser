@@ -181,6 +181,7 @@ abstract class InnerNode extends ArrayNode
      * @param int $id
      * @return AbstractNode
      * @uses $this->getChild()
+     * @throws ChildNotFoundException
      */
     public function nextChild($id)
     {
@@ -196,6 +197,7 @@ abstract class InnerNode extends ArrayNode
      * @param int $id
      * @return AbstractNode
      * @uses $this->getChild()
+     * @throws ChildNotFoundException
      */
     public function previousChild($id)
     {
@@ -221,6 +223,25 @@ abstract class InnerNode extends ArrayNode
         }
 
         return false;
+    }
+
+    /**
+     * Removes the child with id $childId and replace it with the new child
+     * $newChild.
+     *
+     * @param int $childId
+     * @param AbstractNode $newChild
+     * @throws ChildNotFoundException
+     */
+    public function replaceChild($childId, AbstractNode $newChild)
+    {
+        $oldChild = $this->getChild($childId);
+        $keys = array_keys($this->children);
+        $index = array_search($childId, $keys, true);
+        $keys[$index] = $newChild->id();
+        $this->children = array_combine($keys, $this->children);
+        $this->children[$newChild->id()] = $newChild;
+        unset($oldChild);
     }
 
     /**

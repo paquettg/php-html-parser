@@ -137,6 +137,19 @@ class NodeParentTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($child3->id(), $parent->lastChild()->id());
 	}
 
+	public function testReplaceChild()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$child3 = new Node;
+		$parent->addChild($child);
+		$parent->addChild($child2);
+		$parent->replaceChild($child->id(), $child3);
+
+		$this->assertFalse($parent->isChild($child->id()));
+	}
+
 	/**
 	 * @expectedException PHPHtmlParser\Exceptions\CircularException
 	 */
