@@ -6,7 +6,7 @@ namespace PHPHtmlParser\Dom;
  *
  * @package PHPHtmlParser\Dom
  */
-class TextNode extends AbstractNode
+class TextNode extends LeafNode
 {
 
     /**

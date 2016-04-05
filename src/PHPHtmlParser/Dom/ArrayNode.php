@@ -13,13 +13,6 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
 {
 
     /**
-     * Returns the array to be used the the iterator.
-     *
-     * @return array
-     */
-    abstract protected function getIteratorArray();
-
-    /**
      * Gets the iterator
      *
      * @return ArrayIterator
@@ -39,4 +32,10 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
         return count($this->getIteratorArray());
     }
 
+    /**
+     * Returns the array to be used the the iterator.
+     *
+     * @return array
+     */
+    abstract protected function getIteratorArray();
 }

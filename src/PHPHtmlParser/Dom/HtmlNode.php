@@ -9,7 +9,7 @@ use PHPHtmlParser\Exceptions\ChildNotFoundException;
  *
  * @package PHPHtmlParser\Dom
  */
-class HtmlNode extends ArrayNode
+class HtmlNode extends InnerNode
 {
 
     /**

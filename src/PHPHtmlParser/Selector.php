@@ -3,6 +3,8 @@ namespace PHPHtmlParser;
 
 use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
+use PHPHtmlParser\Dom\InnerNode;
+use PHPHtmlParser\Dom\LeafNode;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
 /**
@@ -189,10 +191,11 @@ class Selector
         $options = $this->flattenOptions($options);
 
         $return = [];
-        /** @var AbstractNode $node */
+        /** @var InnerNode $node */
         foreach ($nodes as $node) {
             // check if we are a leaf
-            if ( ! $node->hasChildren()) {
+            if ($node instanceof LeafNode ||
+                 ! $node->hasChildren()) {
                 continue;
             }
 
@@ -272,7 +275,8 @@ class Selector
                     $return[] = $child;
                 } else {
                     // this child failed to be matched
-                    if ($child->hasChildren()) {
+                    if ($child instanceof InnerNode &&
+                        $child->hasChildren()) {
                         // we still want to check its children
                         $children[] = $child;
                     }
