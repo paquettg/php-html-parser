@@ -390,9 +390,6 @@ class Dom
             $str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
         }
 
-        // strip out preformatted tags
-        $str = mb_eregi_replace("<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>", '', $str);
-
         // strip out server side scripts
         $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
 

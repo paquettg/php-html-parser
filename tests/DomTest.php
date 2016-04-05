@@ -302,4 +302,11 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$dom->load("<div class=\"stream-container \"  > <div class=\"stream-item js-new-items-bar-container\"> </div> <div class=\"stream\">");
 		$this->assertEquals("<div class=\"stream-container \"> <div class=\"stream-item js-new-items-bar-container\"> </div> <div class=\"stream\"></div></div>", (string) $dom);
 	}
+
+	public function testCodeTag()
+	{
+		$dom = new Dom;
+		$dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+		$this->assertEquals('<strong>hello</strong><code class="language-php">$foo = "bar";</code>', (string) $dom);
+	}
 }
