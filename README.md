@@ -110,7 +110,7 @@ require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
-$dom->loadStr('<html>String</html>', [])
+$dom->loadStr('<html>String</html>', []);
 $html = $dom->outerHtml;
 ```
 
