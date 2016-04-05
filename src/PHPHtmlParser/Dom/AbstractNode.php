@@ -153,6 +153,21 @@ abstract class AbstractNode
     }
 
     /**
+     * Removes this node and all its children from the
+     * DOM tree.
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        if ( ! is_null($this->parent)) {
+            $this->parent->removeChild($this->id);
+        }
+
+        $this->parent = null;
+    }
+
+    /**
      * Sets the encoding class to this node.
      *
      * @param Encode $encode

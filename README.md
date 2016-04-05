@@ -1,7 +1,7 @@
 PHP Html Parser
 ==========================
 
-Version 1.6.9
+Version 1.6.9 - DEV
 
 [![Build Status](https://travis-ci.org/paquettg/php-html-parser.png)](https://travis-ci.org/paquettg/php-html-parser)
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
@@ -205,4 +205,15 @@ $a   = $dom->find('a')[0];
 $tag = $a->getTag();
 $tag->setAttribute('class', 'foo');
 echo $a->getAttribute('class'); // "foo"
+```
+
+It is also possible to remove a node from the tree. Simply call the `delete` method on any node to remove it from the tree. It is important to note that you should unset the node after removing it from the `DOM``, it will still take memory as long as it is not unset.
+
+```php
+$dom = new Dom;
+$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$a   = $dom->find('a')[0];
+$a->delete();
+unset($a);
+echo $dom; // '<div class="all"><p>Hey bro, <br /> :)</p></div>');
 ```

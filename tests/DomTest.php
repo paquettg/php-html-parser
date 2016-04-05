@@ -309,4 +309,14 @@ class DomTest extends PHPUnit_Framework_TestCase {
 		$dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
 		$this->assertEquals('<strong>hello</strong><code class="language-php">$foo = "bar";</code>', (string) $dom);
 	}
+
+	public function testDeleteNode()
+	{
+		$dom = new Dom;
+		$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+		$a   = $dom->find('a')[0];
+		$a->delete();
+		unset($a);
+		$this->assertEquals('<div class="all"><p>Hey bro, <br /> :)</p></div>', (string) $dom);
+	}
 }

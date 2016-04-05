@@ -1,7 +1,7 @@
 <?php
 namespace PHPHtmlParser;
 
-use PHPHtmlPArser\Dom\AbstractNode;
+use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Exceptions\NotLoadedException;
