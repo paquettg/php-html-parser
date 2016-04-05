@@ -22,4 +22,11 @@ class NodeTextTest extends PHPUnit_Framework_TestCase {
 		$text = $node->ancestorByTag('text');
 		$this->assertEquals($node, $text);
 	}
+
+	public function testPreserveEntity()
+	{
+		$node = new TextNode('&#x69;');
+		$text = $node->text;
+		$this->assertEquals('&#x69;', $text);
+	}
 }
