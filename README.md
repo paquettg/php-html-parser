@@ -20,6 +20,8 @@ Usage
 You can find many examples of how to use the dom parser and any of its parts (which you will most likely never touch) in the tests directory. The tests are done using PHPUnit and are very small, a few lines each, and are a great place to start. Given that, I'll still be showing a few examples of how the package should be used. The following example is a very simplistic usage of the package.
 
 ```php
+// Assuming you installed from Composer:
+require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
@@ -36,6 +38,8 @@ Loading Files
 You may also seamlessly load a file into the dom instead of a string, which is much more convinient and is how I except most developers will be loading the html. The following example is taken from our test and uses the "big.html" file found there.
 
 ```php
+// Assuming you installed from Composer:
+require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
@@ -67,6 +71,8 @@ Loading Url
 Loading a url is very similar to the way you would load the html from a file. 
 
 ```php
+// Assuming you installed from Composer:
+require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
@@ -81,6 +87,8 @@ $html = $dom->outerHtml; // same result as the first example
 What makes the loadFromUrl method note worthy is the `PHPHtmlParser\CurlInterface` parameter, an optional second parameter. By default, we use the `PHPHtmlParser\Curl` class to get the contents of the url. On the other hand, though, you can inject your own implementation of CurlInterface and we will attempt to load the url using what ever tool/settings you want, up to you.
 
 ```php
+// Assuming you installed from Composer:
+require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 use App\Services\Connector;
 
@@ -97,6 +105,8 @@ Loading Strings
 Loading a string directly, with out the checks in `load()` is also easely done.
 
 ```php
+// Assuming you installed from Composer:
+require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
@@ -112,6 +122,8 @@ Options
 You can also set parsing option that will effect the behavior of the parsing engine. You can set a global option array using the `setOptions` method in the `Dom` object or a instance specific option by adding it to the `load` method as an extra (optional) parameter.
 
 ```php
+// Assuming you installed from Composer:
+require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
