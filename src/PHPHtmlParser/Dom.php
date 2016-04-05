@@ -365,7 +365,7 @@ class Dom
         // clean out the \n\r
         $replace = ' ';
         if ($this->options->get('preserveLineBreaks')) {
-            $replace = '&#10';
+            $replace = '&#10;';
         }
         $str = str_replace(["\r\n", "\r", "\n"], $replace, $str);
 
