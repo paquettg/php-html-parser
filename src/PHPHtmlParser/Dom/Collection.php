@@ -1,9 +1,9 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-use Countable;
 use ArrayAccess;
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 use PHPHtmlParser\Exceptions\EmptyCollectionException;
 

@@ -1,9 +1,9 @@
 <?php
 namespace PHPHtmlParser\Dom;
 
-use PHPHtmlParser\Selector;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
+use PHPHtmlParser\Selector;
 use stringEncode\Encode;
 
 /**
