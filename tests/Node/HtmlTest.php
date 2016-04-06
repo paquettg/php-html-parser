@@ -47,17 +47,15 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 			],
 		]);
 		$a = new Tag('a');
-		$a->setAttributes([
-			'href' => [
-				'value'       => 'http://google.com',
-				'doubleQuote' => false,
-			],
-		]);
 		$br = new Tag('br');
 		$br->selfClosing();
 
 		$parent  = new HtmlNode($div);
 		$childa  = new HtmlNode($a);
+		$childa->setAttribute('href', [
+            'value'       => 'http://google.com',
+            'doubleQuote' => false,
+		]);
 		$childbr = new HtmlNode($br);
 		$parent->addChild($childa);
 		$parent->addChild($childbr);
@@ -368,6 +366,23 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 		$node = new HtmlNode('a');
 		$node->setAttribute('class', 'foo');
 		$this->assertEquals('foo', $node->getAttribute('class'));
+	}
+
+	public function testRemoveAttribute()
+	{
+		$node = new HtmlNode('a');
+		$node->setAttribute('class', 'foo');
+		$node->removeAttribute('class');
+		$this->assertnull($node->getAttribute('class'));
+	}
+
+	public function testRemoveAllAttributes()
+	{
+		$node = new HtmlNode('a');
+		$node->setAttribute('class', 'foo');
+		$node->setAttribute('href', 'http://google.com');
+		$node->removeAllAttributes();
+		$this->assertEquals(0, count($node->getAttributes()));
 	}
 
 	public function testCountable()

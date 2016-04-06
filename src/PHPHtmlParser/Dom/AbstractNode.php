@@ -12,6 +12,8 @@ use stringEncode\Encode;
  * @property string outerhtml
  * @property string innerhtml
  * @property string text
+ * @property \PHPHtmlParser\Dom\Tag tag
+ * @property InnerNode parent
  */
 abstract class AbstractNode
 {
@@ -78,6 +80,9 @@ abstract class AbstractNode
                 return $this->innerHtml();
             case 'text':
                 return $this->text();
+            case 'tag':
+                return $this->getTag();
+            case 'parent': $this->getParent();
         }
 
         return null;
@@ -215,33 +220,6 @@ abstract class AbstractNode
     }
 
     /**
-     * Shortcut to return the first child.
-     *
-     * @return AbstractNode
-     * @uses $this->getChild()
-     */
-    public function firstChild()
-    {
-        reset($this->children);
-        $key = key($this->children);
-
-        return $this->getChild($key);
-    }
-
-    /**
-     * Attempts to get the last child.
-     *
-     * @return AbstractNode
-     */
-    public function lastChild()
-    {
-        end($this->children);
-        $key = key($this->children);
-
-        return $this->getChild($key);
-    }
-
-    /**
      * Attempts to get the next sibling.
      *
      * @return AbstractNode
@@ -327,6 +305,29 @@ abstract class AbstractNode
         $this->tag->setAttribute($key, $value);
 
         return $this;
+    }
+
+    /**
+     * A wrapper method that simply calls the removeAttribute method
+     * on the tag of this node.
+     *
+     * @param string $key
+     * @return void
+     */
+    public function removeAttribute($key)
+    {
+        $this->tag->removeAttribute($key);
+    }
+
+    /**
+     * A wrapper method that simply calls the removeAllAttributes
+     * method on the tag of this node.
+     *
+     * @return void
+     */
+    public function removeAllAttributes()
+    {
+        $this->tag->removeAllAttributes();
     }
 
     /**

@@ -136,7 +136,7 @@ class Tag
      * Set an attribute for this tag.
      *
      * @param string $key
-     * @param mixed $value
+     * @param string|array $value
      * @return $this
      */
     public function setAttribute($key, $value)
@@ -151,6 +151,28 @@ class Tag
         $this->attr[$key] = $value;
 
         return $this;
+    }
+
+    /**
+     * Removes an attribute from this tag.
+     *
+     * @param $key
+     * @return void
+     */
+    public function removeAttribute($key)
+    {
+        $key = strtolower($key);
+        unset($this->attr[$key]);
+    }
+
+    /**
+     * Removes all attributes on this tag.
+     *
+     * @return void
+     */
+    public function removeAllAttributes()
+    {
+        $this->attr = [];
     }
 
     /**

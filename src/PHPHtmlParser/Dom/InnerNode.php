@@ -245,6 +245,33 @@ abstract class InnerNode extends ArrayNode
     }
 
     /**
+     * Shortcut to return the first child.
+     *
+     * @return AbstractNode
+     * @uses $this->getChild()
+     */
+    public function firstChild()
+    {
+        reset($this->children);
+        $key = key($this->children);
+
+        return $this->getChild($key);
+    }
+
+    /**
+     * Attempts to get the last child.
+     *
+     * @return AbstractNode
+     */
+    public function lastChild()
+    {
+        end($this->children);
+        $key = key($this->children);
+
+        return $this->getChild($key);
+    }
+
+    /**
      * Checks if the given node id is a descendant of the
      * current node.
      *
