@@ -176,7 +176,8 @@ class Selector
             /** @var AbstractNode $node */
             foreach ($nodes as $node) {
                 if ($rule['tag'] == '*' ||
-                    $rule['tag'] == $node->getTag()->name()) {
+                    $rule['tag'] == $node->getTag()->name()
+                ) {
                     ++$count;
                     if ($count == $rule['key']) {
                         // found the node we wanted
@@ -195,7 +196,8 @@ class Selector
         foreach ($nodes as $node) {
             // check if we are a leaf
             if ($node instanceof LeafNode ||
-                 ! $node->hasChildren()) {
+                ! $node->hasChildren()
+            ) {
                 continue;
             }
 
@@ -276,7 +278,8 @@ class Selector
                 } else {
                     // this child failed to be matched
                     if ($child instanceof InnerNode &&
-                        $child->hasChildren()) {
+                        $child->hasChildren()
+                    ) {
                         // we still want to check its children
                         $children[] = $child;
                     }
