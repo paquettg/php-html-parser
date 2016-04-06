@@ -49,7 +49,7 @@ class Selector
      * node object.
      *
      * @param AbstractNode $node
-     * @return array|Collection
+     * @return Collection
      */
     public function find(AbstractNode $node)
     {
