@@ -12,7 +12,7 @@ PHPHtmlParser is a simple, flexible, html parser which allows you to select tags
 Install
 -------
 
-This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 5.4, 5.5, and hhvm 2.3.
+This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 5.6, 7.0, and hhvm 2.3.
 
 Usage
 -----
