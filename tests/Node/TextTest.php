@@ -26,7 +26,7 @@ class NodeTextTest extends PHPUnit_Framework_TestCase {
 	public function testPreserveEntity()
 	{
 		$node = new TextNode('&#x69;');
-		$text = $node->text;
+		$text = $node->innerhtml;
 		$this->assertEquals('&#x69;', $text);
 	}
 }

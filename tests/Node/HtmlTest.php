@@ -101,7 +101,7 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
 	public function testInnerHtmlMagic()
 	{
 		$parent  = new HtmlNode('div');
-		$parent->getTag()->setAttributes([
+		$parent->tag->setAttributes([
 			'class' => [
 				'value'       => 'all',
 				'doubleQuote' => true,

@@ -87,10 +87,11 @@ final class StaticDom
      * new object.
      *
      * @param string $url
+     * @param array $options
      * @param CurlInterface $curl
      * @return $this
      */
-    public static function loadFromUrl($url, CurlInterface $curl = null)
+    public static function loadFromUrl($url, $options = [], CurlInterface $curl = null)
     {
         $dom       = new Dom;
         self::$dom = $dom;
@@ -99,7 +100,7 @@ final class StaticDom
             $curl = new Curl;
         }
 
-        return $dom->loadFromUrl($url, $curl);
+        return $dom->loadFromUrl($url, $options, $curl);
     }
 
     /**
