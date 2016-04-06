@@ -1,5 +1,22 @@
 ### Development
 
+## 1.7.0
+
+- Added .scrutinizer.yml to repo
+- Reformated code to PSR-1/2
+- Improved the test coverage and some small code changes
+- Added removeAttribute and removeAllAttributes tag methods fixes #57
+- Added replaceNode method implements #52
+- Added a delete method. fixes #43
+- Added semicolon after &#10 for linebreak preservation. fixes #62
+- Removed code that removed <code> tag fixes #60
+- Added new test related to #63
+- Refactored the nodes into inner and leaf nodes
+- Fixed Strings example in README
+- Close this header so the markdown will render properly
+- Added preserve line break option. Defaults to false.
+
+
 ## 1.6.9
 
 - Added Changelog
