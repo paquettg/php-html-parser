@@ -11,44 +11,44 @@ namespace PHPHtmlParser\Dom;
 class MockNode extends InnerNode
 {
 
-    /**
-     * Mock of innner html.
-     */
-    public function innerHtml()
-    {
-    }
+	/**
+	 * Mock of innner html.
+	 */
+	public function innerHtml()
+	{
+	}
 
-    /**
-     * Mock of outer html.
-     */
-    public function outerHtml()
-    {
-    }
+	/**
+	 * Mock of outer html.
+	 */
+	public function outerHtml()
+	{
+	}
 
-    /**
-     * Mock of text.
-     */
-    public function text()
-    {
-    }
+	/**
+	 * Mock of text.
+	 */
+	public function text()
+	{
+	}
 
-    /**
-     * Clear content of this node
-     */
-    protected function clear()
-    {
-        $this->innerHtml = null;
-        $this->outerHtml = null;
-        $this->text      = null;
-    }
+	/**
+	 * Clear content of this node
+	 */
+	protected function clear()
+	{
+		$this->innerHtml = null;
+		$this->outerHtml = null;
+		$this->text      = null;
+	}
 
-    /**
-     * Returns all children of this html node.
-     *
-     * @return array
-     */
-    protected function getIteratorArray()
-    {
-        return $this->getChildren();
-    }
+	/**
+	 * Returns all children of this html node.
+	 *
+	 * @return array
+	 */
+	protected function getIteratorArray()
+	{
+		return $this->getChildren();
+	}
 }

@@ -12,30 +12,30 @@ use IteratorAggregate;
 abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Countable
 {
 
-    /**
-     * Gets the iterator
-     *
-     * @return ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new ArrayIterator($this->getIteratorArray());
-    }
+	/**
+	 * Gets the iterator
+	 *
+	 * @return ArrayIterator
+	 */
+	public function getIterator()
+	{
+		return new ArrayIterator($this->getIteratorArray());
+	}
 
-    /**
-     * Returns the count of the iterator array.
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->getIteratorArray());
-    }
+	/**
+	 * Returns the count of the iterator array.
+	 *
+	 * @return int
+	 */
+	public function count()
+	{
+		return count($this->getIteratorArray());
+	}
 
-    /**
-     * Returns the array to be used the the iterator.
-     *
-     * @return array
-     */
-    abstract protected function getIteratorArray();
+	/**
+	 * Returns the array to be used the the iterator.
+	 *
+	 * @return array
+	 */
+	abstract protected function getIteratorArray();
 }
