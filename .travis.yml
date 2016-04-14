@@ -3,6 +3,7 @@ language: php
 php:
   - 5.6
   - 7.0
+  - 7.0
   - hhvm
 
 install:
@@ -14,6 +15,42 @@ script:
   - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+after_script:
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
   - php vendor/bin/coveralls
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
