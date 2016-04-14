@@ -12,6 +12,11 @@
 - Removed code that removed <code> tag fixes #60
 - Added new test related to #63
 - Refactored the nodes into inner and leaf nodes
+- Refactored the nodes into inner and leaf nodes
+- Refactored the nodes into inner and leaf nodes
+- Refactored the nodes into inner and leaf nodes
+- Refactored the nodes into inner and leaf nodes
+- Refactored the nodes into inner and leaf nodes
 - Fixed Strings example in README
 - Close this header so the markdown will render properly
 - Added preserve line break option. Defaults to false.
