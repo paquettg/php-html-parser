@@ -5,6 +5,9 @@
 - Added .scrutinizer.yml to repo
 - Reformated code to PSR-1/2
 - Improved the test coverage and some small code changes
+- Improved the test coverage and some small code changes
+- Improved the test coverage and some small code changes
+- Improved the test coverage and some small code changes
 - Added removeAttribute and removeAllAttributes tag methods fixes #57
 - Added replaceNode method implements #52
 - Added a delete method. fixes #43
