@@ -235,13 +235,11 @@ abstract class InnerNode extends ArrayNode
      */
     public function replaceChild($childId, AbstractNode $newChild)
     {
-        $oldChild                        = $this->getChild($childId);
-        $keys                            = array_keys($this->children);
-        $index                           = array_search($childId, $keys, true);
-        $keys[$index]                    = $newChild->id();
-        $this->children                  = array_combine($keys, $this->children);
-        $this->children[$newChild->id()] = $newChild;
-        unset($oldChild);
+        $oldChild = $this->children[$childId];
+        unset($oldChild['node']);
+        $oldChild['node'] = $newChild;
+        unset($this->children[$childId]);
+        $this->children[$newChild->id()] = $oldChild;
     }
 
     /**
