@@ -172,6 +172,15 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Dzień', $dom->find('p', 0)->text);
     }
 
+	public function testLoadFileWhitespace()
+	{
+		$dom = new Dom;
+		$dom->setOptions(['cleanupInput' => false]);
+		$dom->loadFromFile('tests/files/whitespace.html');
+		$this->assertEquals(1, count($dom->find('.class')));
+		$this->assertEquals("<span><span class=\"class\"></span></span>", (string)$dom);
+	}
+
     public function testLoadFileBig()
     {
         $dom = new Dom;

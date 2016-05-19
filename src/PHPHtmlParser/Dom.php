@@ -516,8 +516,8 @@ class Dom
             }
 
             if (empty($name)) {
-                $this->content->fastForward(1);
-                continue;
+				$this->content->skipByToken('blank');
+				continue;
             }
 
             $this->content->skipByToken('blank');
