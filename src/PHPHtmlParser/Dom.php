@@ -79,15 +79,23 @@ class Dom
      * @var array
      */
     protected $selfClosing = [
-        'img',
-        'br',
-        'input',
-        'meta',
-        'link',
-        'hr',
+        'area',
         'base',
+        'basefont',
+        'br',
+        'col',
         'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
         'spacer',
+        'track',
+        'wbr'
     ];
 
     /**
