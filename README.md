@@ -7,7 +7,7 @@ Version 1.7.0
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/paquettg/php-html-parser/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/paquettg/php-html-parser/?branch=master)
 
-PHPHtmlParser is a simple, flexible, html parser which allows you to select tags using any css selector, like jQuery. The goal is to assiste in the development of tools which require a quick, easy way to scrap html, whether it's valid or not! This project was original supported by [sunra/php-simple-html-dom-parser](https://github.com/sunra/php-simple-html-dom-parser) but the support seems to have stopped so this project is my adaptation of his previous work.
+PHPHtmlParser is a simple, flexible, html parser which allows you to select tags using any css selector, like jQuery. The goal is to assist in the development of tools which require a quick, easy way to scrap html, whether it's valid or not! This project was original supported by [sunra/php-simple-html-dom-parser](https://github.com/sunra/php-simple-html-dom-parser) but the support seems to have stopped so this project is my adaptation of his previous work.
 
 Install
 -------
@@ -35,7 +35,7 @@ The above will output "click here". Simple no? There are many ways to get the sa
 Loading Files
 ------------------
 
-You may also seamlessly load a file into the dom instead of a string, which is much more convinient and is how I except most developers will be loading the html. The following example is taken from our test and uses the "big.html" file found there.
+You may also seamlessly load a file into the dom instead of a string, which is much more convenient and is how I except most developers will be loading the html. The following example is taken from our test and uses the "big.html" file found there.
 
 ```php
 // Assuming you installed from Composer:
@@ -61,9 +61,9 @@ foreach ($contents as $content)
 }
 ```
 
-This example loads the html from big.html, a real page found online, and gets all the content-border classes to process. It also shows a few things you can do with a node but it is not an exhaustive list of methods that a node has avaiable.
+This example loads the html from big.html, a real page found online, and gets all the content-border classes to process. It also shows a few things you can do with a node but it is not an exhaustive list of methods that a node has available.
 
-Alternativly, you can always use the `load()` method to load the file. It will attempt to find the file using `file_exists` and, if succesfull, will call `loadFromFile()` for you. The same applies to a URL and `loadFromUrl()` method.
+Alternativly, you can always use the `load()` method to load the file. It will attempt to find the file using `file_exists` and, if successful, will call `loadFromFile()` for you. The same applies to a URL and `loadFromUrl()` method.
 
 Loading Url
 ----------------
@@ -102,7 +102,7 @@ As long as the Connector object implements the `PHPHtmlParser\CurlInterface` int
 Loading Strings
 ---------------
 
-Loading a string directly, with out the checks in `load()` is also easely done.
+Loading a string directly, with out the checks in `load()` is also easily done.
 
 ```php
 // Assuming you installed from Composer:
@@ -142,7 +142,7 @@ At the moment we support 7 options.
 
 **Strict**
 
-Strict, by default false, will throw a `StrickException` if it find that the html is not strict complient (all tags must have a clossing tag, no attribute with out a value, etc.).
+Strict, by default false, will throw a `StrickException` if it find that the html is not strictly compliant (all tags must have a closing tag, no attribute with out a value, etc.).
 
 **whitespaceTextNode**
 
@@ -150,11 +150,11 @@ The whitespaceTextNode, by default true, option tells the parser to save textnod
 
 **enforceEncoding**
 
-The enforceEncoding, by default null, option will enforce an charater set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
+The enforceEncoding, by default null, option will enforce an character set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
 
 **cleanupInput**
 
-Set this to `true` to skip the entire clean up phase of the parser. If this is set to true the next 3 options will be ignored. Defaults to `false`.
+Set this to `false` to skip the entire clean up phase of the parser. If this is set to true the next 3 options will be ignored. Defaults to `true`.
 
 **removeScripts**
 
