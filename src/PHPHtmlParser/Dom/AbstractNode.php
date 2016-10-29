@@ -5,6 +5,7 @@ use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Selector;
 use stringEncode\Encode;
+use PHPHtmlParser\Finder;
 
 /**
  * Dom node object.
@@ -17,7 +18,7 @@ use stringEncode\Encode;
  */
 abstract class AbstractNode
 {
-
+    private static $count = 0;
     /**
      * Contains the tag name/type
      *
@@ -54,11 +55,12 @@ abstract class AbstractNode
     protected $encode;
 
     /**
-     * Creates a unique spl hash for this node.
+     * Creates a unique id for this node.
      */
     public function __construct()
     {
-        $this->id = spl_object_hash($this);
+        $this->id = self::$count;
+        self::$count++;
     }
 
     /**
@@ -108,6 +110,11 @@ abstract class AbstractNode
     public function __toString()
     {
         return $this->outerHtml();
+    }
+
+    public function resetCount()
+    {
+        self::$count = 0;
     }
 
     /**
@@ -218,6 +225,15 @@ abstract class AbstractNode
         }
 
         return null;
+    }
+
+    public function hasNextSibling()
+    {
+        if (is_null($this->parent) || (!$this->parent->hasChildren())) {
+            return false;
+        }
+
+        return $this->parent->hasNextChild($this->id());
     }
 
     /**
@@ -379,6 +395,20 @@ abstract class AbstractNode
     }
 
     /**
+     * Find node by id
+     *
+     * @param $id
+     * @return bool|AbstractNode
+     */
+    public function findById($id)
+    {
+        $finder= new Finder($id);
+
+        return $finder->find($this);
+    }
+
+
+    /**
      * Gets the inner html of this node.
      *
      * @return string
@@ -407,4 +437,14 @@ abstract class AbstractNode
      * @return void
      */
     abstract protected function clear();
+
+    /**
+     * Check is node type textNode
+     *
+     * @return boolean
+     */
+    public function isTextNode() {
+
+        return false;
+    }
 }

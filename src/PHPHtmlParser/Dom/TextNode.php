@@ -102,4 +102,10 @@ class TextNode extends LeafNode
     {
         $this->convertedText = null;
     }
+
+    public function isTextNode()
+    {
+        return true;
+    }
+
 }

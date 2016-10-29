@@ -220,6 +220,20 @@ class Dom
     }
 
     /**
+     * Find element by Id on the root node
+     *
+     * @param int $id Element Id
+     * @return mixed
+     *
+     */
+    public function findById($id)
+    {
+        $this->isLoaded();
+
+        return $this->root->findById($id);
+    }
+
+    /**
      * Adds the tag (or tags in an array) to the list of tags that will always
      * be self closing.
      *
@@ -289,6 +303,42 @@ class Dom
         $this->isLoaded();
 
         return $this->root->lastChild();
+    }
+
+    /**
+     * Simple wrapper function that returns count of child elements
+     *
+     * @return int
+     */
+    public function countChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->countChildren();
+    }
+
+    /**
+     * Get array of children
+     *
+     * @return array
+     */
+    public function getChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->getChildren();
+    }
+
+    /**
+     * Check if node have children nodes
+     *
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->hasChildren();
     }
 
     /**
@@ -391,7 +441,9 @@ class Dom
         }
 
         // strip out server side scripts
-        $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+        if ($this->options->get('serverSideScriptis') == true){
+            $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+        }
 
         // strip smarty scripts
         $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
