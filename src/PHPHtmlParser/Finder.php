@@ -44,8 +44,10 @@ class Finder
                 return $this->find($node->firstChild());
             }
             if ($nextSibling->id() < $this->id) {
-                return $this->find($nextSibling->firstChild());
+                return $this->find($nextSibling);
             }
+        } else {
+            return $this->find($node->firstChild());
         }
 
         return false;
