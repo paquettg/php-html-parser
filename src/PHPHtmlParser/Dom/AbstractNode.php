@@ -112,7 +112,10 @@ abstract class AbstractNode
         return $this->outerHtml();
     }
 
-    public function resetCount()
+    /**
+     * Reset node counter
+     */
+    public static function resetCount()
     {
         self::$count = 0;
     }
