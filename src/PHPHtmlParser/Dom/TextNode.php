@@ -108,4 +108,9 @@ class TextNode extends LeafNode
         return true;
     }
 
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
 }
