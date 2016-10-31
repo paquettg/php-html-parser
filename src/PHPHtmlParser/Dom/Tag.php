@@ -232,21 +232,28 @@ class Tag
      */
     public function getStyle()
     {
-        $style = trim($this->getAttribute('style'));
+        $style = $this->getAttribute('style');
 
-        if ($style) {
-            $style_attr = explode(';', $style);
-            if (!$style_attr) {
-                return null;
-            }
-            foreach ($style_attr as $attr) {
-                $attr = explode(':', $attr);
-                $style_array[$attr[0]] = $attr[1];
-            }
-            return $style_array;
+        if ($style === null) {
+            return null;
         }
 
-        return null;
+        $style_attr = trim($style['value']);
+        $style_attr = substr($style_attr, 0, -1);
+        $style_attr = explode(';', $style_attr);
+
+        if (!$style_attr) {
+            return null;
+        }
+
+        $style_array = [];
+
+        foreach ($style_attr as $attr) {
+            $attr = explode(':', $attr);
+            $style_array[$attr[0]] = $attr[1];
+        }
+
+        return $style_array;
     }
 
     /**
