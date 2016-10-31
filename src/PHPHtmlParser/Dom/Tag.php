@@ -226,6 +226,30 @@ class Tag
     }
 
     /**
+     * Return style array
+     *
+     * @return null|array
+     */
+    public function getStyle()
+    {
+        $style = trim($this->getAttribute('style'));
+
+        if ($style) {
+            $style_attr = explode(';', $style);
+            if (!$style_attr) {
+                return null;
+            }
+            foreach ($style_attr as $attr) {
+                $attr = explode(':', $attr);
+                $style_array[$attr[0]] = $attr[1];
+            }
+            return $style_array;
+        }
+
+        return null;
+    }
+
+    /**
      * Generates the opening tag for this object.
      *
      * @return string
