@@ -31,13 +31,13 @@ class Finder
             return $this->find($node->firstChild());
         }
 
-        if ($node->id() === $this->id) {
+        if ($node->id() == $this->id) {
             return $node;
         }
 
         if ($node->hasNextSibling()) {
             $nextSibling = $node->nextSibling();
-            if ($nextSibling->id() === $this->id) {
+            if ($nextSibling->id() == $this->id) {
                 return $nextSibling;
             }
             if ($nextSibling->id() > $this->id) {
