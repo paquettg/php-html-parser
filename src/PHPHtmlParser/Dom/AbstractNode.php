@@ -460,6 +460,10 @@ abstract class AbstractNode
      */
     public function getAttributeArray($attributeValue, $delimiter)
     {
+        if ($attributeValue == null) {
+            return null;
+        }
+
         $attributeValue = trim($attributeValue);
         $attributeValue = substr($attributeValue, 0, -1);
         $attributeValue = explode(';', $attributeValue);
