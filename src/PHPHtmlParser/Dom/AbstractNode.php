@@ -294,6 +294,18 @@ abstract class AbstractNode
     }
 
     /**
+     * A wrapper method that simply calls the hasAttribute method
+     * on the tag of this node.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasAttribute($key)
+    {
+        return $this->tag->hasAttribute($key);
+    }
+
+    /**
      * A wrapper method that simply calls the setAttribute method
      * on the tag of this node.
      *

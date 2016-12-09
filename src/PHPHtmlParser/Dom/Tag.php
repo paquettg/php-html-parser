@@ -226,6 +226,17 @@ class Tag
     }
 
     /**
+     * Returns TRUE if node has attribute
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasAttribute($key)
+    {
+        return isset($this->attr[$key]);
+    }
+
+    /**
      * Generates the opening tag for this object.
      *
      * @return string

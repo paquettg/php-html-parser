@@ -232,9 +232,7 @@ class Selector
                             $pass = false;
                         }
                     } else {
-                        if ($rule['key'] != 'plaintext' &&
-                            is_null($child->getAttribute($rule['key']))
-                        ) {
+                        if ($rule['key'] != 'plaintext' && !$child->hasAttribute($rule['key'])) {
                             $pass = false;
                         }
                     }
