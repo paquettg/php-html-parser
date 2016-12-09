@@ -192,9 +192,10 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $dom = new Dom;
         $dom->loadFromFile('tests/files/big.html', ['preserveLineBreaks' => true]);
         $post = $dom->find('.post-row', 0);
-        $this->assertEquals('<p>Журчанье воды<br />
-Черно-белые тени<br />
-Вновь на фонтане</p>', trim($post->find('.post-message', 0)->innerHtml));
+        $this->assertEquals(
+            "<p>Журчанье воды<br />\nЧерно-белые тени<br />\nВновь на фонтане</p>",
+            trim($post->find('.post-message', 0)->innerHtml)
+        );
     }
 
     public function testLoadFromUrl()
