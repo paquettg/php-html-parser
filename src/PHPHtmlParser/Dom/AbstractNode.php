@@ -453,12 +453,13 @@ abstract class AbstractNode
 
      /**
      * Get attribute values in array
-     *
+     * @deprecated
+     * @todo remove this method
      * @param $attributeValue
      * @param $delimiter
      * @return array
      */
-    public function getAttributeArray($attributeValue, $delimiter)
+    public function getAttributeArray($attributeValue, $delimiter = ';')
     {
         if ($attributeValue == null) {
             return null;
