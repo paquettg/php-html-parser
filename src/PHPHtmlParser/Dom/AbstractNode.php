@@ -305,6 +305,9 @@ abstract class AbstractNode
     {
         $this->tag->setAttribute($key, $value);
 
+        //clear any cache
+        $this->clear();
+        
         return $this;
     }
 
@@ -318,6 +321,9 @@ abstract class AbstractNode
     public function removeAttribute($key)
     {
         $this->tag->removeAttribute($key);
+        
+        //clear any cache
+        $this->clear();
     }
 
     /**
@@ -329,8 +335,10 @@ abstract class AbstractNode
     public function removeAllAttributes()
     {
         $this->tag->removeAllAttributes();
+        
+        //clear any cache
+        $this->clear();
     }
-
     /**
      * Function to locate a specific ancestor tag in the path to the root.
      *
