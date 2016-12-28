@@ -68,6 +68,30 @@ class NodeTagTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('funtimes', $tag->class['value']);
     }
 
+    public function testUpdateAttributes()
+    {
+        $tag = new Tag('a');
+        $tag->setAttributes([
+            'href' => [
+                'value'       => 'http://google.com',
+                'doubleQuote' => false,
+            ],
+        ]);
+
+        $this->assertEquals(null, $tag->class['value']);
+        $this->assertEquals('http://google.com', $tag->href['value']);
+
+
+        $attr = [
+            'href'  => 'https://www.google.com',
+            'class' => 'funtimes',
+        ];
+
+        $tag->setAttributes($attr);
+        $this->assertEquals('funtimes', $tag->class['value']);
+        $this->assertEquals('https://www.google.com', $tag->href['value']);
+    }
+
     public function testNoise()
     {
         $tag = new Tag('a');
