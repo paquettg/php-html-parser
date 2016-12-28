@@ -242,6 +242,9 @@ abstract class InnerNode extends ArrayNode
         $this->children                  = array_combine($keys, $this->children);
         $this->children[$newChild->id()] = $newChild;
         unset($oldChild);
+        
+        //clear any cache
+        $this->clear();
     }
 
     /**
