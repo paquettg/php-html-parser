@@ -91,6 +91,13 @@ class Dom
     ];
 
     /**
+     * A list of tags where there should be no /> at the end (html5 style)
+     *
+     * @var array
+     */
+    protected $noSlash = [];
+
+    /**
      * Returns the inner html of the root node.
      *
      * @return string
@@ -263,6 +270,53 @@ class Dom
     public function clearSelfClosingTags()
     {
         $this->selfClosing = [];
+
+        return $this;
+    }
+
+
+    /**
+     * Adds a tag to the list of self closing tags that should not have a trailing slash
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function addNoSlashTag($tag)
+    {
+        if ( ! is_array($tag)) {
+            $tag = [$tag];
+        }
+        foreach ($tag as $value) {
+            $this->noSlash[] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes a tag from the list of no-slash tags.
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function removeNoSlashTag($tag)
+    {
+        if ( ! is_array($tag)) {
+            $tag = [$tag];
+        }
+        $this->noSlash = array_diff($this->noSlash, $tag);
+
+        return $this;
+    }
+
+    /**
+     * Empties the list of no-slash tags.
+     *
+     * @return $this
+     */
+    public function clearNoSlashTags()
+    {
+        $this->noSlash = [];
 
         return $this;
     }
@@ -588,6 +642,13 @@ class Dom
 
             // We force self closing on this tag.
             $node->getTag()->selfClosing();
+
+            // Should this tag use a trailing slash?
+            if(in_array($tag, $this->noSlash))
+            {
+                $node->getTag()->noTrailingSlash();
+            }
+
         }
 
         $this->content->fastForward(1);
