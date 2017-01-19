@@ -450,32 +450,4 @@ abstract class AbstractNode
 
         return false;
     }
-
-     /**
-     * Get attribute values in array
-     * @deprecated
-     * @todo remove this method
-     * @param $attributeValue
-     * @param $delimiter
-     * @return array
-     */
-    public function getAttributeArray($attributeValue, $delimiter = ';')
-    {
-        if ($attributeValue == null) {
-            return null;
-        }
-
-        $attributeValue = trim($attributeValue);
-        $attributeValue = substr($attributeValue, 0, -1);
-        $attributeValue = explode(';', $attributeValue);
-
-        $result = [];
-
-        foreach ($attributeValue as $attr) {
-            $attr = explode($delimiter, $attr);
-            $result[$attr[0]] = $attr[1];
-        }
-
-        return $result;
-    }
 }
