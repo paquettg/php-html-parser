@@ -19,14 +19,13 @@ class Finder
 
     /**
      *
-     * Find node in tree
+     * Find node in tree by id
      *
      * @param AbstractNode $node
      * @return bool|AbstractNode
      */
     public function find(AbstractNode $node)
     {
-
         if (!$node->id()) {
             return $this->find($node->firstChild());
         }
@@ -46,11 +45,10 @@ class Finder
             if ($nextSibling->id() < $this->id) {
                 return $this->find($nextSibling);
             }
-        } else {
+        } else if (!$node->isTextNode()) {
             return $this->find($node->firstChild());
         }
 
         return false;
     }
-
 }

@@ -319,4 +319,52 @@ class DomTest extends PHPUnit_Framework_TestCase {
         unset($a);
         $this->assertEquals('<div class="all"><p>Hey bro, <br /> :)</p></div>', (string) $dom);
     }
+
+    public function testCountChildren()
+    {
+        $dom = new Dom;
+        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $this->assertEquals(2, $dom->countChildren());
+    }
+
+    public function testGetChildrenArray()
+    {
+        $dom = new Dom;
+        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $this->assertInternalType('array', $dom->getChildren());
+    }
+
+    public function testHasChildren()
+    {
+        $dom = new Dom;
+        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $this->assertTrue($dom->hasChildren());
+    }
+
+    public function testFindByIdVar1()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        /** @var Dom\AbstractNode $result */
+        $result = $dom->findById(4);
+        $this->assertEquals(4, $result->id());
+    }
+
+    public function testFindByIdVar2()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        /** @var Dom\AbstractNode $result */
+        $result = $dom->findById(5);
+        $this->assertEquals(5, $result->id());
+    }
+
+    public function testFindByIdNotFountEleement()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        /** @var Dom\AbstractNode $result */
+        $result = $dom->findById(8);
+        $this->assertFalse($result);
+    }
 }
