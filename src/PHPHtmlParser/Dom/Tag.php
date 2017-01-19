@@ -180,7 +180,7 @@ class Tag
      */
     public function getStyleAttributeArray()
     {
-        $value = $this->getAttribute('style');
+        $value = $this->getAttribute('style')['value'];
 
         if ($value === null) {
             return null;
