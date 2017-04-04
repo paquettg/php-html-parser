@@ -83,7 +83,7 @@ abstract class AbstractNode
             case 'tag':
                 return $this->getTag();
             case 'parent':
-                $this->getParent();
+                return $this->getParent();
         }
 
         return null;
