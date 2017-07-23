@@ -174,6 +174,51 @@ class Tag
     }
 
     /**
+     * Set inline style attribute value.
+     *
+     * @param $attr_key
+     * @param $attr_value
+     */
+    public function setStyleAttributeValue($attr_key, $attr_value)
+    {
+
+        $style_array = $this->getStyleAttributeArray();
+        $style_array[$attr_key] = $attr_value;
+
+        $style_string = '';
+        foreach ($style_array as $key => $value) {
+            $style_string .= $key . ':' . $value . ';';
+        }
+
+        $this->setAttribute('style', $style_string);
+    }
+
+    /**
+     * Get style attribute in array
+     *
+     * @return array|null
+     */
+    public function getStyleAttributeArray()
+    {
+        $value = $this->getAttribute('style')['value'];
+
+        if ($value === null) {
+            return null;
+        }
+
+        $value = explode(';', substr(trim($value), 0, -1));
+        $result = [];
+        foreach ($value as $attr) {
+            $attr = explode(':', $attr);
+            $result[$attr[0]] = $attr[1];
+        }
+
+        return $result;
+    }
+
+
+
+    /**
      * Removes an attribute from this tag.
      *
      * @param $key

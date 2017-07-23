@@ -177,4 +177,18 @@ class NodeTagTest extends PHPUnit_Framework_TestCase {
         $tag->selfClosing();
         $this->assertEmpty($tag->makeClosingTag());
     }
+
+    public function testSetTagAttribute()
+    {
+        $tag = new Tag('div');
+        $tag->setStyleAttributeValue('display', 'none');
+        $this->assertEquals('display:none;', $tag->getAttribute('style')['value']);
+    }
+
+    public function testGetStyleAttributesArray()
+    {
+        $tag = new Tag('div');
+        $tag->setStyleAttributeValue('display', 'none');
+        $this->assertInternalType('array', $tag->getStyleAttributeArray());
+    }
 }

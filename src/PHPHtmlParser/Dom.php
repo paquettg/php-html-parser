@@ -135,6 +135,7 @@ class Dom
      */
     public function load($str, $options = [])
     {
+        AbstractNode::resetCount();
         // check if it's a file
         if (strpos($str, "\n") === false && is_file($str)) {
             return $this->loadFromFile($str, $options);
@@ -232,6 +233,20 @@ class Dom
         $this->isLoaded();
 
         return $this->root->find($selector, $nth);
+    }
+
+    /**
+     * Find element by Id on the root node
+     *
+     * @param int $id Element Id
+     * @return mixed
+     *
+     */
+    public function findById($id)
+    {
+        $this->isLoaded();
+
+        return $this->root->findById($id);
     }
 
     /**
@@ -354,6 +369,42 @@ class Dom
     }
 
     /**
+     * Simple wrapper function that returns count of child elements
+     *
+     * @return int
+     */
+    public function countChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->countChildren();
+    }
+
+    /**
+     * Get array of children
+     *
+     * @return array
+     */
+    public function getChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->getChildren();
+    }
+
+    /**
+     * Check if node have children nodes
+     *
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->hasChildren();
+    }
+
+    /**
      * Simple wrapper function that returns an element by the
      * id.
      *
@@ -453,7 +504,9 @@ class Dom
         }
 
         // strip out server side scripts
-        $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+        if ($this->options->get('serverSideScriptis') == true){
+            $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+        }
 
         // strip smarty scripts
         $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);

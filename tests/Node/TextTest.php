@@ -32,6 +32,25 @@ class NodeTextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('&#x69;', $text);
     }
 
+    public function testIsTextNode()
+    {
+        $node = new TextNode('text');
+        $this->assertEquals(true, $node->isTextNode());
+    }
+
+    public function testTextInTextNode()
+    {
+        $node = new TextNode('foo bar');
+        $this->assertEquals('foo bar', $node->outerHtml());
+    }
+
+    public function testSetTextToTextNode()
+    {
+        $node = new TextNode('');
+        $node->setText('foo bar');
+        $this->assertEquals('foo bar', $node->innerHtml());
+    }
+
     public function testSetText()
     {
         $dom = new Dom;

@@ -72,6 +72,26 @@ class NodeParentTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($child2->id(), $parent->nextChild($child->id())->id());
     }
 
+    public function testHasNextChild()
+    {
+        $parent = new Node;
+        $child = new Node;
+        $child2 = new Node;
+        $parent->addChild($child);
+        $parent->addChild($child2);
+
+        $this->assertEquals($child2->id(), $parent->hasNextChild($child->id()));
+    }
+
+    public function testHasNextChildNotExists()
+    {
+        $parent = new Node;
+        $child = new Node;
+
+        $this->expectException(\PHPHtmlParser\Exceptions\ChildNotFoundException::class);
+        $parent->hasNextChild($child->id());
+    }
+
     public function testNextChildWithRemove()
     {
         $parent = new Node;

@@ -176,6 +176,18 @@ abstract class InnerNode extends ArrayNode
     }
 
     /**
+     * Check if has next Child
+     *
+     * @param $id childId
+     * @return mixed
+     */
+    public function hasNextChild($id)
+    {
+        $child= $this->getChild($id);
+        return $this->children[$child->id()]['next'];
+    }
+
+    /**
      * Attempts to get the next child.
      *
      * @param int $id
