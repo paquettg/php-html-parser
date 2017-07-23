@@ -5,6 +5,7 @@ use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Selector;
 use stringEncode\Encode;
+use PHPHtmlParser\Finder;
 
 /**
  * Dom node object.
@@ -17,7 +18,7 @@ use stringEncode\Encode;
  */
 abstract class AbstractNode
 {
-
+    private static $count = 0;
     /**
      * Contains the tag name/type
      *
@@ -54,11 +55,12 @@ abstract class AbstractNode
     protected $encode;
 
     /**
-     * Creates a unique spl hash for this node.
+     * Creates a unique id for this node.
      */
     public function __construct()
     {
-        $this->id = spl_object_hash($this);
+        $this->id = self::$count;
+        self::$count++;
     }
 
     /**
@@ -83,7 +85,7 @@ abstract class AbstractNode
             case 'tag':
                 return $this->getTag();
             case 'parent':
-                $this->getParent();
+                return $this->getParent();
         }
 
         return null;
@@ -108,6 +110,14 @@ abstract class AbstractNode
     public function __toString()
     {
         return $this->outerHtml();
+    }
+
+    /**
+     * Reset node counter
+     */
+    public static function resetCount()
+    {
+        self::$count = 0;
     }
 
     /**
@@ -166,8 +176,8 @@ abstract class AbstractNode
         if ( ! is_null($this->parent)) {
             $this->parent->removeChild($this->id);
         }
-
-        $this->parent = null;
+        $this->parent->clear();
+        $this->clear();
     }
 
     /**
@@ -215,6 +225,15 @@ abstract class AbstractNode
         }
 
         return null;
+    }
+
+    public function hasNextSibling()
+    {
+        if (is_null($this->parent) || (!$this->parent->hasChildren())) {
+            return false;
+        }
+
+        return $this->parent->hasNextChild($this->id());
     }
 
     /**
@@ -291,6 +310,18 @@ abstract class AbstractNode
     }
 
     /**
+     * A wrapper method that simply calls the hasAttribute method
+     * on the tag of this node.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasAttribute($key)
+    {
+        return $this->tag->hasAttribute($key);
+    }
+
+    /**
      * A wrapper method that simply calls the setAttribute method
      * on the tag of this node.
      *
@@ -301,6 +332,9 @@ abstract class AbstractNode
     public function setAttribute($key, $value)
     {
         $this->tag->setAttribute($key, $value);
+
+        //clear any cache
+        $this->clear();
 
         return $this;
     }
@@ -315,6 +349,9 @@ abstract class AbstractNode
     public function removeAttribute($key)
     {
         $this->tag->removeAttribute($key);
+
+        //clear any cache
+        $this->clear();
     }
 
     /**
@@ -326,8 +363,10 @@ abstract class AbstractNode
     public function removeAllAttributes()
     {
         $this->tag->removeAllAttributes();
-    }
 
+        //clear any cache
+        $this->clear();
+    }
     /**
      * Function to locate a specific ancestor tag in the path to the root.
      *
@@ -376,6 +415,20 @@ abstract class AbstractNode
     }
 
     /**
+     * Find node by id
+     *
+     * @param $id
+     * @return bool|AbstractNode
+     */
+    public function findById($id)
+    {
+        $finder= new Finder($id);
+
+        return $finder->find($this);
+    }
+
+
+    /**
      * Gets the inner html of this node.
      *
      * @return string
@@ -404,4 +457,14 @@ abstract class AbstractNode
      * @return void
      */
     abstract protected function clear();
+
+    /**
+     * Check is node type textNode
+     *
+     * @return boolean
+     */
+    public function isTextNode() {
+
+        return false;
+    }
 }

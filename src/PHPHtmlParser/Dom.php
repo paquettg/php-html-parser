@@ -79,16 +79,31 @@ class Dom
      * @var array
      */
     protected $selfClosing = [
-        'img',
-        'br',
-        'input',
-        'meta',
-        'link',
-        'hr',
+        'area',
         'base',
+        'basefont',
+        'br',
+        'col',
         'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
         'spacer',
+        'track',
+        'wbr'
     ];
+
+    /**
+     * A list of tags where there should be no /> at the end (html5 style)
+     *
+     * @var array
+     */
+    protected $noSlash = [];
 
     /**
      * Returns the inner html of the root node.
@@ -120,6 +135,7 @@ class Dom
      */
     public function load($str, $options = [])
     {
+        AbstractNode::resetCount();
         // check if it's a file
         if (strpos($str, "\n") === false && is_file($str)) {
             return $this->loadFromFile($str, $options);
@@ -220,6 +236,20 @@ class Dom
     }
 
     /**
+     * Find element by Id on the root node
+     *
+     * @param int $id Element Id
+     * @return mixed
+     *
+     */
+    public function findById($id)
+    {
+        $this->isLoaded();
+
+        return $this->root->findById($id);
+    }
+
+    /**
      * Adds the tag (or tags in an array) to the list of tags that will always
      * be self closing.
      *
@@ -267,6 +297,53 @@ class Dom
         return $this;
     }
 
+
+    /**
+     * Adds a tag to the list of self closing tags that should not have a trailing slash
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function addNoSlashTag($tag)
+    {
+        if ( ! is_array($tag)) {
+            $tag = [$tag];
+        }
+        foreach ($tag as $value) {
+            $this->noSlash[] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes a tag from the list of no-slash tags.
+     *
+     * @param $tag
+     * @return $this
+     */
+    public function removeNoSlashTag($tag)
+    {
+        if ( ! is_array($tag)) {
+            $tag = [$tag];
+        }
+        $this->noSlash = array_diff($this->noSlash, $tag);
+
+        return $this;
+    }
+
+    /**
+     * Empties the list of no-slash tags.
+     *
+     * @return $this
+     */
+    public function clearNoSlashTags()
+    {
+        $this->noSlash = [];
+
+        return $this;
+    }
+
     /**
      * Simple wrapper function that returns the first child.
      *
@@ -289,6 +366,42 @@ class Dom
         $this->isLoaded();
 
         return $this->root->lastChild();
+    }
+
+    /**
+     * Simple wrapper function that returns count of child elements
+     *
+     * @return int
+     */
+    public function countChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->countChildren();
+    }
+
+    /**
+     * Get array of children
+     *
+     * @return array
+     */
+    public function getChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->getChildren();
+    }
+
+    /**
+     * Check if node have children nodes
+     *
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        $this->isLoaded();
+
+        return $this->root->hasChildren();
     }
 
     /**
@@ -391,7 +504,9 @@ class Dom
         }
 
         // strip out server side scripts
-        $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+        if ($this->options->get('serverSideScriptis') == true){
+            $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+        }
 
         // strip smarty scripts
         $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
@@ -516,8 +631,8 @@ class Dom
             }
 
             if (empty($name)) {
-                $this->content->fastForward(1);
-                continue;
+				$this->content->skipByToken('blank');
+				continue;
             }
 
             $this->content->skipByToken('blank');
@@ -588,6 +703,13 @@ class Dom
 
             // We force self closing on this tag.
             $node->getTag()->selfClosing();
+
+            // Should this tag use a trailing slash?
+            if(in_array($tag, $this->noSlash))
+            {
+                $node->getTag()->noTrailingSlash();
+            }
+
         }
 
         $this->content->fastForward(1);

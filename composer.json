@@ -15,10 +15,11 @@
     ],
     "require": {
         "php": ">=5.6",
+        "ext-mbstring": "*",
         "paquettg/string-encode": "~0.1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.3.0",
+        "phpunit/phpunit": "~5.7.0",
         "satooshi/php-coveralls": "~1.0.0",
         "mockery/mockery": "~0.9.0"
     },

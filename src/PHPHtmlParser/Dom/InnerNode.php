@@ -104,7 +104,7 @@ abstract class InnerNode extends ArrayNode
      * @return bool
      * @throws CircularException
      */
-    public function addChild(AbstractNode $child)
+    public function addChild(AbstractNode $child, $before = null)
     {
         $key = null;
 
@@ -118,22 +118,51 @@ abstract class InnerNode extends ArrayNode
             throw new CircularException('Can not set itself as a child.');
         }
 
+		$next = null;
+
         if ($this->hasChildren()) {
-            if (isset($this->children[$child->id()])) {
-                // we already have this child
-                return false;
-            }
-            $sibling                      = $this->lastChild();
-            $key                          = $sibling->id();
-            $this->children[$key]['next'] = $child->id();
+			if (isset($this->children[$child->id()])) {
+				// we already have this child
+				return false;
+			}
+
+			if ($before) {
+				if (!isset($this->children[$before])) {
+					return false;
+				}
+
+				$key = $this->children[$before]['prev'];
+
+				if($key){
+					$this->children[$key]['next'] = $child->id();
+				}
+
+				$this->children[$before]['prev'] = $child->id();
+				$next = $before;
+			} else {
+				$sibling = $this->lastChild();
+				$key = $sibling->id();
+
+				$this->children[$key]['next'] = $child->id();
+			}
         }
 
-        // add the child
-        $this->children[$child->id()] = [
-            'node' => $child,
-            'next' => null,
-            'prev' => $key,
-        ];
+		$keys = array_keys($this->children);
+
+		$insert = [
+			'node' => $child,
+			'next' => $next,
+			'prev' => $key,
+		];
+
+		$index = $key ? (array_search($key, $keys, true) + 1) : 0;
+		array_splice($keys, $index, 0, $child->id());
+
+		$children = array_values($this->children);
+		array_splice($children, $index, 0, [$insert]);
+
+		// add the child
+		$this->children = array_combine($keys, $children);
 
         // tell child I am the new parent
         $child->setParent($this);
@@ -143,6 +172,36 @@ abstract class InnerNode extends ArrayNode
 
         return true;
     }
+
+	/**
+	 * Insert element before child with provided id
+	 *
+	 * @param AbstractNode $child
+	 * @return bool
+	 * @param int $id
+	 */
+	public function insertBefore(AbstractNode $child, $id){
+		$this->addChild($child, $id);
+	}
+
+	/**
+	 * Insert element before after with provided id
+	 *
+	 * @param AbstractNode $child
+	 * @return bool
+	 * @param int $id
+	 */
+	public function insertAfter(AbstractNode $child, $id){
+		if (!isset($this->children[$id])) {
+			return false;
+		}
+
+		if ($this->children[$id]['next']) {
+			return $this->addChild($child, $this->children[$id]['next']);
+		}
+
+		return $this->addChild($child);
+	}
 
     /**
      * Removes the child by id.
@@ -173,6 +232,18 @@ abstract class InnerNode extends ArrayNode
         $this->clear();
 
         return $this;
+    }
+
+    /**
+     * Check if has next Child
+     *
+     * @param $id childId
+     * @return mixed
+     */
+    public function hasNextChild($id)
+    {
+        $child= $this->getChild($id);
+        return $this->children[$child->id()]['next'];
     }
 
     /**
@@ -235,13 +306,28 @@ abstract class InnerNode extends ArrayNode
      */
     public function replaceChild($childId, AbstractNode $newChild)
     {
-        $oldChild                        = $this->getChild($childId);
-        $keys                            = array_keys($this->children);
-        $index                           = array_search($childId, $keys, true);
-        $keys[$index]                    = $newChild->id();
-        $this->children                  = array_combine($keys, $this->children);
-        $this->children[$newChild->id()] = $newChild;
-        unset($oldChild);
+        $oldChild = $this->children[$childId];
+
+        $newChild->prev = $oldChild['prev'];
+        $newChild->next = $oldChild['next'];
+
+        $keys = array_keys($this->children);
+        $index = array_search($childId, $keys, true);
+        $keys[$index] = $newChild->id();
+        $this->children = array_combine($keys, $this->children);
+        $this->children[$newChild->id()] = array(
+            'prev' => $oldChild['prev'],
+            'node' => $newChild,
+            'next' => $oldChild['next']
+        );
+
+        if ($oldChild['prev'] && isset($this->children[$newChild->prev])) {
+            $this->children[$oldChild['prev']]['next'] = $newChild->id();
+        }
+
+        if ($oldChild['next'] && isset($this->children[$newChild->next])) {
+            $this->children[$oldChild['next']]['prev'] = $newChild->id();
+        }
     }
 
     /**

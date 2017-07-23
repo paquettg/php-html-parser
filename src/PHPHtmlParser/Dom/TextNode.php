@@ -73,6 +73,24 @@ class TextNode extends LeafNode
     }
 
     /**
+     * Sets the text for this node.
+     *
+     * @var string $text
+     * @return void
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+
+        if ( ! is_null($this->encode)) {
+            $text = $this->encode->convert($text);
+
+            // remember the conversion
+            $this->convertedText = $text;
+        }
+    }
+
+    /**
      * This node has no html, just return the text.
      *
      * @return string
@@ -101,5 +119,15 @@ class TextNode extends LeafNode
     protected function clear()
     {
         $this->convertedText = null;
+    }
+
+    /**
+     * Checks if the current node is a text node.
+     *
+     * @return bool
+     */
+    public function isTextNode()
+    {
+        return true;
     }
 }

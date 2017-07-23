@@ -34,6 +34,13 @@ class Tag
     protected $selfClosing = false;
 
     /**
+     * If self-closing, will this use a trailing slash. />
+     *
+     * @var bool
+     */
+    protected $trailingSlash = true;
+
+    /**
      * Tag noise
      */
     protected $noise = '';
@@ -99,6 +106,19 @@ class Tag
         return $this;
     }
 
+
+    /**
+     * Sets the tag to not use a trailing slash.
+     *
+     * @return $this
+     */
+    public function noTrailingSlash()
+    {
+        $this->trailingSlash = false;
+
+        return $this;
+    }
+
     /**
      * Checks if the tag is self closing.
      *
@@ -152,6 +172,51 @@ class Tag
 
         return $this;
     }
+
+    /**
+     * Set inline style attribute value.
+     *
+     * @param $attr_key
+     * @param $attr_value
+     */
+    public function setStyleAttributeValue($attr_key, $attr_value)
+    {
+
+        $style_array = $this->getStyleAttributeArray();
+        $style_array[$attr_key] = $attr_value;
+
+        $style_string = '';
+        foreach ($style_array as $key => $value) {
+            $style_string .= $key . ':' . $value . ';';
+        }
+
+        $this->setAttribute('style', $style_string);
+    }
+
+    /**
+     * Get style attribute in array
+     *
+     * @return array|null
+     */
+    public function getStyleAttributeArray()
+    {
+        $value = $this->getAttribute('style')['value'];
+
+        if ($value === null) {
+            return null;
+        }
+
+        $value = explode(';', substr(trim($value), 0, -1));
+        $result = [];
+        foreach ($value as $attr) {
+            $attr = explode(':', $attr);
+            $result[$attr[0]] = $attr[1];
+        }
+
+        return $result;
+    }
+
+
 
     /**
      * Removes an attribute from this tag.
@@ -226,6 +291,17 @@ class Tag
     }
 
     /**
+     * Returns TRUE if node has attribute
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasAttribute($key)
+    {
+        return isset($this->attr[$key]);
+    }
+
+    /**
      * Generates the opening tag for this object.
      *
      * @return string
@@ -247,7 +323,7 @@ class Tag
             }
         }
 
-        if ($this->selfClosing) {
+        if ($this->selfClosing && $this->trailingSlash) {
             return $return.' />';
         } else {
             return $return.'>';

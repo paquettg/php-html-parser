@@ -72,6 +72,26 @@ class NodeParentTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($child2->id(), $parent->nextChild($child->id())->id());
     }
 
+    public function testHasNextChild()
+    {
+        $parent = new Node;
+        $child = new Node;
+        $child2 = new Node;
+        $parent->addChild($child);
+        $parent->addChild($child2);
+
+        $this->assertEquals($child2->id(), $parent->hasNextChild($child->id()));
+    }
+
+    public function testHasNextChildNotExists()
+    {
+        $parent = new Node;
+        $child = new Node;
+
+        $this->expectException(\PHPHtmlParser\Exceptions\ChildNotFoundException::class);
+        $parent->hasNextChild($child->id());
+    }
+
     public function testNextChildWithRemove()
     {
         $parent = new Node;
@@ -136,6 +156,78 @@ class NodeParentTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($child3->id(), $parent->lastChild()->id());
     }
+
+	public function testInsertBeforeFirst()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$child3 = new Node;
+		$parent->addChild($child2);
+		$parent->addChild($child3);
+
+		$parent->insertBefore($child, $child2->id());
+
+		$this->assertTrue($parent->isChild($child->id()));
+		$this->assertEquals($parent->firstChild()->id(), $child->id());
+		$this->assertEquals($child->nextSibling()->id(), $child2->id());
+		$this->assertEquals($child2->nextSibling()->id(), $child3->id());
+		$this->assertEquals($parent->lastChild()->id(), $child3->id());
+	}
+
+	public function testInsertBeforeLast()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$child3 = new Node;
+		$parent->addChild($child);
+		$parent->addChild($child3);
+
+		$parent->insertBefore($child2, $child3->id());
+
+		$this->assertTrue($parent->isChild($child2->id()));
+		$this->assertEquals($parent->firstChild()->id(), $child->id());
+		$this->assertEquals($child->nextSibling()->id(), $child2->id());
+		$this->assertEquals($child2->nextSibling()->id(), $child3->id());
+		$this->assertEquals($parent->lastChild()->id(), $child3->id());
+	}
+
+	public function testInsertAfterFirst()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$child3 = new Node;
+		$parent->addChild($child);
+		$parent->addChild($child3);
+
+		$parent->insertAfter($child2, $child->id());
+
+		$this->assertTrue($parent->isChild($child2->id()));
+		$this->assertEquals($parent->firstChild()->id(), $child->id());
+		$this->assertEquals($child->nextSibling()->id(), $child2->id());
+		$this->assertEquals($child2->nextSibling()->id(), $child3->id());
+		$this->assertEquals($parent->lastChild()->id(), $child3->id());
+	}
+
+	public function testInsertAfterLast()
+	{
+		$parent = new Node;
+		$child  = new Node;
+		$child2 = new Node;
+		$child3 = new Node;
+		$parent->addChild($child);
+		$parent->addChild($child2);
+
+		$parent->insertAfter($child3, $child2->id());
+
+		$this->assertTrue($parent->isChild($child2->id()));
+		$this->assertEquals($parent->firstChild()->id(), $child->id());
+		$this->assertEquals($child->nextSibling()->id(), $child2->id());
+		$this->assertEquals($child2->nextSibling()->id(), $child3->id());
+		$this->assertEquals($parent->lastChild()->id(), $child3->id());
+	}
 
     public function testReplaceChild()
     {

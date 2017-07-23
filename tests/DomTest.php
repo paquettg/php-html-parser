@@ -88,6 +88,15 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('<br /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
+    public function testLoadClosingTagOnSelfClosingNoSlash()
+    {
+        $dom = new Dom;
+        $dom->addNoSlashTag("br");
+
+        $dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+        $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
+    }
+
     public function testLoadClosingTagAddSelfClosingTag()
     {
         $dom = new Dom;
@@ -172,6 +181,15 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Dzień', $dom->find('p', 0)->text);
     }
 
+	public function testLoadFileWhitespace()
+	{
+		$dom = new Dom;
+		$dom->setOptions(['cleanupInput' => false]);
+		$dom->loadFromFile('tests/files/whitespace.html');
+		$this->assertEquals(1, count($dom->find('.class')));
+		$this->assertEquals("<span><span class=\"class\"></span></span>", (string)$dom);
+	}
+
     public function testLoadFileBig()
     {
         $dom = new Dom;
@@ -192,9 +210,10 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $dom = new Dom;
         $dom->loadFromFile('tests/files/big.html', ['preserveLineBreaks' => true]);
         $post = $dom->find('.post-row', 0);
-        $this->assertEquals('<p>Журчанье воды<br />
-Черно-белые тени<br />
-Вновь на фонтане</p>', trim($post->find('.post-message', 0)->innerHtml));
+        $this->assertEquals(
+            "<p>Журчанье воды<br />\nЧерно-белые тени<br />\nВновь на фонтане</p>",
+            trim($post->find('.post-message', 0)->innerHtml)
+        );
     }
 
     public function testLoadFromUrl()
@@ -259,15 +278,6 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('<p>Hey bro, <a href="google.com" id="78">click here</a></p>', $dom->getElementsByClass('all')[0]->innerHtml);
     }
 
-    public function testEnforceEncoding()
-    {
-        $dom = new Dom;
-        $dom->load('tests/files/horrible.html', [
-            'enforceEncoding' => 'UTF-8',
-        ]);
-        $this->assertNotEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', $dom->find('table input', 1)->outerHtml);
-    }
-
     public function testScriptCleanerScriptTag()
     {
         $dom = new Dom;
@@ -318,5 +328,53 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $a->delete();
         unset($a);
         $this->assertEquals('<div class="all"><p>Hey bro, <br /> :)</p></div>', (string) $dom);
+    }
+
+    public function testCountChildren()
+    {
+        $dom = new Dom;
+        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $this->assertEquals(2, $dom->countChildren());
+    }
+
+    public function testGetChildrenArray()
+    {
+        $dom = new Dom;
+        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $this->assertInternalType('array', $dom->getChildren());
+    }
+
+    public function testHasChildren()
+    {
+        $dom = new Dom;
+        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $this->assertTrue($dom->hasChildren());
+    }
+
+    public function testFindByIdVar1()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        /** @var Dom\AbstractNode $result */
+        $result = $dom->findById(4);
+        $this->assertEquals(4, $result->id());
+    }
+
+    public function testFindByIdVar2()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        /** @var Dom\AbstractNode $result */
+        $result = $dom->findById(5);
+        $this->assertEquals(5, $result->id());
+    }
+
+    public function testFindByIdNotFountEleement()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        /** @var Dom\AbstractNode $result */
+        $result = $dom->findById(8);
+        $this->assertFalse($result);
     }
 }
