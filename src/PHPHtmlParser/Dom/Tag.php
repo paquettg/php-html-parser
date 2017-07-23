@@ -34,6 +34,13 @@ class Tag
     protected $selfClosing = false;
 
     /**
+     * If self-closing, will this use a trailing slash. />
+     *
+     * @var bool
+     */
+    protected $trailingSlash = true;
+
+    /**
      * Tag noise
      */
     protected $noise = '';
@@ -95,6 +102,19 @@ class Tag
     public function selfClosing()
     {
         $this->selfClosing = true;
+
+        return $this;
+    }
+
+
+    /**
+     * Sets the tag to not use a trailing slash.
+     *
+     * @return $this
+     */
+    public function noTrailingSlash()
+    {
+        $this->trailingSlash = false;
 
         return $this;
     }
@@ -258,7 +278,7 @@ class Tag
             }
         }
 
-        if ($this->selfClosing) {
+        if ($this->selfClosing && $this->trailingSlash) {
             return $return.' />';
         } else {
             return $return.'>';

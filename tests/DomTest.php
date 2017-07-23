@@ -88,6 +88,15 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('<br /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
+    public function testLoadClosingTagOnSelfClosingNoSlash()
+    {
+        $dom = new Dom;
+        $dom->addNoSlashTag("br");
+
+        $dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+        $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
+    }
+
     public function testLoadClosingTagAddSelfClosingTag()
     {
         $dom = new Dom;
