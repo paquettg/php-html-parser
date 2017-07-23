@@ -15,6 +15,7 @@
     ],
     "require": {
         "php": ">=5.6",
+        "ext-mbstring": "*",
         "paquettg/string-encode": "~0.1.0"
     },
     "require-dev": {
