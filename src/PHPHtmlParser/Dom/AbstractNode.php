@@ -85,7 +85,7 @@ abstract class AbstractNode
             case 'tag':
                 return $this->getTag();
             case 'parent':
-                $this->getParent();
+                return $this->getParent();
         }
 
         return null;
@@ -179,8 +179,8 @@ abstract class AbstractNode
         if ( ! is_null($this->parent)) {
             $this->parent->removeChild($this->id);
         }
-
-        $this->parent = null;
+        $this->parent->clear();
+        $this->clear();
     }
 
     /**
@@ -324,6 +324,9 @@ abstract class AbstractNode
     {
         $this->tag->setAttribute($key, $value);
 
+        //clear any cache
+        $this->clear();
+
         return $this;
     }
 
@@ -337,6 +340,9 @@ abstract class AbstractNode
     public function removeAttribute($key)
     {
         $this->tag->removeAttribute($key);
+
+        //clear any cache
+        $this->clear();
     }
 
     /**
@@ -348,8 +354,10 @@ abstract class AbstractNode
     public function removeAllAttributes()
     {
         $this->tag->removeAllAttributes();
-    }
 
+        //clear any cache
+        $this->clear();
+    }
     /**
      * Function to locate a specific ancestor tag in the path to the root.
      *

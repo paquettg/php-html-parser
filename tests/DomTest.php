@@ -172,6 +172,15 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Dzień', $dom->find('p', 0)->text);
     }
 
+	public function testLoadFileWhitespace()
+	{
+		$dom = new Dom;
+		$dom->setOptions(['cleanupInput' => false]);
+		$dom->loadFromFile('tests/files/whitespace.html');
+		$this->assertEquals(1, count($dom->find('.class')));
+		$this->assertEquals("<span><span class=\"class\"></span></span>", (string)$dom);
+	}
+
     public function testLoadFileBig()
     {
         $dom = new Dom;
@@ -257,15 +266,6 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $dom = new Dom;
         $dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
         $this->assertEquals('<p>Hey bro, <a href="google.com" id="78">click here</a></p>', $dom->getElementsByClass('all')[0]->innerHtml);
-    }
-
-    public function testEnforceEncoding()
-    {
-        $dom = new Dom;
-        $dom->load('tests/files/horrible.html', [
-            'enforceEncoding' => 'UTF-8',
-        ]);
-        $this->assertNotEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', $dom->find('table input', 1)->outerHtml);
     }
 
     public function testScriptCleanerScriptTag()

@@ -79,15 +79,23 @@ class Dom
      * @var array
      */
     protected $selfClosing = [
-        'img',
-        'br',
-        'input',
-        'meta',
-        'link',
-        'hr',
+        'area',
         'base',
+        'basefont',
+        'br',
+        'col',
         'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
         'spacer',
+        'track',
+        'wbr'
     ];
 
     /**
@@ -569,8 +577,8 @@ class Dom
             }
 
             if (empty($name)) {
-                $this->content->fastForward(1);
-                continue;
+				$this->content->skipByToken('blank');
+				continue;
             }
 
             $this->content->skipByToken('blank');
