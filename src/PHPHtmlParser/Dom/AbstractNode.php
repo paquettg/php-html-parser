@@ -162,9 +162,6 @@ abstract class AbstractNode
         // assign child to parent
         $this->parent->addChild($this);
 
-        //clear any cache
-        $this->clear();
-
         return $this;
     }
 
