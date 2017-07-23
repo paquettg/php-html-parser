@@ -12,7 +12,7 @@ PHPHtmlParser is a simple, flexible, html parser which allows you to select tags
 Install
 -------
 
-This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 5.6, 7.0, and hhvm 2.3.
+This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 5.6, 7.0, 7.1.
 
 Usage
 -----
@@ -216,4 +216,14 @@ $a   = $dom->find('a')[0];
 $a->delete();
 unset($a);
 echo $dom; // '<div class="all"><p>Hey bro, <br /> :)</p></div>');
+```
+
+You can modify the text of `TextNode` objects easely. Please note that, if you set an encoding, the new text will be encoded using the existing encoding.
+
+```php
+$dom = new Dom;
+$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$a   = $dom->find('a')[0];
+$a->firstChild()->setText('biz baz');
+echo $dom; // '<div class="all"><p>Hey bro, <a href="google.com">biz baz</a><br /> :)</p></div>'
 ```
