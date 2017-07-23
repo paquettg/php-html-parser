@@ -121,14 +121,13 @@ class TextNode extends LeafNode
         $this->convertedText = null;
     }
 
+    /**
+     * Checks if the current node is a text node.
+     *
+     * @return bool
+     */
     public function isTextNode()
     {
         return true;
     }
-
-    public function setText($text)
-    {
-        $this->text = $text;
-    }
-
 }
