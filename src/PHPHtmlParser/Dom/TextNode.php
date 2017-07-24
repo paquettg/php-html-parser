@@ -35,10 +35,12 @@ class TextNode extends LeafNode
      *
      * @param string $text
      */
-    public function __construct($text)
+    public function __construct($text, $removeDoubleSpace = true)
     {
-        // remove double spaces
-        $text = mb_ereg_replace('\s+', ' ', $text);
+        if ($removeDoubleSpace) {
+            // remove double spaces
+            $text = mb_ereg_replace('\s+', ' ', $text);
+        }
 
         // restore line breaks
         $text = str_replace('&#10;', "\n", $text);

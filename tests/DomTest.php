@@ -377,4 +377,14 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $result = $dom->findById(8);
         $this->assertFalse($result);
     }
+
+    public function testWhitespaceInText()
+    {
+        $dom = new Dom();
+        $dom->setOptions(array(
+            'removeDoubleSpace' => false,
+        ));
+        $dom->load('<pre>    Hello world</pre>');
+        $this->assertEquals('<pre>    Hello world</pre>', (string) $dom);
+    }
 }

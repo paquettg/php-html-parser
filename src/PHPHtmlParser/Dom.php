@@ -565,7 +565,7 @@ class Dom
                 trim($str) != ''
             ) {
                 // we found text we care about
-                $textNode = new TextNode($str);
+                $textNode = new TextNode($str, $this->options->removeDoubleSpace);
                 $activeNode->addChild($textNode);
             }
         }

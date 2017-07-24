@@ -138,7 +138,7 @@ $dom->load('http://google.com', [
 $dom->load('http://gmail.com'); // will not have whitespaceTextNode set to false.
 ```
 
-At the moment we support 7 options.
+At the moment we support 8 options.
 
 **Strict**
 
@@ -168,6 +168,9 @@ Set this to `false` to skip removing of style tags from the document body. This 
 
 Preserves Line Breaks if set to `true`. If set to `false` line breaks are cleaned up as part of the input clean up process. Defaults to `false`.
 
+**removeDoubleSpace**
+
+Set this to `false` if you want to preserver whitespace inside of text nodes. It is set to `true` by default.
 Static Facade
 -------------
 

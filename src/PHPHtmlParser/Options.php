@@ -25,6 +25,7 @@ class Options
         'removeScripts'      => true,
         'removeStyles'       => true,
         'preserveLineBreaks' => false,
+        'removeDoubleSpace'  => true,
     ];
 
     /**
