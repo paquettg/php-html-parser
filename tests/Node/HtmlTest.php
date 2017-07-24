@@ -1,6 +1,7 @@
 <?php
 
 
+use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Dom\MockNode;
@@ -488,5 +489,15 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
         $a    = new Tag('a');
         $node = new HtmlNode($a);
         $node->ancestorByTag('div');
+    }
+
+    public function testReplaceNode()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $id = $dom->find('p')[0]->id();
+        $newChild = new HtmlNode('h1');
+        $dom->find('p')[0]->getParent()->replaceChild($id, $newChild);
+        $this->assertEquals('<div class="all"><h1></h1></div>', (string) $dom);
     }
 }
