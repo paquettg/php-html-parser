@@ -203,4 +203,18 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $selector = new Selector('div > ul');
         $this->assertEquals(1, count($selector->find($root)));
     }
+
+    public function testFindNth()
+    {
+        $root   = new HtmlNode('root');
+        $parent = new HtmlNode('div');
+        $child1 = new HtmlNode('a');
+        $child2 = new HtmlNode('p');
+        $parent->addChild($child1);
+        $parent->addChild($child2);
+        $root->addChild($parent);
+
+        $selector = new Selector('div a');
+        $this->assertEquals($child1->id(), $selector->find($root, 1)->id());
+    }
 }
