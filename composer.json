@@ -33,5 +33,10 @@
         "psr-0": {
             "PHPHtmlParser": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.8.x-dev"
+        }
     }
 }
