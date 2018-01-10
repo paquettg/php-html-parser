@@ -26,6 +26,9 @@
         "satooshi/php-coveralls": "~1.0.0",
         "mockery/mockery": "~0.9.0"
     },
+    "replace": {
+        "paquettg/php-html-parser": "self.version"
+    },
     "autoload": {
         "psr-0": {
             "PHPHtmlParser": "src/"
