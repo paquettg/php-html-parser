@@ -31,19 +31,19 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 
     public function testLoadWithFile()
     {
-        $dom = Dom::load('tests/files/small.html');
+        $dom = Dom::load(__DIR__ . '/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testLoadFromFile()
     {
-        $dom = Dom::loadFromFile('tests/files/small.html');
+        $dom = Dom::loadFromFile(__DIR__ . '/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testFind()
     {
-        Dom::load('tests/files/horrible.html');
+        Dom::load(__DIR__ . '/files/horrible.html');
         $this->assertEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', Dom::find('table input', 1)->outerHtml);
     }
 
@@ -57,7 +57,7 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 
     public function testFindI()
     {
-        Dom::load('tests/files/horrible.html');
+        Dom::load(__DIR__ . '/files/horrible.html');
         $this->assertEquals('[ Досие бр:12928 ]', Dom::find('i')[0]->innerHtml);
     }
 
@@ -67,7 +67,7 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
         $curl->shouldReceive('get')
              ->once()
              ->with('http://google.com')
-             ->andReturn(file_get_contents('tests/files/small.html'));
+             ->andReturn(file_get_contents(__DIR__ . '/files/small.html'));
 
         Dom::loadFromUrl('http://google.com', [], $curl);
         $this->assertEquals('VonBurgermeister', Dom::find('.post-row div .post-user font', 0)->text);
