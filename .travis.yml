@@ -1,13 +1,16 @@
 language: php
 
 php:
-  - 5.6
-  - 7.0
-  - hhvm
+  - 7.1
+  - 7.2
+  - nightly
 
 install:
   - composer self-update
   - composer install --dev --no-interaction
+
+allowed_failures:
+  - nightly
 
 script:
   - vendor/bin/phpunit
