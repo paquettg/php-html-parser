@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\Dom;
+use PHPUnit\Framework\TestCase;
 
-class PreserveLineBreaks extends PHPUnit_Framework_TestCase {
+class PreserveLineBreaks extends TestCase {
 
     public function testPreserveLineBreakTrue()
     {

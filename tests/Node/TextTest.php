@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\Dom\TextNode;
+use PHPUnit\Framework\TestCase;
 
-class NodeTextTest extends PHPUnit_Framework_TestCase {
+class NodeTextTest extends TestCase {
 
     public function testText()
     {

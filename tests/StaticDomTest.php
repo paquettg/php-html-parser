@@ -1,8 +1,10 @@
 <?php
 
+use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\StaticDom;
+use PHPUnit\Framework\TestCase;
 
-class StaticDomTest extends PHPUnit_Framework_TestCase {
+class StaticDomTest extends TestCase {
 
     public function setUp()
     {
@@ -47,11 +49,9 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', Dom::find('table input', 1)->outerHtml);
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
-     */
     public function testFindNoLoad()
     {
+        $this->expectException(NotLoadedException::class);
         StaticDom::find('.post-user font', 0);
     }
 

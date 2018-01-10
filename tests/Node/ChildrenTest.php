@@ -1,8 +1,11 @@
 <?php
 
 use PHPHtmlParser\Dom\MockNode as Node;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use PHPHtmlParser\Exceptions\ParentNotFoundException;
+use PHPUnit\Framework\TestCase;
 
-class NodeChildTest extends PHPUnit_Framework_TestCase {
+class NodeChildTest extends TestCase {
 
     public function testGetParent()
     {
@@ -32,22 +35,20 @@ class NodeChildTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($child2->id(), $child->nextSibling()->id());
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\ChildNotFoundException
-     */
     public function testNextSiblingNotFound()
     {
+        $this->expectException(ChildNotFoundException::class);
+
         $parent = new Node;
         $child  = new Node;
         $child->setParent($parent);
         $child->nextSibling();
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\ParentNotFoundException
-     */
     public function testNextSiblingNoParent()
     {
+        $this->expectException(ParentNotFoundException::class);
+
         $child = new Node;
         $child->nextSibling();
     }
@@ -62,22 +63,20 @@ class NodeChildTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($child->id(), $child2->previousSibling()->id());
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\ChildNotFoundException
-     */
     public function testPreviousSiblingNotFound()
     {
+        $this->expectException(ChildNotFoundException::class);
+
         $parent = new Node;
         $node = new Node;
         $node->setParent($parent);
         $node->previousSibling();
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\ParentNotFoundException
-     */
     public function testPreviousSiblingNoParent()
     {
+        $this->expectException(ParentNotFoundException::class);
+
         $child = new Node;
         $child->previousSibling();
     }

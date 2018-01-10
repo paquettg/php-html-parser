@@ -1,8 +1,10 @@
 <?php
 
 use PHPHtmlParser\Dom\MockNode as Node;
+use PHPHtmlParser\Exceptions\CircularException;
+use PHPUnit\Framework\TestCase;
 
-class NodeParentTest extends PHPUnit_Framework_TestCase {
+class NodeParentTest extends TestCase {
 
     public function testHasChild()
     {
@@ -150,33 +152,30 @@ class NodeParentTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($parent->isChild($child->id()));
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\CircularException
-     */
     public function testSetParentDescendantException()
     {
+        $this->expectException(CircularException::class);
+
         $parent = new Node;
         $child  = new Node;
         $parent->addChild($child);
         $parent->setParent($child);
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\CircularException
-     */
     public function testAddChildAncestorException()
     {
+        $this->expectException(CircularException::class);
+
         $parent = new Node;
         $child  = new Node;
         $parent->addChild($child);
         $child->addChild($parent);
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\CircularException
-     */
     public function testAddItselfAsChild()
     {
+        $this->expectException(CircularException::class);
+
         $parent = new Node;
         $parent->addChild($parent);
     }

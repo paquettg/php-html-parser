@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\Dom;
+use PHPUnit\Framework\TestCase;
 
-class CleanupTest extends PHPUnit_Framework_TestCase {
+class CleanupTest extends TestCase {
 
     public function testCleanupInputTrue()
     {

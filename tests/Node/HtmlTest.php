@@ -5,8 +5,11 @@ use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Dom\MockNode;
 use PHPHtmlParser\Dom\Tag;
+use PHPHtmlParser\Exceptions\ParentNotFoundException;
+use PHPHtmlParser\Exceptions\UnknownChildTypeException;
+use PHPUnit\Framework\TestCase;
 
-class NodeHtmlTest extends PHPUnit_Framework_TestCase {
+class NodeHtmlTest extends TestCase {
 
     public function testInnerHtml()
     {
@@ -65,11 +68,10 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($inner, $parent->innerHtml());
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\UnknownChildTypeException
-     */
     public function testInnerHtmlUnkownChild()
     {
+        $this->expectException(UnknownChildTypeException::class);
+
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
@@ -447,11 +449,10 @@ class NodeHtmlTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(2, $children);
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\ParentNotFoundException
-     */
     public function testAncestorByTagFailure()
     {
+        $this->expectException(ParentNotFoundException::class);
+
         $a    = new Tag('a');
         $node = new HtmlNode($a);
         $node->ancestorByTag('div');

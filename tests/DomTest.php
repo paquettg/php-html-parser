@@ -1,8 +1,10 @@
 <?php
 
 use PHPHtmlParser\Dom;
+use PHPHtmlParser\Exceptions\NotLoadedException;
+use PHPUnit\Framework\TestCase;
 
-class DomTest extends PHPUnit_Framework_TestCase {
+class DomTest extends TestCase {
 
     public function tearDown()
     {
@@ -17,11 +19,9 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $div->outerHtml);
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
-     */
     public function testNotLoaded()
     {
+        $this->expectException(NotLoadedException::class);
         $dom = new Dom;
         $div = $dom->find('div', 0);
     }

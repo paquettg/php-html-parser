@@ -4,8 +4,9 @@ use PHPHtmlParser\Selector;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\Collection;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends PHPUnit_Framework_TestCase {
+class CollectionTest extends TestCase {
     
     public function testEach()
     {
@@ -29,10 +30,10 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException PHPHtmlParser\Exceptions\EmptyCollectionException
      */
     public function testCallNoNodes()
     {
+        $this->expectException('PHPHtmlParser\Exceptions\EmptyCollectionException');
         $collection = new Collection();
         $collection->innerHtml();
     }
@@ -70,10 +71,10 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException PHPHtmlParser\Exceptions\EmptyCollectionException
      */
     public function testGetNoNodes()
     {
+        $this->expectException('PHPHtmlParser\Exceptions\EmptyCollectionException');
         $collection = new Collection();
         $collection->innerHtml;
     }
