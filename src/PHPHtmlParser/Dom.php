@@ -359,8 +359,8 @@ class Dom
         }
 
         // remove white space before closing tags
-        $str = mb_eregi_replace("'\s+>", "'>", $str);
-        $str = mb_eregi_replace('"\s+>', '">', $str);
+        $str = preg_replace("#'\s+>#i", "'>", $str);
+        $str = preg_replace('#"\s+>#i', '">', $str);
 
         // clean out the \n\r
         $replace = ' ';
@@ -370,31 +370,31 @@ class Dom
         $str = str_replace(["\r\n", "\r", "\n"], $replace, $str);
 
         // strip the doctype
-        $str = mb_eregi_replace("<!doctype(.*?)>", '', $str);
+        $str = preg_replace("#<!doctype(.*?)>#i", '', $str);
 
         // strip out comments
-        $str = mb_eregi_replace("<!--(.*?)-->", '', $str);
+        $str = preg_replace("#<!--(.*?)-->#i", '', $str);
 
         // strip out cdata
-        $str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
+        $str = preg_replace("#<!\[CDATA\[(.*?)\]\]>#i", '', $str);
 
         // strip out <script> tags
         if ($this->options->get('removeScripts') == true) {
-            $str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
-            $str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
+            $str = preg_replace("#<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>#i", '', $str);
+            $str = preg_replace("#<\s*script\s*>(.*?)<\s*/\s*script\s*>#i", '', $str);
         }
 
         // strip out <style> tags
         if ($this->options->get('removeStyles') == true) {
-            $str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
-            $str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
+            $str = preg_replace("#<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>#", '', $str);
+            $str = preg_replace("#<\s*style\s*>(.*?)<\s*/\s*style\s*>#", '', $str);
         }
 
         // strip out server side scripts
-        $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+        $str = preg_replace("#(<\?)(.*?)(\?>)#i", '', $str);
 
         // strip smarty scripts
-        $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
+        $str = preg_replace("#(\{\w)(.*?)(\})#i", '', $str);
 
         return $str;
     }

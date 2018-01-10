@@ -38,7 +38,7 @@ class TextNode extends LeafNode
     public function __construct($text)
     {
         // remove double spaces
-        $text = mb_ereg_replace('\s+', ' ', $text);
+        $text = preg_replace('#\s+#', ' ', $text);
 
         // restore line breaks
         $text = str_replace('&#10;', "\n", $text);
