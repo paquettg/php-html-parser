@@ -1,5 +1,12 @@
 ### Development
 
+## 1.8.0 (2018-01-10)
+
+- Renamed fork to `thesoftwarefanatics/php-html-parser`
+- Drop support for HHVM and PHP < 7.1
+- Fix loading of HTML code with invalid multibyte charsets
+- Fix errors on PHP 7.2
+
 ## 1.7.0
 
 - Added .scrutinizer.yml to repo
