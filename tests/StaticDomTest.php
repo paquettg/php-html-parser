@@ -1,8 +1,10 @@
 <?php
 
+use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\StaticDom;
+use PHPUnit\Framework\TestCase;
 
-class StaticDomTest extends PHPUnit_Framework_TestCase {
+class StaticDomTest extends TestCase {
 
     public function setUp()
     {
@@ -24,41 +26,39 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
 
     public function testLoad()
     {
-        $dom = Dom::load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom = StaticDom::load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $div = $dom->find('div', 0);
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $div->outerHtml);
     }
 
     public function testLoadWithFile()
     {
-        $dom = Dom::load('tests/files/small.html');
+        $dom = StaticDom::load(__DIR__ . '/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testLoadFromFile()
     {
-        $dom = Dom::loadFromFile('tests/files/small.html');
+        $dom = StaticDom::loadFromFile(__DIR__ . '/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testFind()
     {
-        Dom::load('tests/files/horrible.html');
+        StaticDom::load(__DIR__ . '/files/horrible.html');
         $this->assertEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', Dom::find('table input', 1)->outerHtml);
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
-     */
     public function testFindNoLoad()
     {
-        Dom::find('.post-user font', 0);
+        $this->expectException(NotLoadedException::class);
+        StaticDom::find('.post-user font', 0);
     }
 
     public function testFindI()
     {
-        Dom::load('tests/files/horrible.html');
-        $this->assertEquals('[ Досие бр:12928 ]', Dom::find('i')[0]->innerHtml);
+        StaticDom::load(__DIR__ . '/files/horrible.html');
+        $this->assertEquals('[ Досие бр:12928 ]', StaticDom::find('i')[0]->innerHtml);
     }
 
     public function testLoadFromUrl()
@@ -67,10 +67,10 @@ class StaticDomTest extends PHPUnit_Framework_TestCase {
         $curl->shouldReceive('get')
              ->once()
              ->with('http://google.com')
-             ->andReturn(file_get_contents('tests/files/small.html'));
+             ->andReturn(file_get_contents(__DIR__ . '/files/small.html'));
 
-        Dom::loadFromUrl('http://google.com', [], $curl);
-        $this->assertEquals('VonBurgermeister', Dom::find('.post-row div .post-user font', 0)->text);
+        StaticDom::loadFromUrl('http://google.com', [], $curl);
+        $this->assertEquals('VonBurgermeister', StaticDom::find('.post-row div .post-user font', 0)->text);
     }
 
 }

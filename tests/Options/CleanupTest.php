@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\Dom;
+use PHPUnit\Framework\TestCase;
 
-class CleanupTest extends PHPUnit_Framework_TestCase {
+class CleanupTest extends TestCase {
 
     public function testCleanupInputTrue()
     {
@@ -10,7 +11,7 @@ class CleanupTest extends PHPUnit_Framework_TestCase {
         $dom->setOptions([
             'cleanupInput' => true,
         ]);
-        $dom->loadFromFile('tests/files/horrible.html');
+        $dom->loadFromFile(__DIR__ . '/../files/horrible.html');
         $this->assertEquals(0, count($dom->find('style')));
         $this->assertEquals(0, count($dom->find('script')));
     }
@@ -21,7 +22,7 @@ class CleanupTest extends PHPUnit_Framework_TestCase {
         $dom->setOptions([
             'cleanupInput' => false,
         ]);
-        $dom->loadFromFile('tests/files/horrible.html');
+        $dom->loadFromFile(__DIR__ . '/../files/horrible.html');
         $this->assertEquals(1, count($dom->find('style')));
         $this->assertEquals(1, count($dom->find('script')));
     }
@@ -32,7 +33,7 @@ class CleanupTest extends PHPUnit_Framework_TestCase {
         $dom->setOptions([
             'removeStyles' => true,
         ]);
-        $dom->loadFromFile('tests/files/horrible.html');
+        $dom->loadFromFile(__DIR__ . '/../files/horrible.html');
         $this->assertEquals(0, count($dom->find('style')));
     }
 
@@ -42,7 +43,7 @@ class CleanupTest extends PHPUnit_Framework_TestCase {
         $dom->setOptions([
             'removeStyles' => false,
         ]);
-        $dom->loadFromFile('tests/files/horrible.html');
+        $dom->loadFromFile(__DIR__ . '/../files/horrible.html');
         $this->assertEquals(1, count($dom->find('style')));
         $this->assertEquals('text/css',
             $dom->find('style')->getAttribute('type'));
@@ -54,7 +55,7 @@ class CleanupTest extends PHPUnit_Framework_TestCase {
         $dom->setOptions([
             'removeScripts' => true,
         ]);
-        $dom->loadFromFile('tests/files/horrible.html');
+        $dom->loadFromFile(__DIR__ . '/../files/horrible.html');
         $this->assertEquals(0, count($dom->find('script')));
     }
 
@@ -64,7 +65,7 @@ class CleanupTest extends PHPUnit_Framework_TestCase {
         $dom->setOptions([
             'removeScripts' => false,
         ]);
-        $dom->loadFromFile('tests/files/horrible.html');
+        $dom->loadFromFile(__DIR__ . '/../files/horrible.html');
         $this->assertEquals(1, count($dom->find('script')));
         $this->assertEquals('text/JavaScript',
             $dom->find('script')->getAttribute('type'));

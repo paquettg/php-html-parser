@@ -1,8 +1,10 @@
 <?php
 
 use PHPHtmlParser\Dom;
+use PHPHtmlParser\Exceptions\NotLoadedException;
+use PHPUnit\Framework\TestCase;
 
-class DomTest extends PHPUnit_Framework_TestCase {
+class DomTest extends TestCase {
 
     public function tearDown()
     {
@@ -17,11 +19,9 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $div->outerHtml);
     }
 
-    /**
-     * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
-     */
     public function testNotLoaded()
     {
+        $this->expectException(NotLoadedException::class);
         $dom = new Dom;
         $div = $dom->find('div', 0);
     }
@@ -147,21 +147,21 @@ class DomTest extends PHPUnit_Framework_TestCase {
     public function testLoadWithFile()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/small.html');
+        $dom->loadFromFile(__DIR__ . '/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testLoadFromFile()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/small.html');
+        $dom->loadFromFile(__DIR__ . '/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testLoadFromFileFind()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/small.html');
+        $dom->loadFromFile(__DIR__ . '/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-row div .post-user font', 0)->text);
     }
 
@@ -175,14 +175,14 @@ class DomTest extends PHPUnit_Framework_TestCase {
     public function testLoadFileBig()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile(__DIR__ . '/files/big.html');
         $this->assertEquals(10, count($dom->find('.content-border')));
     }
 
     public function testLoadFileBigTwice()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile(__DIR__ . '/files/big.html');
         $post = $dom->find('.post-row', 0);
         $this->assertEquals(' <p>Журчанье воды<br /> Черно-белые тени<br /> Вновь на фонтане</p> ', $post->find('.post-message', 0)->innerHtml);
     }
@@ -190,7 +190,7 @@ class DomTest extends PHPUnit_Framework_TestCase {
     public function testLoadFileBigTwicePreserveOption()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/big.html', ['preserveLineBreaks' => true]);
+        $dom->loadFromFile(__DIR__ . '/files/big.html', ['preserveLineBreaks' => true]);
         $post = $dom->find('.post-row', 0);
         $this->assertEquals('<p>Журчанье воды<br />
 Черно-белые тени<br />
@@ -203,7 +203,7 @@ class DomTest extends PHPUnit_Framework_TestCase {
         $curl->shouldReceive('get')
              ->once()
              ->with('http://google.com')
-             ->andReturn(file_get_contents('tests/files/small.html'));
+             ->andReturn(file_get_contents(__DIR__ . '/files/small.html'));
         
         $dom = new Dom;
         $dom->loadFromUrl('http://google.com', [], $curl);
@@ -262,7 +262,7 @@ class DomTest extends PHPUnit_Framework_TestCase {
     public function testEnforceEncoding()
     {
         $dom = new Dom;
-        $dom->load('tests/files/horrible.html', [
+        $dom->load(__DIR__ . '/files/horrible.html', [
             'enforceEncoding' => 'UTF-8',
         ]);
         $this->assertNotEquals('<input type="submit" tabindex="0" name="submit" value="Информации" />', $dom->find('table input', 1)->outerHtml);
