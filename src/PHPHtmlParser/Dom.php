@@ -633,7 +633,7 @@ class Dom
             return false;
         }
         $matches = [];
-        if (preg_match('/charset=(.+)/', $content, $matches)) {
+        if (preg_match('/charset=([^; ]+)/', $content, $matches)) {
             $encode->from(trim($matches[1]));
             $this->root->propagateEncoding($encode);
 
