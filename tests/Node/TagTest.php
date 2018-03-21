@@ -1,8 +1,8 @@
 <?php
 
 use PHPHtmlParser\Dom\Tag;
-
-class NodeTagTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+class NodeTagTest extends TestCase {
 
     public function testSelfClosing()
     {

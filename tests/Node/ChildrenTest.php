@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\Dom\MockNode as Node;
+use PHPUnit\Framework\TestCase;
 
-class NodeChildTest extends PHPUnit_Framework_TestCase {
+class NodeChildTest extends TestCase {
 
     public function testGetParent()
     {

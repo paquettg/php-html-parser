@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\StaticDom;
+use PHPUnit\Framework\TestCase;
 
-class StaticDomTest extends PHPUnit_Framework_TestCase {
+class StaticDomTest extends TestCase {
 
     public function setUp()
     {

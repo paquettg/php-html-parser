@@ -2,8 +2,8 @@
 
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\StrictException;
-
-class StrictTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+class StrictTest extends TestCase {
 
     public function testConfigStrict()
     {

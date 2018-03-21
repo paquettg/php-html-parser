@@ -4,8 +4,9 @@ use PHPHtmlParser\Selector;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\Collection;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends PHPUnit_Framework_TestCase {
+class CollectionTest extends TestCase {
     
     public function testEach()
     {
