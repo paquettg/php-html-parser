@@ -3,8 +3,9 @@
 use PHPHtmlParser\Selector;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
+use PHPUnit\Framework\TestCase;
 
-class SelectorTest extends PHPUnit_Framework_TestCase {
+class SelectorTest extends TestCase {
     
     public function testParseSelectorStringId()
     {

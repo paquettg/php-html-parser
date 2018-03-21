@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\Dom;
+use PHPUnit\Framework\TestCase;
 
-class DomTest extends PHPUnit_Framework_TestCase {
+class DomTest extends TestCase {
 
     public function tearDown()
     {

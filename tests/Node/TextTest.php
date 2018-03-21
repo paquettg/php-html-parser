@@ -3,8 +3,9 @@
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\TextNode;
 use stringEncode\Encode;
+use PHPUnit\Framework\TestCase;
 
-class NodeTextTest extends PHPUnit_Framework_TestCase {
+class NodeTextTest extends TestCase {
 
     public function testText()
     {

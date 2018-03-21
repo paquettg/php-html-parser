@@ -1,8 +1,9 @@
 <?php
 
 use PHPHtmlParser\Options;
+use PHPUnit\Framework\TestCase;
 
-class OptionsTest extends PHPUnit_Framework_TestCase {
+class OptionsTest extends TestCase {
 
     public function testDefaultWhitespaceTextNode()
     {

@@ -6,8 +6,9 @@ use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Dom\MockNode;
 use PHPHtmlParser\Dom\Tag;
+use PHPUnit\Framework\TestCase;
 
-class NodeHtmlTest extends PHPUnit_Framework_TestCase {
+class NodeHtmlTest extends TestCase {
 
     public function testInnerHtml()
     {
