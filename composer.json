@@ -4,7 +4,7 @@
     "version": "1.7.0",
     "description": "An HTML DOM parser. It allows you to manipulate HTML. Find tags on an HTML page with selectors just like jQuery.",
     "keywords": ["html", "dom", "parser"],
-    "homepage": "https://github.com/paquettg/php-html-parser",
+    "homepage": "https://github.com/muchrm/php-html-parser",
     "license": "MIT",
     "authors": [
         {
