@@ -41,6 +41,14 @@ class DomTest extends TestCase {
         $this->assertEquals($a->text, 'click here');
     }
 
+    public function testCharsetConvertInAttribute()
+    {
+        $dom = new Dom;
+        $dom->loadFromFile(__DIR__ . '/files/ISO-8859-7.html', ['preserveLineBreaks' => true]);
+        $a = $dom->find('a', 0);
+        $this->assertEquals('/testη', $a->href);
+    }
+
     public function testLoadSelfclosingAttr()
     {
         $dom = new Dom;
