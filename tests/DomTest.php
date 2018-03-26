@@ -33,6 +33,21 @@ class DomTest extends TestCase {
         $div = $dom->find('div', 0);
         $this->assertEquals(null, $div->foo);
     }
+    public function testIncorrectContentType()
+    {
+        $dom = new Dom;
+        $dom->load('<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8;"></head><body><div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div></body></html>');
+        $a = $dom->find('a', 0);
+        $this->assertEquals($a->text, 'click here');
+    }
+
+    public function testCharsetConvertInAttribute()
+    {
+        $dom = new Dom;
+        $dom->loadFromFile(__DIR__ . '/files/ISO-8859-7.html', ['preserveLineBreaks' => true]);
+        $a = $dom->find('a', 0);
+        $this->assertEquals('/testη', $a->href);
+    }
 
     public function testLoadSelfclosingAttr()
     {

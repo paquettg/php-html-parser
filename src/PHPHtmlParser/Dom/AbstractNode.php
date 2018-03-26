@@ -70,8 +70,8 @@ abstract class AbstractNode
     public function __get($key)
     {
         // check attribute first
-        if ( ! is_null($this->getAttribute($key))) {
-            return $this->getAttribute($key);
+        if ( ! is_null($value = $this->getAttribute($key))) {
+            return $value;
         }
         switch (strtolower($key)) {
             case 'outerhtml':

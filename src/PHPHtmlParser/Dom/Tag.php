@@ -146,6 +146,7 @@ class Tag
             $value = [
                 'value'       => $value,
                 'doubleQuote' => true,
+                'didConvertCharset' => true, 
             ];
         }
         $this->attr[$key] = $value;
@@ -217,9 +218,10 @@ class Tag
             return null;
         }
         $value = $this->attr[$key]['value'];
-        if (is_string($value) && ! is_null($this->encode)) {
+        if (is_string($value) && ! is_null($this->encode) && ! ($this->attr[$key]['didConvertCharset'] ?? false)) {
             // convert charset
             $this->attr[$key]['value'] = $this->encode->convert($value);
+            $this->attr[$key]['didConvertCharset'] = true;
         }
 
         return $this->attr[$key];
