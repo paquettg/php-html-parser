@@ -45,6 +45,10 @@ class TextNode extends LeafNode
         // restore line breaks
         $text = str_replace('&#10;', "\n", $text);
 
+        // convert HTML symbols
+        $text = html_entity_decode($text);
+
+
         $this->text = $text;
         $this->tag  = new Tag('text');
         parent::__construct();
