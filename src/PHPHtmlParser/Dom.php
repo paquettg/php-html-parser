@@ -210,7 +210,7 @@ class Dom
      *
      * @param string $selector
      * @param int $nth
-     * @return array
+     * @return \PHPHtmlParser\Dom\AbstractNode[]|\PHPHtmlParser\Dom\AbstractNode
      */
     public function find($selector, $nth = null)
     {

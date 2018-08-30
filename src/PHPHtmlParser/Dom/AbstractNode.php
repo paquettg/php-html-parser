@@ -359,7 +359,7 @@ abstract class AbstractNode
      *
      * @param string $selector
      * @param int $nth
-     * @return array|AbstractNode
+     * @return AbstractNode[]|AbstractNode
      */
     public function find($selector, $nth = null)
     {
