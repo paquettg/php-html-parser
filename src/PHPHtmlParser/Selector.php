@@ -168,8 +168,8 @@ class Selector
     protected function seek(array $nodes, array $rule, array $options)
     {
         // XPath index
-        if (count($rule['tag']) > 0 &&
-            count($rule['key']) > 0 &&
+        if (mb_strlen($rule['tag']) > 0 &&
+            mb_strlen($rule['key']) > 0 &&
             is_numeric($rule['key'])
         ) {
             $count = 0;
