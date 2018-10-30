@@ -1,9 +1,9 @@
 PHP Html Parser
 ==========================
 
-Version 1.7.0
+Version Master
 
-[![Build Status](https://travis-ci.org/zzepish/php-html-parser.png)](https://travis-ci.org/Zzepish/php-html-parser)
+[![Build Status](https://travis-ci.org/zzepish/php-html-parser.png?branch=master)](https://travis-ci.org/Zzepish/php-html-parser?branch=master)
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/paquettg/php-html-parser/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/paquettg/php-html-parser/?branch=master)
 
