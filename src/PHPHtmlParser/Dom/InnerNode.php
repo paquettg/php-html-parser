@@ -201,7 +201,7 @@ abstract class InnerNode extends ArrayNode
      */
     public function previousChild($id)
     {
-        $child = $this->getchild($id);
+        $child = $this->getChild($id);
         $next  = $this->children[$child->id()]['prev'];
 
         return $this->getChild($next);
