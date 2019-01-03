@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
@@ -46,7 +47,7 @@ class HtmlNode extends InnerNode
      */
     public function __construct($tag)
     {
-        if ( ! $tag instanceof Tag) {
+        if (!$tag instanceof Tag) {
             $tag = new Tag($tag);
         }
         $this->tag = $tag;
@@ -61,27 +62,27 @@ class HtmlNode extends InnerNode
      */
     public function innerHtml()
     {
-        if ( ! $this->hasChildren()) {
+        if (!$this->hasChildren()) {
             // no children
             return '';
         }
 
-        if ( ! is_null($this->innerHtml)) {
+        if (!is_null($this->innerHtml)) {
             // we already know the result.
             return $this->innerHtml;
         }
 
-        $child  = $this->firstChild();
+        $child = $this->firstChild();
         $string = '';
 
         // continue to loop until we are out of children
-        while ( ! is_null($child)) {
+        while (!is_null($child)) {
             if ($child instanceof TextNode) {
                 $string .= $child->text();
             } elseif ($child instanceof HtmlNode) {
                 $string .= $child->outerHtml();
             } else {
-                throw new UnknownChildTypeException('Unknown child type "'.get_class($child).'" found in node');
+                throw new UnknownChildTypeException('Unknown child type "' . get_class($child) . '" found in node');
             }
 
             try {
@@ -101,8 +102,8 @@ class HtmlNode extends InnerNode
     /**
      * Gets the html of this node, including it's own
      * tag.
-     *
      * @return string
+     * @throws UnknownChildTypeException
      */
     public function outerHtml()
     {
@@ -111,7 +112,7 @@ class HtmlNode extends InnerNode
             return $this->innerHtml();
         }
 
-        if ( ! is_null($this->outerHtml)) {
+        if (!is_null($this->outerHtml)) {
             // we already know the results.
             return $this->outerHtml;
         }
@@ -136,34 +137,39 @@ class HtmlNode extends InnerNode
 
     /**
      * Gets the text of this node (if there is any text). Or get all the text
-     * in this node, including children.
+     * in this node, including children
      *
      * @param bool $lookInChildren
+     * @param bool $returnAsArray
      * @return string
      */
-    public function text($lookInChildren = false)
+    public function text($lookInChildren = false, $returnAsArray = false)
     {
         if ($lookInChildren) {
-            if ( ! is_null($this->textWithChildren)) {
+            if (!is_null($this->textWithChildren)) {
                 // we already know the results.
                 return $this->textWithChildren;
             }
-        } elseif ( ! is_null($this->text)) {
+        } elseif (!is_null($this->text)) {
             // we already know the results.
             return $this->text;
         }
 
         // find out if this node has any text children
-        $text = '';
+        $text = $returnAsArray ? [] : "";
         foreach ($this->children as $child) {
             /** @var AbstractNode $node */
             $node = $child['node'];
             if ($node instanceof TextNode) {
-                $text .= $child['node']->text;
+                if ($returnAsArray) array_push($text,
+                    $child['node']->text);
+                else $text .= $child['node']->text;
             } elseif ($lookInChildren &&
                 $node instanceof HtmlNode
             ) {
-                $text .= $node->text($lookInChildren);
+                if ($returnAsArray) array_push($text,
+                    $node->text($lookInChildren, $returnAsArray));
+                else $text .= $node->text($lookInChildren);
             }
         }
 
@@ -185,7 +191,7 @@ class HtmlNode extends InnerNode
     {
         $this->innerHtml = null;
         $this->outerHtml = null;
-        $this->text      = null;
+        $this->text = null;
 
         if (is_null($this->parent) === false) {
             $this->parent->clear();
