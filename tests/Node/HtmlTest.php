@@ -1,13 +1,14 @@
 <?php
+declare(strict_types=1);
 
-
+use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Dom\MockNode;
 use PHPHtmlParser\Dom\Tag;
 
-class NodeHtmlTest extends PHPUnit_Framework_TestCase {
+class NodeHtmlTest extends TestCase {
 
     public function testInnerHtml()
     {

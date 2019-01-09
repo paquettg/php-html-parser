@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Selector;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\Collection;
 
-class CollectionTest extends PHPUnit_Framework_TestCase {
+class CollectionTest extends TestCase {
     
     public function testEach()
     {

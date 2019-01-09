@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\StaticDom;
 
-class StaticDomTest extends PHPUnit_Framework_TestCase {
+class StaticDomTest extends TestCase {
 
     public function setUp()
     {

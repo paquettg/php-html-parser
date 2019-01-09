@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Content;
 
-class ContentTest extends PHPUnit_Framework_TestCase {
+class ContentTest extends TestCase {
 
     public function testChar()
     {

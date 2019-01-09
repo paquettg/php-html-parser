@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\StrictException;
 
-class StrictTest extends PHPUnit_Framework_TestCase {
+class StrictTest extends TestCase {
 
     public function testConfigStrict()
     {
