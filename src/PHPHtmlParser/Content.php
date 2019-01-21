@@ -43,9 +43,9 @@ class Content
     /**
      * Content constructor.
      *
-     * @param $content
+     * @param string $content
      */
-    public function __construct($content)
+    public function __construct(string $content = '')
     {
         $this->content = $content;
         $this->size    = strlen($content);
@@ -57,7 +57,7 @@ class Content
      *
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->pos;
     }
@@ -68,7 +68,7 @@ class Content
      * @param int $char
      * @return string
      */
-    public function char($char = null)
+    public function char(int $char = null): string
     {
         $pos = $this->pos;
         if ( ! is_null($char)) {
@@ -86,9 +86,10 @@ class Content
      * Moves the current position forward.
      *
      * @param int $count
-     * @return $this
+     * @return Content
+     * @chainable
      */
-    public function fastForward($count)
+    public function fastForward(int $count): Content
     {
         $this->pos += $count;
 
@@ -99,9 +100,10 @@ class Content
      * Moves the current position backward.
      *
      * @param int $count
-     * @return $this
+     * @return Content
+     * @chainable
      */
-    public function rewind($count)
+    public function rewind(int $count): Content
     {
         $this->pos -= $count;
         if ($this->pos < 0) {
@@ -119,7 +121,7 @@ class Content
      * @param bool $escape
      * @return string
      */
-    public function copyUntil($string, $char = false, $escape = false)
+    public function copyUntil(string $string, bool $char = false, bool $escape = false): string
     {
         if ($this->pos >= $this->size) {
             // nothing left
@@ -180,7 +182,7 @@ class Content
      * @param string $unless
      * @return string
      */
-    public function copyUntilUnless($string, $unless)
+    public function copyUntilUnless(string $string, string $unless)
     {
         $lastPos = $this->pos;
         $this->fastForward(1);
@@ -205,7 +207,7 @@ class Content
      * @return string
      * @uses $this->copyUntil()
      */
-    public function copyByToken($token, $char = false, $escape = false)
+    public function copyByToken(string $token, bool $char = false, bool $escape = false)
     {
         $string = $this->$token;
 
@@ -219,7 +221,7 @@ class Content
      * @param bool $copy
      * @return $this|string
      */
-    public function skip($string, $copy = false)
+    public function skip(string $string, bool $copy = false)
     {
         $len = strspn($this->content, $string, $this->pos);
 
@@ -243,7 +245,7 @@ class Content
      * @return null|string
      * @uses $this->skip()
      */
-    public function skipByToken($token, $copy = false)
+    public function skipByToken(string $token, bool $copy = false)
     {
         $string = $this->$token;
 

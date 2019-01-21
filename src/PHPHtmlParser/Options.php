@@ -59,9 +59,10 @@ class Options
      * Sets a new options param to override the current option array.
      *
      * @param array $options
-     * @return $this
+     * @return Options
+     * @chainable
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): Options
     {
         foreach ($options as $key => $option) {
             $this->options[$key] = $option;
@@ -77,7 +78,7 @@ class Options
      * @param string
      * @return mixed
      */
-    public function get($key)
+    public function get(string $key)
     {
         if (isset($this->options[$key])) {
             return $this->options[$key];

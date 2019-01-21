@@ -34,8 +34,9 @@ class TextNode extends LeafNode
      * Sets the text for this node.
      *
      * @param string $text
+     * @param bool $removeDoubleSpace
      */
-    public function __construct($text, $removeDoubleSpace = true)
+    public function __construct(string $text, $removeDoubleSpace = true)
     {
         if ($removeDoubleSpace) {
             // remove double spaces
@@ -55,7 +56,7 @@ class TextNode extends LeafNode
      *
      * @return string
      */
-    public function text()
+    public function text(): string
     {
         // convert charset
         if ( ! is_null($this->encode)) {
@@ -80,7 +81,7 @@ class TextNode extends LeafNode
      * @var string $text
      * @return void
      */
-    public function setText($text)
+    public function setText(string $text): void
     {
         $this->text = $text;
 
@@ -98,7 +99,7 @@ class TextNode extends LeafNode
      * @return string
      * @uses $this->text()
      */
-    public function innerHtml()
+    public function innerHtml(): string
     {
         return $this->text();
     }
@@ -109,7 +110,7 @@ class TextNode extends LeafNode
      * @return string
      * @uses $this->text()
      */
-    public function outerHtml()
+    public function outerHtml(): string
     {
         return $this->text();
     }
@@ -118,7 +119,7 @@ class TextNode extends LeafNode
      * Call this when something in the node tree has changed. Like a child has been added
      * or a parent has been changed.
      */
-    protected function clear()
+    protected function clear(): void
     {
         $this->convertedText = null;
     }
@@ -128,7 +129,7 @@ class TextNode extends LeafNode
      *
      * @return bool
      */
-    public function isTextNode()
+    public function isTextNode(): bool
     {
         return true;
     }

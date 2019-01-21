@@ -17,7 +17,7 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->getIteratorArray());
     }
@@ -27,7 +27,7 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->getIteratorArray());
     }
@@ -37,5 +37,5 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
      *
      * @return array
      */
-    abstract protected function getIteratorArray();
+    abstract protected function getIteratorArray(): array;
 }

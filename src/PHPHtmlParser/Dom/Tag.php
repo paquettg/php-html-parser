@@ -57,7 +57,7 @@ class Tag
      *
      * @param $name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -89,7 +89,7 @@ class Tag
      *
      * @return string
      */
-    public function name()
+    public function name(): string
     {
         return $this->name;
     }
@@ -97,9 +97,10 @@ class Tag
     /**
      * Sets the tag to be self closing.
      *
-     * @return $this
+     * @return Tag
+     * @chainable
      */
-    public function selfClosing()
+    public function selfClosing(): Tag
     {
         $this->selfClosing = true;
 
@@ -110,9 +111,10 @@ class Tag
     /**
      * Sets the tag to not use a trailing slash.
      *
-     * @return $this
+     * @return Tag
+     * @chainable
      */
-    public function noTrailingSlash()
+    public function noTrailingSlash(): Tag
     {
         $this->trailingSlash = false;
 
@@ -124,7 +126,7 @@ class Tag
      *
      * @return bool
      */
-    public function isSelfClosing()
+    public function isSelfClosing(): bool
     {
         return $this->selfClosing;
     }
@@ -133,8 +135,9 @@ class Tag
      * Sets the encoding type to be used.
      *
      * @param Encode $encode
+     * @return void
      */
-    public function setEncoding(Encode $encode)
+    public function setEncoding(Encode $encode): void
     {
         $this->encode = $encode;
     }
@@ -142,10 +145,11 @@ class Tag
     /**
      * Sets the noise for this tag (if any)
      *
-     * @param $noise
-     * @return $this
+     * @param string $noise
+     * @return Tag
+     * @chainable
      */
-    public function noise($noise)
+    public function noise(string $noise): Tag
     {
         $this->noise = $noise;
 
@@ -157,9 +161,10 @@ class Tag
      *
      * @param string $key
      * @param string|array $value
-     * @return $this
+     * @return Tag
+     * @chainable
      */
-    public function setAttribute($key, $value)
+    public function setAttribute(string $key, $value): Tag
     {
         $key = strtolower($key);
         if ( ! is_array($value)) {
@@ -176,10 +181,10 @@ class Tag
     /**
      * Set inline style attribute value.
      *
-     * @param $attr_key
-     * @param $attr_value
+     * @param mixed $attr_key
+     * @param mixed $attr_value
      */
-    public function setStyleAttributeValue($attr_key, $attr_value)
+    public function setStyleAttributeValue($attr_key, $attr_value): void
     {
 
         $style_array = $this->getStyleAttributeArray();
@@ -196,14 +201,14 @@ class Tag
     /**
      * Get style attribute in array
      *
-     * @return array|null
+     * @return array
      */
-    public function getStyleAttributeArray()
+    public function getStyleAttributeArray(): array
     {
         $value = $this->getAttribute('style')['value'];
 
         if ($value === null) {
-            return null;
+            return [];
         }
 
         $value = explode(';', substr(trim($value), 0, -1));
@@ -221,7 +226,7 @@ class Tag
     /**
      * Removes an attribute from this tag.
      *
-     * @param $key
+     * @param mixed $key
      * @return void
      */
     public function removeAttribute($key)
@@ -276,7 +281,7 @@ class Tag
      * @param string $key
      * @return mixed
      */
-    public function getAttribute($key)
+    public function getAttribute(string $key)
     {
         if ( ! isset($this->attr[$key])) {
             return null;
@@ -296,7 +301,7 @@ class Tag
      * @param string $key
      * @return bool
      */
-    public function hasAttribute($key)
+    public function hasAttribute(string $key)
     {
         return isset($this->attr[$key]);
     }

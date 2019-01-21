@@ -15,5 +15,5 @@ interface CurlInterface
      * @param string $url
      * @return string
      */
-    public function get($url);
+    public function get($url): string;
 }

@@ -18,7 +18,7 @@ class Curl implements CurlInterface
      * @return string
      * @throws CurlException
      */
-    public function get($url)
+    public function get(string $url): string
     {
         $ch = curl_init($url);
 

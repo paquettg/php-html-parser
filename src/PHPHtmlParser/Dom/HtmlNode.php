@@ -42,7 +42,7 @@ class HtmlNode extends InnerNode
     /**
      * Sets up the tag of this node.
      *
-     * @param $tag
+     * @param string|Tag $tag
      */
     public function __construct($tag)
     {
@@ -59,7 +59,7 @@ class HtmlNode extends InnerNode
      * @return string
      * @throws UnknownChildTypeException
      */
-    public function innerHtml()
+    public function innerHtml(): string
     {
         if ( ! $this->hasChildren()) {
             // no children
@@ -104,7 +104,7 @@ class HtmlNode extends InnerNode
      *
      * @return string
      */
-    public function outerHtml()
+    public function outerHtml(): string
     {
         // special handling for root
         if ($this->tag->name() == 'root') {
@@ -141,7 +141,7 @@ class HtmlNode extends InnerNode
      * @param bool $lookInChildren
      * @return string
      */
-    public function text($lookInChildren = false)
+    public function text(bool $lookInChildren = false): string
     {
         if ($lookInChildren) {
             if ( ! is_null($this->textWithChildren)) {
@@ -181,7 +181,7 @@ class HtmlNode extends InnerNode
      * Call this when something in the node tree has changed. Like a child has been added
      * or a parent has been changed.
      */
-    protected function clear()
+    protected function clear(): void
     {
         $this->innerHtml = null;
         $this->outerHtml = null;
@@ -197,7 +197,7 @@ class HtmlNode extends InnerNode
      *
      * @return array
      */
-    protected function getIteratorArray()
+    protected function getIteratorArray(): array
     {
         return $this->getChildren();
     }

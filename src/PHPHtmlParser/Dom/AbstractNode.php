@@ -3,6 +3,7 @@ namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Selector;
 use stringEncode\Encode;
 use PHPHtmlParser\Finder;
@@ -69,7 +70,7 @@ abstract class AbstractNode
      * @param string $key
      * @return mixed
      */
-    public function __get($key)
+    public function __get(string $key)
     {
         // check attribute first
         if ( ! is_null($this->getAttribute($key))) {
@@ -114,6 +115,8 @@ abstract class AbstractNode
 
     /**
      * Reset node counter
+     *
+     * @return void
      */
     public static function resetCount()
     {
@@ -122,8 +125,10 @@ abstract class AbstractNode
 
     /**
      * Returns the id of this object.
+     *
+     * @return int
      */
-    public function id()
+    public function id(): int
     {
         return $this->id;
     }
@@ -142,10 +147,11 @@ abstract class AbstractNode
      * Sets the parent node.
      *
      * @param InnerNode $parent
-     * @return $this
+     * @return AbstractNode
      * @throws CircularException
+     * @chainable
      */
-    public function setParent(InnerNode $parent)
+    public function setParent(InnerNode $parent): AbstractNode
     {
         // remove from old parent
         if ( ! is_null($this->parent)) {
@@ -199,7 +205,7 @@ abstract class AbstractNode
      * @param int $id
      * @return bool
      */
-    public function isAncestor($id)
+    public function isAncestor(int $id): Bool
     {
         if ( ! is_null($this->getAncestor($id))) {
             return true;
@@ -214,7 +220,7 @@ abstract class AbstractNode
      * @param int $id
      * @return null|AbstractNode
      */
-    public function getAncestor($id)
+    public function getAncestor(int $id)
     {
         if ( ! is_null($this->parent)) {
             if ($this->parent->id() == $id) {
@@ -227,13 +233,29 @@ abstract class AbstractNode
         return null;
     }
 
-    public function hasNextSibling()
+    /**
+     * Checks if the current node has a next sibling.
+     *
+     * @return bool
+     */
+    public function hasNextSibling(): bool
     {
-        if (is_null($this->parent) || (!$this->parent->hasChildren())) {
+        try
+        {
+            $sibling = $this->nextSibling();
+            // sibling found, return true;
+            return true;
+        }
+        catch (ParentNotFoundException $e)
+        {
+            // no parent, no next sibling
             return false;
         }
-
-        return $this->parent->hasNextChild($this->id());
+        catch (ChildNotFoundException $e)
+        {
+            // no sibling found
+            return false;
+        }
     }
 
     /**
@@ -242,7 +264,7 @@ abstract class AbstractNode
      * @return AbstractNode
      * @throws ParentNotFoundException
      */
-    public function nextSibling()
+    public function nextSibling(): AbstractNode
     {
         if (is_null($this->parent)) {
             throw new ParentNotFoundException('Parent is not set for this node.');
@@ -257,7 +279,7 @@ abstract class AbstractNode
      * @return AbstractNode
      * @throws ParentNotFoundException
      */
-    public function previousSibling()
+    public function previousSibling(): AbstractNode
     {
         if (is_null($this->parent)) {
             throw new ParentNotFoundException('Parent is not set for this node.');
@@ -271,7 +293,7 @@ abstract class AbstractNode
      *
      * @return Tag
      */
-    public function getTag()
+    public function getTag(): Tag
     {
         return $this->tag;
     }
@@ -282,7 +304,7 @@ abstract class AbstractNode
      *
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = $this->tag->getAttributes();
         foreach ($attributes as $name => $info) {
@@ -299,7 +321,7 @@ abstract class AbstractNode
      * @param string $key
      * @return mixed
      */
-    public function getAttribute($key)
+    public function getAttribute(string $key)
     {
         $attribute = $this->tag->getAttribute($key);
         if ( ! is_null($attribute)) {
@@ -316,7 +338,7 @@ abstract class AbstractNode
      * @param string $key
      * @return bool
      */
-    public function hasAttribute($key)
+    public function hasAttribute(string $key): bool
     {
         return $this->tag->hasAttribute($key);
     }
@@ -326,10 +348,11 @@ abstract class AbstractNode
      * on the tag of this node.
      *
      * @param string $key
-     * @param string $value
-     * @return $this
+     * @param string|null $value
+     * @return AbstractNode
+     * @chainable
      */
-    public function setAttribute($key, $value)
+    public function setAttribute(string $key, $value): AbstractNode
     {
         $this->tag->setAttribute($key, $value);
 
@@ -346,7 +369,7 @@ abstract class AbstractNode
      * @param string $key
      * @return void
      */
-    public function removeAttribute($key)
+    public function removeAttribute(string $key): void
     {
         $this->tag->removeAttribute($key);
 
@@ -360,7 +383,7 @@ abstract class AbstractNode
      *
      * @return void
      */
-    public function removeAllAttributes()
+    public function removeAllAttributes(): void
     {
         $this->tag->removeAllAttributes();
 
@@ -374,7 +397,7 @@ abstract class AbstractNode
      * @return AbstractNode
      * @throws ParentNotFoundException
      */
-    public function ancestorByTag($tag)
+    public function ancestorByTag(string $tag): AbstractNode
     {
         // Start by including ourselves in the comparison.
         $node = $this;
@@ -397,7 +420,7 @@ abstract class AbstractNode
      * @param int $nth
      * @return array|AbstractNode
      */
-    public function find($selector, $nth = null)
+    public function find(string $selector, int $nth = null)
     {
         $selector = new Selector($selector);
         $nodes    = $selector->find($this);
@@ -417,10 +440,10 @@ abstract class AbstractNode
     /**
      * Find node by id
      *
-     * @param $id
+     * @param int $id
      * @return bool|AbstractNode
      */
-    public function findById($id)
+    public function findById(int $id)
     {
         $finder= new Finder($id);
 
@@ -433,7 +456,7 @@ abstract class AbstractNode
      *
      * @return string
      */
-    abstract public function innerHtml();
+    abstract public function innerHtml(): string;
 
     /**
      * Gets the html of this node, including it's own
@@ -441,14 +464,14 @@ abstract class AbstractNode
      *
      * @return string
      */
-    abstract public function outerHtml();
+    abstract public function outerHtml(): string;
 
     /**
      * Gets the text of this node (if there is any text).
      *
      * @return string
      */
-    abstract public function text();
+    abstract public function text(): string;
 
     /**
      * Call this when something in the node tree has changed. Like a child has been added
@@ -456,14 +479,15 @@ abstract class AbstractNode
      *
      * @return void
      */
-    abstract protected function clear();
+    abstract protected function clear(): void;
 
     /**
      * Check is node type textNode
      *
      * @return boolean
      */
-    public function isTextNode() {
+    public function isTextNode(): bool 
+    {
 
         return false;
     }

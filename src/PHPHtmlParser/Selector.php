@@ -52,7 +52,7 @@ class Selector
      * @param AbstractNode $node
      * @return Collection
      */
-    public function find(AbstractNode $node)
+    public function find(AbstractNode $node): Collection
     {
         $results = new Collection;
         foreach ($this->selectors as $selector) {
@@ -86,7 +86,7 @@ class Selector
      *
      * @param string $selector
      */
-    protected function parseSelectorString($selector)
+    protected function parseSelectorString(string $selector): void
     {
         $matches = [];
         preg_match_all($this->pattern, trim($selector).' ', $matches, PREG_SET_ORDER);
@@ -166,7 +166,7 @@ class Selector
      * @return array
      * @recursive
      */
-    protected function seek(array $nodes, array $rule, array $options)
+    protected function seek(array $nodes, array $rule, array $options): array
     {
         // XPath index
         if (array_key_exists('tag', $rule) &&
@@ -316,7 +316,7 @@ class Selector
      * @param string $value
      * @return bool
      */
-    protected function match($operator, $pattern, $value)
+    protected function match(string $operator, string $pattern, string $value): bool
     {
         $value   = strtolower($value);
         $pattern = strtolower($pattern);
@@ -347,7 +347,7 @@ class Selector
      * @param array $rule
      * @return array
      */
-    protected function alterNext($rule)
+    protected function alterNext(array $rule): array
     {
         $options = [];
         if ($rule['tag'] == '>') {
