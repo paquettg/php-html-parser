@@ -203,6 +203,9 @@ abstract class InnerNode extends ArrayNode
 			return $this->addChild($child, $this->children[$id]['next']);
 		}
 
+		// clear cache
+		$this->clear();
+
 		return $this->addChild($child);
 	}
 
@@ -344,6 +347,9 @@ abstract class InnerNode extends ArrayNode
         
         // remove old child
         unset($this->children[$childId]);
+
+        // clean out cache
+        $this->clear();
     }
 
     /**
@@ -414,6 +420,9 @@ abstract class InnerNode extends ArrayNode
         if ($this->isDescendant($parent->id())) {
             throw new CircularException('Can not add descendant "'.$parent->id().'" as my parent.');
         }
+
+		// clear cache
+		$this->clear();
 
         return parent::setParent($parent);
     }
