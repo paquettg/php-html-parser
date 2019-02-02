@@ -30,7 +30,7 @@ class NodeTextTest extends TestCase {
     public function testPreserveEntity()
     {
         $node = new TextNode('&#x69;');
-        $text = $node->innerhtml;
+        $text = $node->outerhtml;
         $this->assertEquals('&#x69;', $text);
     }
 

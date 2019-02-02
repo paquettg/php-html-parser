@@ -7,7 +7,12 @@ namespace PHPHtmlParser;
  * @package PHPHtmlParser
  * @property bool whitespaceTextNode
  * @property bool strict
- * @property bool enforceEncoding
+ * @property string|null enforceEncoding
+ * @property bool cleanupInput
+ * @property bool removeScripts
+ * @property bool removeStyles
+ * @property bool preserveLineBreaks
+ * @property bool removeDoubleSpace
  */
 class Options
 {

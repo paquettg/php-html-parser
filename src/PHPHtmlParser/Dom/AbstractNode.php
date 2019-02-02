@@ -44,7 +44,7 @@ abstract class AbstractNode
     /**
      * The unique id of the class. Given by PHP.
      *
-     * @var string
+     * @var int
      */
     protected $id;
 
@@ -54,6 +54,13 @@ abstract class AbstractNode
      * @var mixed
      */
     protected $encode;
+
+    /**
+     * An array of all the children.
+     *
+     * @var array
+     */
+    protected $children = [];
 
     /**
      * Creates a unique id for this node.
@@ -242,7 +249,8 @@ abstract class AbstractNode
     {
         try
         {
-            $sibling = $this->nextSibling();
+            $this->nextSibling();
+
             // sibling found, return true;
             return true;
         }
@@ -418,7 +426,7 @@ abstract class AbstractNode
      *
      * @param string $selector
      * @param int $nth
-     * @return array|AbstractNode
+     * @return mixed
      */
     public function find(string $selector, int $nth = null)
     {

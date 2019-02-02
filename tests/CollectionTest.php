@@ -39,6 +39,13 @@ class CollectionTest extends TestCase {
         $collection->innerHtml();
     }
 
+    public function testNoNodeString()
+    {
+        $collection = new Collection();
+        $string = (string) $collection;
+        $this->assertEmpty($string);
+    }
+
     public function testCallMagic()
     {
         $root   = new HtmlNode(new Tag('root'));
@@ -113,5 +120,28 @@ class CollectionTest extends TestCase {
         $array      = $collection->toArray();
         $lastA      = end($array);
         $this->assertEquals($child3->id(), $lastA->id());
+    }
+
+    public function testGetIterator()
+    {
+        $collection = new Collection();
+        $iterator = $collection->getIterator();
+        $this->assertTrue($iterator instanceof \ArrayIterator);
+        
+    }
+
+    public function testOffsetSet()
+    {
+        $collection = new Collection();
+        $collection->offsetSet(7, true);
+        $this->assertTrue($collection->offsetGet(7));
+    }
+
+    public function testOffsetUnset()
+    {
+        $collection = new Collection();
+        $collection->offsetSet(7, true);
+        $collection->offsetUnset(7);
+        $this->assertTrue(is_null($collection->offsetGet(7)));
     }
 }

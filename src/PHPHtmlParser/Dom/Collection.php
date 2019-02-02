@@ -28,7 +28,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      *
      * @param string $method
      * @param array $arguments
-     * @return mixed;
+     * @return mixed
      * @throws EmptyCollectionException
      */
     public function __call(string $method, array $arguments)
@@ -72,7 +72,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
         if ($node instanceof AbstractNode) {
             return (string)$node;
         } else {
-            throw new EmptyCollectionException('The collection does not contain any Nodes.');
+            return '';
         }
     }
 
