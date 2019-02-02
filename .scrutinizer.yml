@@ -33,3 +33,9 @@ tools:
     php_cpd:
         enabled: true
         excluded_dirs: [vendor, test]
+build:
+    nodes:
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run
