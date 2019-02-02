@@ -389,4 +389,12 @@ class DomTest extends TestCase {
         $dom->load('<pre>    Hello world</pre>');
         $this->assertEquals('<pre>    Hello world</pre>', (string) $dom);
     }
+
+    public function testGetComplexAttribute()
+    {
+        $dom = new Dom;
+        $dom->load('<a href="?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4" class="pagination-next">Next <span class="chevron">&gt;</span></a>');
+        $href = $dom->find('a', 0)->href;
+        $this->assertEquals('?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4', $href);
+    }
 }
