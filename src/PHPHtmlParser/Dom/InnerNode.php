@@ -332,13 +332,18 @@ abstract class InnerNode extends ArrayNode
             'next' => $oldChild['next']
         );
 
+        // chnge previous child id to new child
         if ($oldChild['prev'] && isset($this->children[$newChild->prev])) {
             $this->children[$oldChild['prev']]['next'] = $newChild->id();
         }
 
+        // change next child id to new child
         if ($oldChild['next'] && isset($this->children[$newChild->next])) {
             $this->children[$oldChild['next']]['prev'] = $newChild->id();
         }
+        
+        // remove old child
+        unset($this->children[$childId]);
     }
 
     /**
