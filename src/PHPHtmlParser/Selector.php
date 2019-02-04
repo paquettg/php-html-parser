@@ -326,15 +326,15 @@ class Selector
             case '!=':
                 return $value !== $pattern;
             case '^=':
-                return preg_match('/^'.preg_quote($pattern, '/').'/', $value);
+                return preg_match('/^'.preg_quote($pattern, '/').'/', $value) == 1;
             case '$=':
-                return preg_match('/'.preg_quote($pattern, '/').'$/', $value);
+                return preg_match('/'.preg_quote($pattern, '/').'$/', $value) == 1;
             case '*=':
                 if ($pattern[0] == '/') {
-                    return preg_match($pattern, $value);
+                    return preg_match($pattern, $value) == 1;
                 }
 
-                return preg_match("/".$pattern."/i", $value);
+                return preg_match("/".$pattern."/i", $value) == 1;
         }
 
         return false;

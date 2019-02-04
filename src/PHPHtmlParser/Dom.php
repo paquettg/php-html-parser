@@ -419,9 +419,9 @@ class Dom
      * id.
      *
      * @param string $id
-     * @return \PHPHtmlParser\Dom\AbstractNode
+     * @return \PHPHtmlParser\Dom\AbstractNode|null
      */
-    public function getElementById($id): \PHPHtmlParser\Dom\AbstractNode
+    public function getElementById($id)
     {
         $this->isLoaded();
 
