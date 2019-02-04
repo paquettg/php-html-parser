@@ -397,4 +397,14 @@ class DomTest extends TestCase {
         $href = $dom->find('a', 0)->href;
         $this->assertEquals('?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4', $href);
     }
+
+    public function testGetChildrenNoChildren()
+    {
+        $dom = new Dom();
+        $dom->loadStr('<div>Test <img src="test.jpg"></div>');
+
+        $imgNode = $dom->root->find('img');
+        $children = $imgNode->getChildren();
+        $this->assertTrue(count($children) === 0);
+    }
 }

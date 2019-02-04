@@ -192,7 +192,7 @@ class Dom
      * @return Dom
      * @chainable
      */
-    public function loadStr(string $str, array $option): Dom
+    public function loadStr(string $str, array $option = []): Dom
     {
         $this->options = new Options;
         $this->options->setOptions($this->globalOptions)

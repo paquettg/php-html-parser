@@ -357,9 +357,15 @@ abstract class InnerNode extends ArrayNode
      *
      * @return AbstractNode
      * @uses $this->getChild()
+     * @throws ChildNotFoundException
      */
     public function firstChild(): AbstractNode
     {
+        if (count($this->children) == 0) {
+            // no children
+            throw new ChildNotFoundException("No children found in node.");
+        }
+
         reset($this->children);
         $key = key($this->children);
 
@@ -370,9 +376,16 @@ abstract class InnerNode extends ArrayNode
      * Attempts to get the last child.
      *
      * @return AbstractNode
+     * @uses $this->getChild()
+     * @throws ChildNotFoundException
      */
     public function lastChild(): AbstractNode
     {
+        if (count($this->children) == 0) {
+            // no children
+            throw new ChildNotFoundException("No children found in node.");
+        }
+
         end($this->children);
         $key = key($this->children);
 
