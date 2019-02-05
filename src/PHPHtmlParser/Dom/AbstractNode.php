@@ -4,7 +4,8 @@ namespace PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
-use PHPHtmlParser\Selector;
+use PHPHtmlParser\Selector\Selector;
+use PHPHtmlParser\Selector\Parser as SelectorParser;
 use stringEncode\Encode;
 use PHPHtmlParser\Finder;
 
@@ -430,7 +431,7 @@ abstract class AbstractNode
      */
     public function find(string $selector, int $nth = null)
     {
-        $selector = new Selector($selector);
+        $selector = new Selector($selector, new SelectorParser());
         $nodes    = $selector->find($this);
 
         if ( ! is_null($nth)) {

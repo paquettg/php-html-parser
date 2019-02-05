@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use PHPHtmlParser\Selector;
+use PHPHtmlParser\Selector\Selector;
+use PHPHtmlParser\Selector\Parser;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 
@@ -10,28 +11,28 @@ class SelectorTest extends TestCase {
     
     public function testParseSelectorStringId()
     {
-        $selector  = new Selector('#all');
+        $selector  = new Selector('#all', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertEquals('id', $selectors[0][0]['key']);
     }
 
     public function testParseSelectorStringClass()
     {
-        $selector  = new Selector('div.post');
+        $selector  = new Selector('div.post', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertEquals('class', $selectors[0][0]['key']);
     }
 
     public function testParseSelectorStringAttribute()
     {
-        $selector  = new Selector('div[visible=yes]');
+        $selector  = new Selector('div[visible=yes]', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertEquals('yes', $selectors[0][0]['value']);
     }
 
     public function testParseSelectorStringNoKey()
     {
-        $selector  = new Selector('div[!visible]');
+        $selector  = new Selector('div[!visible]', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertTrue($selectors[0][0]['noKey']);
     }
@@ -46,7 +47,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $root->addChild($parent);
 
-        $selector = new Selector('div a');
+        $selector = new Selector('div a', new Parser());
         $this->assertEquals($child1->id(), $selector->find($root)[0]->id());
     }
 
@@ -64,7 +65,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child1);
         $parent->addChild($child2);
 
-        $selector = new Selector('#content');
+        $selector = new Selector('#content', new Parser());
         $this->assertEquals($child2->id(), $selector->find($parent)[0]->id());
     }
 
@@ -84,7 +85,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $parent->addChild($child3);
 
-        $selector = new Selector('.link');
+        $selector = new Selector('.link', new Parser());
         $this->assertEquals($child3->id(), $selector->find($parent)[0]->id());
     }
 
@@ -104,7 +105,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $parent->addChild($child3);
 
-        $selector = new Selector('.outer');
+        $selector = new Selector('.outer', new Parser());
         $this->assertEquals($child3->id(), $selector->find($parent)[0]->id());
     }
 
@@ -120,7 +121,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a');
+        $selector = new Selector('div * a', new Parser());
         $this->assertEquals($child3->id(), $selector->find($root)[0]->id());
     }
 
@@ -136,7 +137,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('a, p');
+        $selector = new Selector('a, p', new Parser());
         $this->assertEquals(3, count($selector->find($root)));
     }
 
@@ -156,7 +157,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $parent->addChild($child3);
 
-        $selector = new Selector('div[1]');
+        $selector = new Selector('div[1]', new Parser());
         $this->assertEquals($parent->id(), $selector->find($parent)[0]->id());
     }
 
@@ -170,7 +171,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child1);
         $child1->addChild($child2);
 
-        $selector = new Selector('div li');
+        $selector = new Selector('div li', new Parser());
         $this->assertEquals(1, count($selector->find($root)));
     }
 
@@ -186,7 +187,7 @@ class SelectorTest extends TestCase {
         $child2->addChild($child3);
         $parent->addChild($child2);
 
-        $selector = new Selector('div ul');
+        $selector = new Selector('div ul', new Parser());
         $this->assertEquals(2, count($selector->find($root)));
     }
 
@@ -202,7 +203,7 @@ class SelectorTest extends TestCase {
         $child2->addChild($child3);
         $parent->addChild($child2);
 
-        $selector = new Selector('div > ul');
+        $selector = new Selector('div > ul', new Parser());
         $this->assertEquals(1, count($selector->find($root)));
     }
 
@@ -213,7 +214,7 @@ class SelectorTest extends TestCase {
         $child1->setAttribute('custom-attr', null);
         $root->addChild($child1);
 
-        $selector = new Selector('[custom-attr]');
+        $selector = new Selector('[custom-attr]', new Parser());
         $this->assertEquals(1, count($selector->find($root)));
     }
 }

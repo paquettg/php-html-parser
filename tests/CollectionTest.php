@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use PHPHtmlParser\Selector;
+use PHPHtmlParser\Selector\Selector;
+use PHPHtmlParser\Selector\Parser;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\Collection;
@@ -21,7 +22,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector   = new Selector('a');
+        $selector   = new Selector('a', new Parser());
         $collection = $selector->find($root);
         $count      = 0;
         $collection->each(function ($node) use (&$count) {
@@ -58,7 +59,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a');
+        $selector = new Selector('div * a', new Parser());
         $this->assertEquals($child3->id(), $selector->find($root)->id());
     }
 
@@ -74,7 +75,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a');
+        $selector = new Selector('div * a', new Parser());
         $this->assertEquals($child3->innerHtml, $selector->find($root)->innerHtml);
     }
 
@@ -99,7 +100,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a');
+        $selector = new Selector('div * a', new Parser());
         $this->assertEquals((string)$child3, (string)$selector->find($root));
     }
 
@@ -115,7 +116,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector   = new Selector('a');
+        $selector   = new Selector('a', new Parser());
         $collection = $selector->find($root);
         $array      = $collection->toArray();
         $lastA      = end($array);
