@@ -16,6 +16,7 @@ class MockNode extends InnerNode
      */
     public function innerHtml(): string
     {
+        return '';
     }
 
     /**
@@ -23,6 +24,7 @@ class MockNode extends InnerNode
      */
     public function outerHtml(): string
     {
+        return '';
     }
 
     /**
@@ -30,6 +32,7 @@ class MockNode extends InnerNode
      */
     public function text(): string
     {
+        return '';
     }
 
     /**

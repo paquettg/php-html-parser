@@ -367,7 +367,7 @@ abstract class InnerNode extends ArrayNode
         }
 
         reset($this->children);
-        $key = key($this->children);
+        $key = (int) key($this->children);
 
         return $this->getChild($key);
     }

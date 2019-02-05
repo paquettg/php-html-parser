@@ -219,7 +219,7 @@ class Content
      *
      * @param string $string
      * @param bool $copy
-     * @return $this|string
+     * @return Content|string
      */
     public function skip(string $string, bool $copy = false)
     {
@@ -242,7 +242,7 @@ class Content
      *
      * @param string $token
      * @param bool $copy
-     * @return null|string
+     * @return Content|string
      * @uses $this->skip()
      */
     public function skipByToken(string $token, bool $copy = false)

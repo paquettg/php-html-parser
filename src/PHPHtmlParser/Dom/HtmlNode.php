@@ -14,6 +14,8 @@ class HtmlNode extends InnerNode
 
     /**
      * Remembers what the innerHtml was if it was scanned previously.
+     *
+     * @var string
      */
     protected $innerHtml = null;
 

@@ -15,6 +15,8 @@ use PHPHtmlParser\Finder;
  * @property string outerhtml
  * @property string innerhtml
  * @property string text
+ * @property int prev
+ * @property int next
  * @property \PHPHtmlParser\Dom\Tag tag
  * @property InnerNode parent
  */

@@ -3,6 +3,7 @@
 namespace PHPHtmlParser;
 
 use PHPHtmlParser\Dom\AbstractNode;
+use PHPHtmlParser\Dom\InnerNode;
 
 class Finder
 {
@@ -26,7 +27,7 @@ class Finder
      */
     public function find(AbstractNode $node)
     {
-        if (!$node->id()) {
+        if (!$node->id() && $node instanceof InnerNode) {
             return $this->find($node->firstChild());
         }
 
