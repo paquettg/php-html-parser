@@ -294,6 +294,13 @@ class DomTest extends TestCase {
         $this->assertEquals('....', $dom->getElementsByTag('p')[1]->innerHtml);
     }
 
+    public function testClosingSpan()
+    {
+        $dom = new Dom;
+        $dom->load("<div class='foo'></span>sometext</div>");
+        $this->assertEquals('sometext', $dom->getElementsByTag('div')[0]->innerHtml);
+    }
+
     public function testMultipleDoubleQuotes()
     {
         $dom = new Dom;

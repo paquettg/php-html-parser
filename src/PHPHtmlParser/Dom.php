@@ -544,16 +544,18 @@ class Dom
 
                 // check if it was a closing tag
                 if ($info['closing']) {
-                    $originalNode = $activeNode;
+                    $foundOpeningTag  = true;
+                    $originalNode     = $activeNode;
                     while ($activeNode->getTag()->name() != $info['tag']) {
                         $activeNode = $activeNode->getParent();
                         if (is_null($activeNode)) {
                             // we could not find opening tag
                             $activeNode = $originalNode;
+                            $foundOpeningTag = false;
                             break;
                         }
                     }
-                    if ( ! is_null($activeNode)) {
+                    if ($foundOpeningTag) {
                         $activeNode = $activeNode->getParent();
                     }
                     continue;
