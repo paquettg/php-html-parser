@@ -129,67 +129,18 @@ class Selector
                 // wild card, grab all
                 if ($rule['tag'] == '*' && is_null($rule['key'])) {
                     $return[] = $child;
-                    try {
-                        $child = $node->nextChild($child->id());
-                    } catch (ChildNotFoundException $e) {
-                        // no more children
-                        $child = null;
-                    }
+                    $child = $this->getNextChild($node, $child);
                     continue;
                 }
 
-                $pass = true;
-                // check tag
-                if ( ! empty($rule['tag']) && $rule['tag'] != $child->getTag()->name() &&
-                    $rule['tag'] != '*'
-                ) {
-                    // child failed tag check
-                    $pass = false;
-                }
-
-                // check key
+                $pass = $this->checkTag($rule, $child);
                 if ($pass && ! is_null($rule['key'])) {
-                    if ($rule['noKey']) {
-                        if ( ! is_null($child->getAttribute($rule['key']))) {
-                            $pass = false;
-                        }
-                    } else {
-                        if ($rule['key'] != 'plaintext' && !$child->hasAttribute($rule['key'])) {
-                            $pass = false;
-                        }
-                    }
+                    $pass = $this->checkKey($rule, $child);
                 }
-
-                // compare values
                 if ($pass && ! is_null($rule['key']) &&
                     ! is_null($rule['value']) && $rule['value'] != '*'
                 ) {
-                    if ($rule['key'] == 'plaintext') {
-                        // plaintext search
-                        $nodeValue = $child->text();
-                    } else {
-                        // normal search
-                        $nodeValue = $child->getAttribute($rule['key']);
-                    }
-
-                    $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
-
-                    // handle multiple classes
-                    if ( ! $check && $rule['key'] == 'class') {
-                        $childClasses = explode(' ', $child->getAttribute('class'));
-                        foreach ($childClasses as $class) {
-                            if ( ! empty($class)) {
-                                $check = $this->match($rule['operator'], $rule['value'], $class);
-                            }
-                            if ($check) {
-                                break;
-                            }
-                        }
-                    }
-
-                    if ( ! $check) {
-                        $pass = false;
-                    }
+                    $pass = $this->checkComparison($rule, $child);
                 }
 
                 if ($pass) {
@@ -205,13 +156,7 @@ class Selector
                     }
                 }
 
-                try {
-                    // get next child
-                    $child = $node->nextChild($child->id());
-                } catch (ChildNotFoundException $e) {
-                    // no more children
-                    $child = null;
-                }
+                $child = $this->getNextChild($node, $child);
             }
 
             if (( ! isset($options['checkGrandChildren']) ||
@@ -294,5 +239,100 @@ class Selector
         }
 
         return $options;
+    }
+
+    /**
+     * Returns the next child or null if no more children.
+     *
+     * @param AbstractNode $node
+     * @param AbstractNode $currentChild
+     * @return AbstractNode|null
+     */
+    protected function getNextChild(AbstractNode $node, AbstractNode $currentChild)
+    {
+        try {
+            // get next child
+            $child = $node->nextChild($currentChild->id());
+        } catch (ChildNotFoundException $e) {
+            // no more children
+            $child = null;
+        }
+
+        return $child;
+    }
+
+    /**
+     * Checks tag condition from rules against node.
+     *
+     * @param array $rule
+     * @param AbstractNode $node
+     * @return bool
+     */
+    protected function checkTag(array $rule, AbstractNode $node): bool
+    {
+        if ( ! empty($rule['tag']) && $rule['tag'] != $node->getTag()->name() &&
+            $rule['tag'] != '*'
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks key condition from rules against node.
+     *
+     * @param array $rule
+     * @param AbstractNode $node
+     * @return bool
+     */
+    protected function checkKey(array $rule, AbstractNode $node): bool
+    {
+        if ($rule['noKey']) {
+            if ( ! is_null($node->getAttribute($rule['key']))) {
+                return false;
+            }
+        } else {
+            if ($rule['key'] != 'plaintext' && !$node->hasAttribute($rule['key'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks comparison condition from rules against node.
+     *
+     * @param array $rule
+     * @param AbstractNode $node
+     * @return bool
+     */
+    public function checkComparison(array $rule, AbstractNode $node): bool
+    {
+        if ($rule['key'] == 'plaintext') {
+            // plaintext search
+            $nodeValue = $node->text();
+        } else {
+            // normal search
+            $nodeValue = $node->getAttribute($rule['key']);
+        }
+
+        $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
+
+        // handle multiple classes
+        if ( ! $check && $rule['key'] == 'class') {
+            $nodeClasses = explode(' ', $node->getAttribute('class'));
+            foreach ($nodeClasses as $class) {
+                if ( ! empty($class)) {
+                    $check = $this->match($rule['operator'], $rule['value'], $class);
+                }
+                if ($check) {
+                    break;
+                }
+            }
+        }
+
+        return $check;
     }
 }
