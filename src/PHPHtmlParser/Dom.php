@@ -626,6 +626,11 @@ class Dom
         }
 
         $tag  = strtolower($this->content->copyByToken('slash', true));
+        if (trim($tag) == '')
+        {
+            // no tag found, invalide < found
+            return $return;
+        }
         $node = new HtmlNode($tag);
 
         // attributes

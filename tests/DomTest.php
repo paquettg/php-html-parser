@@ -414,4 +414,20 @@ class DomTest extends TestCase {
         $children = $imgNode->getChildren();
         $this->assertTrue(count($children) === 0);
     }
+
+    public function testInfiniteLoopNotHappening()
+    {
+        $dom = new Dom();
+        $dom->loadStr('<html>
+                <head>
+                <meta http-equiv="refresh" content="5; URL=http://www.example.com">
+                <meta http-equiv="cache-control" content="no-cache">
+                <meta http-equiv="pragma" content="no-cache">
+                <meta http-equiv="expires" content="0">
+                </head>
+                <');
+
+        $metaNodes = $dom->root->find('meta');
+        $this->assertEquals(4, count($metaNodes));
+    }
 }
