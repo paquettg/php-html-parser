@@ -502,24 +502,26 @@ class Dom
         $str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
 
         // strip out <script> tags
-        if ($this->options->get('removeScripts') == true) {
+        if ($this->options->get('removeScripts')) {
             $str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
             $str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
         }
 
         // strip out <style> tags
-        if ($this->options->get('removeStyles') == true) {
+        if ($this->options->get('removeStyles')) {
             $str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
             $str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
         }
 
         // strip out server side scripts
-        if ($this->options->get('serverSideScriptis') == true){
+        if ($this->options->get('serverSideScripts')) {
             $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
         }
 
         // strip smarty scripts
-        $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
+        if ($this->options->get('removeSmartyScripts')) {
+            $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
+        }
 
         return $str;
     }

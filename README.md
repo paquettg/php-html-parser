@@ -170,7 +170,12 @@ Preserves Line Breaks if set to `true`. If set to `false` line breaks are cleane
 
 **removeDoubleSpace**
 
-Set this to `false` if you want to preserver whitespace inside of text nodes. It is set to `true` by default.
+Set this to `false` if you want to preserve whitespace inside of text nodes. It is set to `true` by default.
+
+**removeSmartyScripts**
+
+Set this to `false` if you want to preserve smarty sccript found in the html content. It is set to `true` by default.
+
 Static Facade
 -------------
 

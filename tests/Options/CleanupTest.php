@@ -72,4 +72,24 @@ class CleanupTest extends TestCase {
             $dom->find('script')->getAttribute('type'));
     }
 
+    public function testSmartyScripts()
+    {
+        $dom = new Dom;
+        $dom->load('
+        aa={123}
+        ');
+        $this->assertEquals(' aa= ', $dom->innerHtml);
+    }
+
+    public function testSmartyScriptsDisabled()
+    {
+        $dom = new Dom;
+        $dom->setOptions([
+            'removeSmartyScripts' => false
+        ]);
+        $dom->load('
+        aa={123}
+        ');
+        $this->assertEquals(' aa={123} ', $dom->innerHtml);
+    }
 }
