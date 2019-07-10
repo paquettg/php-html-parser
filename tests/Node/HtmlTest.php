@@ -501,4 +501,17 @@ class NodeHtmlTest extends TestCase {
         $dom->find('p')[0]->getParent()->replaceChild($id, $newChild);
         $this->assertEquals('<div class="all"><h1></h1></div>', (string) $dom);
     }
+
+    public function testTextNodeFirstChild()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $p = $dom->find('p');
+        foreach ($p as $element)
+        {
+            $child = $element->firstChild();
+            $this->assertInstanceOf(TextNode::class, $child);
+            break;
+        }
+    }
 }
