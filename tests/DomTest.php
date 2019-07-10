@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Dom;
@@ -158,21 +157,21 @@ class DomTest extends TestCase {
     public function testLoadWithFile()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/small.html');
+        $dom->loadFromFile('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testLoadFromFile()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/small.html');
+        $dom->loadFromFile('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testLoadFromFileFind()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/small.html');
+        $dom->loadFromFile('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-row div .post-user font', 0)->text);
     }
 
@@ -187,7 +186,7 @@ class DomTest extends TestCase {
 	{
 		$dom = new Dom;
 		$dom->setOptions(['cleanupInput' => false]);
-		$dom->loadFromFile('tests/files/whitespace.html');
+		$dom->loadFromFile('tests/data/files/whitespace.html');
 		$this->assertEquals(1, count($dom->find('.class')));
 		$this->assertEquals("<span><span class=\"class\"></span></span>", (string)$dom);
 	}
@@ -195,14 +194,14 @@ class DomTest extends TestCase {
     public function testLoadFileBig()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(10, count($dom->find('.content-border')));
     }
 
     public function testLoadFileBigTwice()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $post = $dom->find('.post-row', 0);
         $this->assertEquals(' <p>Журчанье воды<br /> Черно-белые тени<br /> Вновь на фонтане</p> ', $post->find('.post-message', 0)->innerHtml);
     }
@@ -210,7 +209,7 @@ class DomTest extends TestCase {
     public function testLoadFileBigTwicePreserveOption()
     {
         $dom = new Dom;
-        $dom->loadFromFile('tests/files/big.html', ['preserveLineBreaks' => true]);
+        $dom->loadFromFile('tests/data/files/big.html', ['preserveLineBreaks' => true]);
         $post = $dom->find('.post-row', 0);
         $this->assertEquals(
             "<p>Журчанье воды<br />\nЧерно-белые тени<br />\nВновь на фонтане</p>",
@@ -224,7 +223,7 @@ class DomTest extends TestCase {
         $curl->shouldReceive('get')
              ->once()
              ->with('http://google.com')
-             ->andReturn(file_get_contents('tests/files/small.html'));
+             ->andReturn(file_get_contents('tests/data/files/small.html'));
         
         $dom = new Dom;
         $dom->loadFromUrl('http://google.com', [], $curl);

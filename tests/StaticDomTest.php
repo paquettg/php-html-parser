@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\StaticDom;
@@ -33,13 +32,13 @@ class StaticDomTest extends TestCase {
 
     public function testLoadWithFile()
     {
-        $dom = Dom::load('tests/files/small.html');
+        $dom = Dom::load('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
     public function testLoadFromFile()
     {
-        $dom = Dom::loadFromFile('tests/files/small.html');
+        $dom = Dom::loadFromFile('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
@@ -53,7 +52,7 @@ class StaticDomTest extends TestCase {
 
     public function testFindI()
     {
-        Dom::load('tests/files/big.html');
+        Dom::load('tests/data/files/big.html');
         $this->assertEquals('В кустах блестит металл<br /> И искрится ток<br /> Человечеству конец', Dom::find('i')[1]->innerHtml);
     }
 
@@ -63,7 +62,7 @@ class StaticDomTest extends TestCase {
         $curl->shouldReceive('get')
              ->once()
              ->with('http://google.com')
-             ->andReturn(file_get_contents('tests/files/small.html'));
+             ->andReturn(file_get_contents('tests/data/files/small.html'));
 
         Dom::loadFromUrl('http://google.com', [], $curl);
         $this->assertEquals('VonBurgermeister', Dom::find('.post-row div .post-user font', 0)->text);

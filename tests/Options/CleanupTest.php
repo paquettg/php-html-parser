@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Dom;
@@ -12,7 +11,7 @@ class CleanupTest extends TestCase {
         $dom->setOptions([
             'cleanupInput' => true,
         ]);
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, count($dom->find('style')));
         $this->assertEquals(0, count($dom->find('script')));
     }
@@ -23,7 +22,7 @@ class CleanupTest extends TestCase {
         $dom->setOptions([
             'cleanupInput' => false,
         ]);
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(1, count($dom->find('style')));
         $this->assertEquals(22, count($dom->find('script')));
     }
@@ -34,7 +33,7 @@ class CleanupTest extends TestCase {
         $dom->setOptions([
             'removeStyles' => true,
         ]);
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, count($dom->find('style')));
     }
 
@@ -44,7 +43,7 @@ class CleanupTest extends TestCase {
         $dom->setOptions([
             'removeStyles' => false,
         ]);
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(1, count($dom->find('style')));
         $this->assertEquals('text/css',
             $dom->find('style')->getAttribute('type'));
@@ -56,7 +55,7 @@ class CleanupTest extends TestCase {
         $dom->setOptions([
             'removeScripts' => true,
         ]);
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, count($dom->find('script')));
     }
 
@@ -66,7 +65,7 @@ class CleanupTest extends TestCase {
         $dom->setOptions([
             'removeScripts' => false,
         ]);
-        $dom->loadFromFile('tests/files/big.html');
+        $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(22, count($dom->find('script')));
         $this->assertEquals('text/javascript',
             $dom->find('script')->getAttribute('type'));
