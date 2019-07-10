@@ -1,5 +1,5 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
+require_once('tests/data/MockNode.php');
 
 use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Dom\MockNode as Node;
