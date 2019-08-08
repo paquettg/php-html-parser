@@ -237,7 +237,7 @@ class Dom
     {
         $this->isLoaded();
 
-        return $this->root->find($selector, $nth);
+        return $this->root->find($selector, $nth, $this->options->get('depthFirstSearch'));
     }
 
     /**

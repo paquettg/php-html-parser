@@ -14,6 +14,7 @@ namespace PHPHtmlParser;
  * @property bool preserveLineBreaks
  * @property bool removeDoubleSpace
  * @property bool removeSmartyScripts
+ * @property bool depthFirstSearch
  */
 class Options
 {
@@ -33,6 +34,7 @@ class Options
         'preserveLineBreaks'   => false,
         'removeDoubleSpace'    => true,
         'removeSmartyScripts'  => true,
+        'depthFirstSearch'     => false,
     ];
 
     /**

@@ -172,10 +172,15 @@ Preserves Line Breaks if set to `true`. If set to `false` line breaks are cleane
 
 Set this to `false` if you want to preserve whitespace inside of text nodes. It is set to `true` by default.
 
-
 **removeSmartyScripts**
 
-Set this to `false` if you want to preserve smarty sccript found in the html content. It is set to `true` by default.
+Set this to `false` if you want to preserve smarty script found in the html content. It is set to `true` by default.
+
+**depthFirstSearch**
+
+By default this is set to `false` for legacy support. Setting this to `true` will change the behavior of find to order elements by depth first. This will properly preserve the order of elements as they where in the HTML.
+
+This option is depricated and will be removed in version `3.0.0` with the new behavior being as if it was set to `true`.
 
 Static Facade
 -------------

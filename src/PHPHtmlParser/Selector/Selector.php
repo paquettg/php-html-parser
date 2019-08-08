@@ -21,6 +21,11 @@ class Selector
     protected $selectors = [];
 
     /**
+     * @var bool
+     */
+    private $depthFirst = false;
+
+    /**
      * Constructs with the selector string
      *
      * @param string $selector
@@ -38,6 +43,15 @@ class Selector
     public function getSelectors()
     {
         return $this->selectors;
+    }
+
+    /**
+     * @param bool $status
+     * @return void
+     */
+    public function setDepthFirstFind(bool $status): void
+    {
+        $this->depthFirst = $status;
     }
 
     /**
@@ -151,8 +165,19 @@ class Selector
                     if ($child instanceof InnerNode &&
                         $child->hasChildren()
                     ) {
-                        // we still want to check its children
-                        $children[] = $child;
+                        if ($this->depthFirst) {
+                            if ( ! isset($options['checkGrandChildren']) ||
+                                $options['checkGrandChildren']) {
+                                // we have a child that failed but are not leaves.
+                                $matches = $this->seek([$child], $rule, $options);
+                                foreach ($matches as $match) {
+                                    $return[] = $match;
+                                }
+                            }
+                        } else {
+                            // we still want to check its children
+                            $children[] = $child;
+                        }
                     }
                 }
 

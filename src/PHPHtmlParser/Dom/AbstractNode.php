@@ -429,11 +429,13 @@ abstract class AbstractNode
      *
      * @param string $selector
      * @param int $nth
+     * @param bool $depthFirst
      * @return mixed
      */
-    public function find(string $selector, int $nth = null)
+    public function find(string $selector, int $nth = null, bool $depthFirst = false)
     {
         $selector = new Selector($selector, new SelectorParser());
+        $selector->setDepthFirstFind($depthFirst);
         $nodes    = $selector->find($this);
 
         if ( ! is_null($nth)) {

@@ -429,4 +429,27 @@ class DomTest extends TestCase {
         $metaNodes = $dom->root->find('meta');
         $this->assertEquals(4, count($metaNodes));
     }
+
+    public function testFindOrder()
+    {
+        $str = '<p><img src="http://example.com/first.jpg"></p><img src="http://example.com/second.jpg">';
+        $dom = new Dom();
+        $dom->load($str);
+        $images = $dom->find('img');
+
+        $this->assertEquals('<img src="http://example.com/second.jpg" />', (string)$images[0]);
+    }
+
+    public function testFindDepthFirstSearch()
+    {
+        $str = '<p><img src="http://example.com/first.jpg"></p><img src="http://example.com/second.jpg">';
+        $dom = new Dom();
+        $dom->setOptions([
+            'depthFirstSearch' => true,
+        ]);
+        $dom->load($str);
+        $images = $dom->find('img');
+
+        $this->assertEquals('<img src="http://example.com/first.jpg" />', (string)$images[0]);
+    }
 }
