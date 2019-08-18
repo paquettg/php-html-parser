@@ -27,8 +27,8 @@ class Selector
 
     /**
      * Constructs with the selector string
-     *
-     * @param string $selector
+     * @param string          $selector
+     * @param ParserInterface $parser
      */
     public function __construct(string $selector, ParserInterface $parser)
     {
@@ -57,9 +57,9 @@ class Selector
     /**
      * Attempts to find the selectors starting from the given
      * node object.
-     *
      * @param AbstractNode $node
      * @return Collection
+     * @throws ChildNotFoundException
      */
     public function find(AbstractNode $node): Collection
     {
@@ -98,8 +98,9 @@ class Selector
      * @param array $nodes
      * @param array $rule
      * @param array $options
+     *
      * @return array
-     * @recursive
+     * @throws ChildNotFoundException
      */
     protected function seek(array $nodes, array $rule, array $options): array
     {
@@ -276,8 +277,11 @@ class Selector
     protected function getNextChild(AbstractNode $node, AbstractNode $currentChild)
     {
         try {
-            // get next child
-            $child = $node->nextChild($currentChild->id());
+            $child = null;
+            if ($node instanceof InnerNode) {
+                // get next child
+                $child = $node->nextChild($currentChild->id());
+            }
         } catch (ChildNotFoundException $e) {
             // no more children
             $child = null;

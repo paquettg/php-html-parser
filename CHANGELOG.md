@@ -22,3 +22,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the Mock object to the tests directory, where it belongs.
 - Changes from `PSR-0` to `PSR-4` autoloading.
 - Updated `CONTRIBUTING.md` contents.
+- Updated docblocks.

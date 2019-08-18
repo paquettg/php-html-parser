@@ -64,7 +64,6 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      * the collection.
      *
      * @return string
-     * @throws EmptyCollectionException
      */
     public function __toString(): string
     {

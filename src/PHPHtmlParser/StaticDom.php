@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use PHPHtmlParser\Exceptions\CircularException;
+use PHPHtmlParser\Exceptions\CurlException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
+use PHPHtmlParser\Exceptions\StrictException;
 
 /**
  * Class StaticDom
@@ -55,9 +59,12 @@ final class StaticDom
     /**
      * Creates a new dom object and calls load() on the
      * new object.
-     *
      * @param string $str
      * @return Dom
+     * @throws ChildNotFoundException
+     * @throws CircularException
+     * @throws CurlException
+     * @throws StrictException
      */
     public static function load(string $str): Dom
     {
@@ -70,9 +77,11 @@ final class StaticDom
     /**
      * Creates a new dom object and calls loadFromFile() on the
      * new object.
-     *
      * @param string $file
      * @return Dom
+     * @throws ChildNotFoundException
+     * @throws CircularException
+     * @throws StrictException
      */
     public static function loadFromFile(string $file): Dom
     {
@@ -85,11 +94,14 @@ final class StaticDom
     /**
      * Creates a new dom object and calls loadFromUrl() on the
      * new object.
-     *
-     * @param string $url
-     * @param array $options
-     * @param CurlInterface $curl
+     * @param string                            $url
+     * @param array                             $options
+     * @param CurlInterface|null $curl
      * @return Dom
+     * @throws ChildNotFoundException
+     * @throws CircularException
+     * @throws CurlException
+     * @throws StrictException
      */
     public static function loadFromUrl(string $url, array $options = [], CurlInterface $curl = null): Dom
     {

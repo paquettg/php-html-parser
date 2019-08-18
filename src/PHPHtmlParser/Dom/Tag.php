@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace PHPHtmlParser\Dom;
 
-use PHPHtmlParser\Dom;
 use stringEncode\Encode;
 
 /**

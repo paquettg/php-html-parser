@@ -67,8 +67,8 @@ class HtmlNode extends InnerNode
 
     /**
      * Gets the inner html of this node.
-     *
      * @return string
+     * @throws ChildNotFoundException
      * @throws UnknownChildTypeException
      */
     public function innerHtml(): string
@@ -113,8 +113,9 @@ class HtmlNode extends InnerNode
     /**
      * Gets the html of this node, including it's own
      * tag.
-     *
      * @return string
+     * @throws ChildNotFoundException
+     * @throws UnknownChildTypeException
      */
     public function outerHtml(): string
     {

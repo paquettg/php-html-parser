@@ -2,7 +2,7 @@
 namespace PHPHtmlParser\Selector;
 
 /**
- * This is the parser for the selctor.
+ * This is the parser for the selector.
  *
  * 
  */
@@ -20,6 +20,8 @@ class Parser implements ParserInterface
      * Parses the selector string
      *
      * @param string $selector
+     *
+     * @return array
      */
     public function parseSelectorString(string $selector): array
     {
