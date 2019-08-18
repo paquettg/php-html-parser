@@ -452,4 +452,24 @@ class DomTest extends TestCase {
 
         $this->assertEquals('<img src="http://example.com/first.jpg" />', (string)$images[0]);
     }
+
+    public function testCaseInSensitivity()
+    {
+        $str = "<FooBar Attribute='asdf'>blah</FooBar>";
+        $dom = new Dom();
+        $dom->loadStr($str);
+
+        $FooBar = $dom->find('FooBar');
+        $this->assertEquals('asdf', $FooBar->attribute);
+    }
+
+    public function testCaseSensitivity()
+    {
+        $str = "<FooBar Attribute='asdf'>blah</FooBar>";
+        $dom = new Dom();
+        $dom->loadStr($str);
+
+        $FooBar = $dom->find('FooBar');
+        $this->assertEquals('asdf', $FooBar->Attribute);
+    }
 }

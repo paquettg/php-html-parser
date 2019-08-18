@@ -283,6 +283,7 @@ class Tag
      */
     public function getAttribute(string $key)
     {
+        $key = strtolower($key);
         if ( ! isset($this->attr[$key])) {
             return null;
         }
