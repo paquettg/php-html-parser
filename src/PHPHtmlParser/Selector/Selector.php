@@ -343,16 +343,24 @@ class Selector
             $nodeValue = $node->getAttribute($rule['key']);
         }
 
-        $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
+        $check = false;
+        if (!is_array($rule['value'])) {
+            $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
+        }
 
         // handle multiple classes
         if ( ! $check && $rule['key'] == 'class') {
             $nodeClasses = explode(' ', $node->getAttribute('class'));
-            foreach ($nodeClasses as $class) {
-                if ( ! empty($class)) {
-                    $check = $this->match($rule['operator'], $rule['value'], $class);
+            foreach ($rule['value'] as $value) {
+                foreach ($nodeClasses as $class) {
+                    if ( ! empty($class)) {
+                        $check = $this->match($rule['operator'], $value, $class);
+                    }
+                    if ($check) {
+                        break;
+                    }
                 }
-                if ($check) {
+                if (!$check) {
                     break;
                 }
             }

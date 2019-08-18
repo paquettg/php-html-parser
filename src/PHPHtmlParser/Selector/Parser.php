@@ -14,7 +14,7 @@ class Parser implements ParserInterface
      *
      * @var string
      */
-    protected $pattern = "/([\w\-:\*>]*)(?:\#([\w\-]+)|\.([\w\-]+))?(?:\[@?(!?[\w\-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
+    protected $pattern = "/([\w\-:\*>]*)(?:\#([\w\-]+)|\.([\w\.\-]+))?(?:\[@?(!?[\w\-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
 
     /**
      * Parses the selector string
@@ -53,7 +53,7 @@ class Parser implements ParserInterface
             // check for class selector
             if ( ! empty($match[3])) {
                 $key   = 'class';
-                $value = $match[3];
+                $value = explode('.', $match[3]);
             }
 
             // and final attribute selector

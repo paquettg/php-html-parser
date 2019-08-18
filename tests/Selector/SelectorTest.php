@@ -216,4 +216,18 @@ class SelectorTest extends TestCase {
         $selector = new Selector('[custom-attr]', new Parser());
         $this->assertEquals(1, count($selector->find($root)));
     }
+
+    public function testFindMultipleClasses()
+    {
+        $root   = new HtmlNode(new Tag('root'));
+        $child1 = new HtmlNode(new Tag('a'));
+        $child1->setAttribute('class', 'b');
+        $child2 = new HtmlNode(new Tag('a'));
+        $child2->setAttribute('class', 'b c');
+        $root->addChild($child1);
+        $root->addChild($child2);
+
+        $selector = new Selector('a.b.c', new Parser());
+        $this->assertEquals(1, count($selector->find($root)));
+    }
 }
