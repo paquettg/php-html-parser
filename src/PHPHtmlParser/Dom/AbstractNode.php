@@ -66,6 +66,11 @@ abstract class AbstractNode
     protected $children = [];
 
     /**
+     * @var bool
+     */
+    protected $htmlSpecialCharsDecode = false;
+
+    /**
      * Creates a unique id for this node.
      */
     public function __construct()
@@ -122,6 +127,16 @@ abstract class AbstractNode
     {
         return $this->outerHtml();
     }
+
+    /**
+     * @param bool $htmlSpecialCharsDecode
+     * @return void
+     */
+    public function setHtmlSpecialCharsDecode($htmlSpecialCharsDecode = false): void
+    {
+        $this->htmlSpecialCharsDecode = $htmlSpecialCharsDecode;
+    }
+
 
     /**
      * Reset node counter

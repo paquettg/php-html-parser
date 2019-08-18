@@ -404,6 +404,17 @@ class DomTest extends TestCase {
         $this->assertEquals('?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4', $href);
     }
 
+    public function testGetComplexAttributeHtmlSpecialCharsDecode()
+    {
+        $dom = new Dom;
+        $dom->setOptions(['htmlSpecialCharsDecode' => true]);
+        $dom->load('<a href="?search=Fort+William&amp;session_type=face&amp;distance=100&amp;uqs=119846&amp;page=4" class="pagination-next">Next <span class="chevron">&gt;</span></a>');
+        $a    = $dom->find('a', 0);
+        $this->assertEquals('Next <span class="chevron">></span>', $a->innerHtml);
+        $href = $a->href;
+        $this->assertEquals('?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4', $href);
+    }
+
     public function testGetChildrenNoChildren()
     {
         $dom = new Dom();

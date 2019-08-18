@@ -56,6 +56,16 @@ class HtmlNode extends InnerNode
     }
 
     /**
+     * @param bool $htmlSpecialCharsDecode
+     * @return void
+     */
+    public function setHtmlSpecialCharsDecode($htmlSpecialCharsDecode = false): void
+    {
+        parent::setHtmlSpecialCharsDecode($htmlSpecialCharsDecode);
+        $this->tag->setHtmlSpecialCharsDecode($htmlSpecialCharsDecode);
+    }
+
+    /**
      * Gets the inner html of this node.
      *
      * @return string

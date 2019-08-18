@@ -15,6 +15,7 @@ namespace PHPHtmlParser;
  * @property bool removeDoubleSpace
  * @property bool removeSmartyScripts
  * @property bool depthFirstSearch
+ * @property bool htmlSpecialCharsDecode
  */
 class Options
 {
@@ -25,16 +26,17 @@ class Options
      * @param array
      */
     protected $defaults = [
-        'whitespaceTextNode'   => true,
-        'strict'               => false,
-        'enforceEncoding'      => null,
-        'cleanupInput'         => true,
-        'removeScripts'        => true,
-        'removeStyles'         => true,
-        'preserveLineBreaks'   => false,
-        'removeDoubleSpace'    => true,
-        'removeSmartyScripts'  => true,
-        'depthFirstSearch'     => false,
+        'whitespaceTextNode'     => true,
+        'strict'                 => false,
+        'enforceEncoding'        => null,
+        'cleanupInput'           => true,
+        'removeScripts'          => true,
+        'removeStyles'           => true,
+        'preserveLineBreaks'     => false,
+        'removeDoubleSpace'      => true,
+        'removeSmartyScripts'    => true,
+        'depthFirstSearch'       => false,
+        'htmlSpecialCharsDecode' => false,
     ];
 
     /**

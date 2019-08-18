@@ -533,6 +533,7 @@ class Dom
     {
         // add the root node
         $this->root = new HtmlNode('root');
+        $this->root->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
         $activeNode = $this->root;
         while ( ! is_null($activeNode)) {
             $str = $this->content->copyUntil('<');
@@ -580,6 +581,7 @@ class Dom
             ) {
                 // we found text we care about
                 $textNode = new TextNode($str, $this->options->removeDoubleSpace);
+                $textNode->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
                 $activeNode->addChild($textNode);
             }
         }
@@ -634,6 +636,7 @@ class Dom
             return $return;
         }
         $node = new HtmlNode($tag);
+        $node->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
 
         // attributes
         while ($this->content->char() != '>' &&

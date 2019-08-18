@@ -188,6 +188,10 @@ By default this is set to `false` for legacy support. Setting this to `true` wil
 
 This option is depricated and will be removed in version `3.0.0` with the new behavior being as if it was set to `true`.
 
+**htmlSpecialCharsDecode**
+
+By default this is set to `false`. Setting this to `true` will apply the php function `htmlspecialchars_decode` too all attribute values and text nodes.
+
 Static Facade
 -------------
 

@@ -52,27 +52,42 @@ class TextNode extends LeafNode
     }
 
     /**
+     * @param bool $htmlSpecialCharsDecode
+     * @return void
+     */
+    public function setHtmlSpecialCharsDecode($htmlSpecialCharsDecode = false): void
+    {
+        parent::setHtmlSpecialCharsDecode($htmlSpecialCharsDecode);
+        $this->tag->setHtmlSpecialCharsDecode($htmlSpecialCharsDecode);
+    }
+
+    /**
      * Returns the text of this node.
      *
      * @return string
      */
     public function text(): string
     {
+        if ($this->htmlSpecialCharsDecode) {
+            $text = htmlspecialchars_decode($this->text);
+        } else {
+            $text = $this->text;
+        }
         // convert charset
         if ( ! is_null($this->encode)) {
             if ( ! is_null($this->convertedText)) {
                 // we already know the converted value
                 return $this->convertedText;
             }
-            $text = $this->encode->convert($this->text);
+            $text = $this->encode->convert($text);
 
             // remember the conversion
             $this->convertedText = $text;
 
             return $text;
-        } else {
-            return $this->text;
         }
+
+        return $text;
     }
 
     /**
@@ -84,7 +99,6 @@ class TextNode extends LeafNode
     public function setText(string $text): void
     {
         $this->text = $text;
-
         if ( ! is_null($this->encode)) {
             $text = $this->encode->convert($text);
 
