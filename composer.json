@@ -24,10 +24,8 @@
         "php-coveralls/php-coveralls": "^2.1"
     },
     "autoload": {
-        "psr-0": { 
-        	"PHPHtmlParser": "src/"
+        "psr-4": { 
+        	"PHPHtmlParser\\": "src/PHPHtmlParser"
        	}
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
