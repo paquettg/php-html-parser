@@ -165,7 +165,10 @@ abstract class InnerNode extends ArrayNode
         array_splice($children, $index, 0, [$insert]);
 
         // add the child
-        $this->children = array_combine($keys, $children);
+        $combination = array_combine($keys, $children);
+        if ($combination !== false) {
+            $this->children = $combination;
+        }
 
         // tell child I am the new parent
         $child->setParent($this);
@@ -338,7 +341,10 @@ abstract class InnerNode extends ArrayNode
         $keys = array_keys($this->children);
         $index = array_search($childId, $keys, true);
         $keys[$index] = $newChild->id();
-        $this->children = array_combine($keys, $this->children);
+        $combination = array_combine($keys, $this->children);
+        if ($combination !== false) {
+            $this->children = $combination;
+        }
         $this->children[$newChild->id()] = [
           'prev' => $oldChild['prev'],
           'node' => $newChild,
