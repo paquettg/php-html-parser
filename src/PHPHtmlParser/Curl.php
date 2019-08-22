@@ -21,6 +21,9 @@ class Curl implements CurlInterface
     public function get(string $url): string
     {
         $ch = curl_init($url);
+        if ($ch === false) {
+            throw new CurlException('Curl Init return `false`.');
+        }
 
         if ( ! ini_get('open_basedir')) {
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -37,6 +40,8 @@ class Curl implements CurlInterface
             // there was a problem
             $error = curl_error($ch);
             throw new CurlException('Error retrieving "'.$url.'" ('.$error.')');
+        } elseif ($content === true) {
+            throw new CurlException('Unexpected return value of content set to true.');
         }
 
         return $content;
