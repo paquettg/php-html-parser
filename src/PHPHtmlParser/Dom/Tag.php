@@ -294,7 +294,7 @@ class Tag
      * Returns an attribute by the key
      *
      * @param string $key
-     * @return mixed
+     * @return array|null
      */
     public function getAttribute(string $key):array
     {

@@ -342,9 +342,9 @@ abstract class AbstractNode
      * on the tag of this node.
      *
      * @param string $key
-     * @return mixed
+     * @return string|null
      */
-    public function getAttribute(string $key)
+    public function getAttribute(string $key): ?string
     {
         $attribute = $this->tag->getAttribute($key);
         if ( ! is_null($attribute)) {

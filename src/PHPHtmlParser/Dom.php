@@ -252,7 +252,14 @@ class Dom
     {
         $this->isLoaded();
 
-        return $this->root->find($selector, $nth, $this->options->get('depthFirstSearch'));
+        $depthFirstSearch = $this->options->get('depthFirstSearch');
+        if (is_bool($depthFirstSearch)) {
+            $result = $this->root->find($selector, $nth, $depthFirstSearch);
+        } else {
+            $result = $this->root->find($selector, $nth);
+        }
+
+        return $result;
     }
 
     /**
@@ -793,6 +800,7 @@ class Dom
             return false;
         }
 
+        /** @var AbstractNode $meta */
         $meta = $this->root->find('meta[http-equiv=Content-Type]', 0);
         if (is_null($meta)) {
             // could not find meta tag
@@ -800,8 +808,8 @@ class Dom
 
             return false;
         }
-        $content = $meta->content;
-        if (empty($content)) {
+        $content = $meta->getAttribute('content');
+        if (is_null($content)) {
             // could not find content
             $this->root->propagateEncoding($encode);
 
