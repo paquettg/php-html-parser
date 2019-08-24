@@ -1,5 +1,6 @@
 composer.phar
 composer.lock
+infection.log
 /vendor/
 .idea/
 *.swp
