@@ -748,6 +748,7 @@ class Dom
         }
 
         $this->content->skipByToken('blank');
+        $tag = strtolower($tag);
         if ($this->content->char() == '/') {
             // self closing tag
             $node->getTag()->selfClosing();
