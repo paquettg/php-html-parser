@@ -53,4 +53,14 @@ class StrictTest extends TestCase {
             $this->assertEquals("Tag 'p' has an attribute 'block' with out a value! (character #22)", $e->getMessage());
         }
     }
+
+    public function testConfigStrictBRTag()
+    {
+        $dom = new Dom;
+        $dom->setOptions([
+          'strict' => true,
+        ]);
+        $dom->load('<br />');
+        $this->assertTrue(true);
+    }
 }
