@@ -483,4 +483,14 @@ class DomTest extends TestCase {
         $FooBar = $dom->find('FooBar');
         $this->assertEquals('asdf', $FooBar->Attribute);
     }
+
+    public function testEmptyAttribute()
+    {
+        $str = '<ul class="summary"><li class></li>blah<li class="foo">what</li></ul>';
+        $dom = new Dom();
+        $dom->load($str);
+
+        $items = $dom->find('.summary .foo');
+        $this->assertEquals(1, count($items));
+    }
 }
