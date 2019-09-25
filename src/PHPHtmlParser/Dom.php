@@ -4,6 +4,7 @@ namespace PHPHtmlParser;
 use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Dom\HtmlNode;
+use PHPHtmlParser\Dom\InnerNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
@@ -46,7 +47,7 @@ class Dom
     /**
      * The document string.
      *
-     * @var Content
+     * @var null|Content
      */
     protected $content = null;
 
@@ -170,7 +171,13 @@ class Dom
      */
     public function loadFromFile(string $file, array $options = []): Dom
     {
-        return $this->loadStr(file_get_contents($file), $options);
+        $content = file_get_contents($file);
+
+        if (false === $content) {
+            $content = '';
+        }
+
+        return $this->loadStr($content, $options);
     }
 
     /**
@@ -332,7 +339,7 @@ class Dom
     /**
      * Adds a tag to the list of self closing tags that should not have a trailing slash
      *
-     * @param $tag
+     * @param array|string $tag
      * @return Dom
      * @chainable
      */
@@ -351,7 +358,7 @@ class Dom
     /**
      * Removes a tag from the list of no-slash tags.
      *
-     * @param $tag
+     * @param array|string $tag
      * @return Dom
      * @chainable
      */
@@ -446,12 +453,12 @@ class Dom
     /**
      * Simple wrapper function that returns an element by the
      * id.
-     * @param $id
+     * @param string $id
      * @return mixed|Collection|null
      * @throws ChildNotFoundException
      * @throws NotLoadedException
      */
-    public function getElementById($id)
+    public function getElementById(string $id)
     {
         $this->isLoaded();
 
@@ -514,8 +521,8 @@ class Dom
         }
 
         // remove white space before closing tags
-        $str = mb_eregi_replace("'\s+>", "'>", $str);
-        $str = mb_eregi_replace('"\s+>', '">', $str);
+        $str = (string) mb_eregi_replace("'\s+>", "'>", $str);
+        $str = (string) mb_eregi_replace('"\s+>', '">', $str);
 
         // clean out the \n\r
         $replace = ' ';
@@ -525,34 +532,34 @@ class Dom
         $str = str_replace(["\r\n", "\r", "\n"], $replace, $str);
 
         // strip the doctype
-        $str = mb_eregi_replace("<!doctype(.*?)>", '', $str);
+        $str = (string) mb_eregi_replace("<!doctype(.*?)>", '', $str);
 
         // strip out comments
-        $str = mb_eregi_replace("<!--(.*?)-->", '', $str);
+        $str = (string) mb_eregi_replace("<!--(.*?)-->", '', $str);
 
         // strip out cdata
-        $str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
+        $str = (string) mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
 
         // strip out <script> tags
         if ($this->options->get('removeScripts')) {
-            $str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
-            $str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
+            $str = (string) mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
+            $str = (string) mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
         }
 
         // strip out <style> tags
         if ($this->options->get('removeStyles')) {
-            $str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
-            $str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
+            $str = (string) mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
+            $str = (string) mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
         }
 
         // strip out server side scripts
         if ($this->options->get('serverSideScripts')) {
-            $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+            $str = (string) mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
         }
 
         // strip smarty scripts
         if ($this->options->get('removeSmartyScripts')) {
-            $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
+            $str = (string) mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
         }
 
         return $str;
@@ -572,7 +579,7 @@ class Dom
         $this->root = new HtmlNode('root');
         $this->root->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
         $activeNode = $this->root;
-        while ( ! is_null($activeNode)) {
+        while ( ! is_null($activeNode) && ! is_null($this->content)) {
             $str = $this->content->copyUntil('<');
             if ($str == '') {
                 $info = $this->parseTag();
@@ -586,7 +593,8 @@ class Dom
                 if ($info['closing']) {
                     $foundOpeningTag  = true;
                     $originalNode     = $activeNode;
-                    while ($activeNode->getTag()->name() != $info['tag']) {
+                    $name = $activeNode->getTag() !== null ? $activeNode->getTag()->name() : '';
+                    while ($name != $info['tag']) {
                         $activeNode = $activeNode->getParent();
                         if (is_null($activeNode)) {
                             // we could not find opening tag
@@ -594,6 +602,7 @@ class Dom
                             $foundOpeningTag = false;
                             break;
                         }
+                        $name = $activeNode->getTag() !== null ? $activeNode->getTag()->name() : '';
                     }
                     if ($foundOpeningTag) {
                         $activeNode = $activeNode->getParent();
@@ -607,10 +616,12 @@ class Dom
 
                 /** @var AbstractNode $node */
                 $node = $info['node'];
-                $activeNode->addChild($node);
+                if ($activeNode instanceof InnerNode) {
+                    $activeNode->addChild($node);
+                }
 
                 // check if node is self closing
-                if ( ! $node->getTag()->isSelfClosing()) {
+                if ( ! is_null($node->getTag()) && ! $node->getTag()->isSelfClosing()) {
                     $activeNode = $node;
                 }
             } else if ($this->options->whitespaceTextNode ||
@@ -619,7 +630,9 @@ class Dom
                 // we found text we care about
                 $textNode = new TextNode($str, $this->options->removeDoubleSpace);
                 $textNode->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
-                $activeNode->addChild($textNode);
+                if ($activeNode instanceof InnerNode) {
+                    $activeNode->addChild($textNode);
+                }
             }
         }
     }
@@ -637,6 +650,9 @@ class Dom
             'closing' => false,
             'node'    => null,
         ];
+        if(is_null($this->content)) {
+            return [];
+        }
         if ($this->content->char() != '<') {
             // we are not at the beginning of a tag
             return $return;
@@ -751,7 +767,9 @@ class Dom
         $tag = strtolower($tag);
         if ($this->content->char() == '/') {
             // self closing tag
-            $node->getTag()->selfClosing();
+            if ( ! is_null($node->getTag())) {
+                $node->getTag()->selfClosing();
+            }
             $this->content->fastForward(1);
         } elseif (in_array($tag, $this->selfClosing)) {
 
@@ -762,10 +780,12 @@ class Dom
             }
 
             // We force self closing on this tag.
-            $node->getTag()->selfClosing();
+            if ( ! is_null($node->getTag())) {
+                $node->getTag()->selfClosing();
+            }
 
             // Should this tag use a trailing slash?
-            if(in_array($tag, $this->noSlash))
+            if( ! is_null($node->getTag()) && in_array($tag, $this->noSlash))
             {
                 $node->getTag()->noTrailingSlash();
             }
@@ -801,7 +821,6 @@ class Dom
             return false;
         }
 
-        /** @var AbstractNode $meta */
         $meta = $this->root->find('meta[http-equiv=Content-Type]', 0);
         if (is_null($meta)) {
             // could not find meta tag

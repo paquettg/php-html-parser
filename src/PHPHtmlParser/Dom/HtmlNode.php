@@ -15,21 +15,21 @@ class HtmlNode extends InnerNode
     /**
      * Remembers what the innerHtml was if it was scanned previously.
      *
-     * @var string
+     * @var null|string
      */
     protected $innerHtml = null;
 
     /**
      * Remembers what the outerHtml was if it was scanned previously.
      *
-     * @var string
+     * @var null|string
      */
     protected $outerHtml = null;
 
     /**
      * Remembers what the text was if it was scanned previously.
      *
-     * @var string
+     * @var null|string
      */
     protected $text = null;
 
@@ -37,7 +37,7 @@ class HtmlNode extends InnerNode
      * Remembers what the text was when we looked into all our
      * children nodes.
      *
-     * @var string
+     * @var null|string
      */
     protected $textWithChildren = null;
 
@@ -62,7 +62,9 @@ class HtmlNode extends InnerNode
     public function setHtmlSpecialCharsDecode($htmlSpecialCharsDecode = false): void
     {
         parent::setHtmlSpecialCharsDecode($htmlSpecialCharsDecode);
-        $this->tag->setHtmlSpecialCharsDecode($htmlSpecialCharsDecode);
+        if ( ! is_null($this->tag)) {
+            $this->tag->setHtmlSpecialCharsDecode($htmlSpecialCharsDecode);
+        }
     }
 
     /**
@@ -120,7 +122,7 @@ class HtmlNode extends InnerNode
     public function outerHtml(): string
     {
         // special handling for root
-        if ($this->tag->name() == 'root') {
+        if ( ! is_null($this->tag) && $this->tag->name() == 'root') {
             return $this->innerHtml();
         }
 
@@ -129,17 +131,23 @@ class HtmlNode extends InnerNode
             return $this->outerHtml;
         }
 
-        $return = $this->tag->makeOpeningTag();
-        if ($this->tag->isSelfClosing()) {
-            // ignore any children... there should not be any though
-            return $return;
+        $return = '';
+
+        if ( ! is_null($this->tag)) {
+            $return .= $this->tag->makeOpeningTag();
+            if ($this->tag->isSelfClosing()) {
+                // ignore any children... there should not be any though
+                return $return;
+            }
         }
 
         // get the inner html
         $return .= $this->innerHtml();
 
-        // add closing tag
-        $return .= $this->tag->makeClosingTag();
+        if ( ! is_null($this->tag)) {
+            // add closing tag
+            $return .= $this->tag->makeClosingTag();
+        }
 
         // remember the results
         $this->outerHtml = $return;

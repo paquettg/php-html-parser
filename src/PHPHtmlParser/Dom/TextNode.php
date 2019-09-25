@@ -26,7 +26,7 @@ class TextNode extends LeafNode
     /**
      * This is the converted version of the text.
      *
-     * @var string
+     * @var null|string
      */
     protected $convertedText = null;
 
@@ -40,7 +40,7 @@ class TextNode extends LeafNode
     {
         if ($removeDoubleSpace) {
             // remove double spaces
-            $text = mb_ereg_replace('\s+', ' ', $text);
+            $text = (string) mb_ereg_replace('\s+', ' ', $text);
         }
 
         // restore line breaks

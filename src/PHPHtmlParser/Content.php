@@ -135,8 +135,7 @@ class Content
                 $position = strpos($this->content, $string, $position);
                 if ($position === false) {
                     // reached the end
-                    $found = true;
-                    continue;
+                    break;
                 }
 
                 if ($this->char($position - 1) == '\\') {

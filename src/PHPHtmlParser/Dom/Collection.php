@@ -18,7 +18,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * The collection of Nodes.
      *
-     * @param array
+     * @var array
      */
     protected $collection = [];
 

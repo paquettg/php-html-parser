@@ -113,7 +113,7 @@ class Selector
             /** @var AbstractNode $node */
             foreach ($nodes as $node) {
                 if ($rule['tag'] == '*' ||
-                    $rule['tag'] == $node->getTag()->name()
+                    $rule['tag'] == ($node->getTag() !== null ? $node->getTag()->name() : '')
                 ) {
                     ++$count;
                     if ($count == $rule['key']) {
@@ -132,9 +132,7 @@ class Selector
         /** @var InnerNode $node */
         foreach ($nodes as $node) {
             // check if we are a leaf
-            if ($node instanceof LeafNode ||
-                ! $node->hasChildren()
-            ) {
+            if (! $node->hasChildren()) {
                 continue;
             }
 
@@ -299,7 +297,8 @@ class Selector
      */
     protected function checkTag(array $rule, AbstractNode $node): bool
     {
-        if ( ! empty($rule['tag']) && $rule['tag'] != $node->getTag()->name() &&
+        $tag = $node->getTag() !== null ? $node->getTag()->name() : '';
+        if ( ! empty($rule['tag']) && $rule['tag'] != $tag &&
             $rule['tag'] != '*'
         ) {
             return false;
@@ -349,7 +348,7 @@ class Selector
 
         $check = false;
         if (!is_array($rule['value'])) {
-            $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
+            $check = $this->match($rule['operator'], $rule['value'], (string) $nodeValue);
         }
 
         // handle multiple classes

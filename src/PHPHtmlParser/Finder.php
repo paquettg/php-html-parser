@@ -9,13 +9,16 @@ use PHPHtmlParser\Exceptions\ParentNotFoundException;
 
 class Finder
 {
+    /**
+     * @var int
+     */
     private $id;
 
     /**
      * Finder constructor.
-     * @param $id
+     * @param int $id
      */
-    public function __construct($id)
+    public function __construct(int $id)
     {
         $this->id = $id;
     }

@@ -59,7 +59,7 @@ class Tag
     /**
      * Sets up the tag with a name.
      *
-     * @param $name
+     * @param string $name
      */
     public function __construct(string $name)
     {
@@ -173,7 +173,7 @@ class Tag
      * Set an attribute for this tag.
      *
      * @param string $key
-     * @param string|array $value
+     * @param null|string|array $value
      * @return Tag
      * @chainable
      */

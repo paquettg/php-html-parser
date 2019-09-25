@@ -11,20 +11,20 @@ use PHPHtmlParser\Finder;
 
 /**
  * Dom node object.
- * @property string    outerhtml
- * @property string    innerhtml
- * @property string    text
- * @property int       prev
- * @property int       next
- * @property Tag       tag
- * @property InnerNode parent
+ * @property string         $outerhtml
+ * @property string         $innerhtml
+ * @property string         $text
+ * @property int            $prev
+ * @property int            $next
+ * @property null|Tag       $tag
+ * @property null|InnerNode $parent
  */
 abstract class AbstractNode
 {
     private static $count = 0;
     /**
      * Contains the tag name/type
-     * @var Tag
+     * @var null|Tag
      */
     protected $tag;
 
@@ -38,7 +38,7 @@ abstract class AbstractNode
     /**
      * Contains the parent Node.
      *
-     * @var InnerNode
+     * @var null|InnerNode
      */
     protected $parent = null;
 
@@ -159,7 +159,7 @@ abstract class AbstractNode
     /**
      * Returns the parent of node.
      *
-     * @return AbstractNode
+     * @return null|InnerNode
      */
     public function getParent()
     {
@@ -203,8 +203,8 @@ abstract class AbstractNode
     {
         if ( ! is_null($this->parent)) {
             $this->parent->removeChild($this->id);
+            $this->parent->clear();
         }
-        $this->parent->clear();
         $this->clear();
     }
 
@@ -217,7 +217,9 @@ abstract class AbstractNode
     public function propagateEncoding(Encode $encode)
     {
         $this->encode = $encode;
-        $this->tag->setEncoding($encode);
+        if ( ! is_null($this->tag)) {
+            $this->tag->setEncoding($encode);
+        }
     }
 
     /**
@@ -314,9 +316,9 @@ abstract class AbstractNode
     /**
      * Gets the tag object of this node.
      *
-     * @return Tag
+     * @return null|Tag
      */
-    public function getTag(): Tag
+    public function getTag(): ?Tag
     {
         return $this->tag;
     }
@@ -329,6 +331,10 @@ abstract class AbstractNode
      */
     public function getAttributes(): array
     {
+        if (is_null($this->tag)) {
+            return [];
+        }
+
         $attributes = $this->tag->getAttributes();
         foreach ($attributes as $name => $info) {
             $attributes[$name] = $info['value'];
@@ -346,6 +352,10 @@ abstract class AbstractNode
      */
     public function getAttribute(string $key): ?string
     {
+        if (is_null($this->tag)) {
+            return null;
+        }
+
         $attribute = $this->tag->getAttribute($key);
         if ( ! is_null($attribute)) {
             $attribute = $attribute['value'];
@@ -363,6 +373,9 @@ abstract class AbstractNode
      */
     public function hasAttribute(string $key): bool
     {
+        if (is_null($this->tag)) {
+            return false;
+        }
         return $this->tag->hasAttribute($key);
     }
 
@@ -377,7 +390,9 @@ abstract class AbstractNode
      */
     public function setAttribute(string $key, $value): AbstractNode
     {
-        $this->tag->setAttribute($key, $value);
+        if ( ! is_null($this->tag)) {
+            $this->tag->setAttribute($key, $value);
+        }
 
         //clear any cache
         $this->clear();
@@ -394,6 +409,10 @@ abstract class AbstractNode
      */
     public function removeAttribute(string $key): void
     {
+        if (is_null($this->tag)) {
+            return;
+        }
+
         $this->tag->removeAttribute($key);
 
         //clear any cache
@@ -408,6 +427,10 @@ abstract class AbstractNode
      */
     public function removeAllAttributes(): void
     {
+        if (is_null($this->tag)) {
+            return;
+        }
+
         $this->tag->removeAllAttributes();
 
         //clear any cache
@@ -426,7 +449,7 @@ abstract class AbstractNode
         $node = $this;
 
         while ( ! is_null($node)) {
-            if ($node->tag->name() == $tag) {
+            if (! is_null($node->tag) && $node->tag->name() == $tag) {
                 return $node;
             }
 
@@ -441,7 +464,7 @@ abstract class AbstractNode
      * @param string   $selector
      * @param int|null $nth
      * @param bool     $depthFirst
-     * @return mixed|Collection|null
+     * @return null|mixed|Collection
      * @throws ChildNotFoundException
      */
     public function find(string $selector, int $nth = null, bool $depthFirst = false)

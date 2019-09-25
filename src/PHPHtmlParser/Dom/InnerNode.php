@@ -31,7 +31,9 @@ abstract class InnerNode extends ArrayNode
     public function propagateEncoding(Encode $encode): void
     {
         $this->encode = $encode;
-        $this->tag->setEncoding($encode);
+        if ( ! is_null($this->tag)) {
+            $this->tag->setEncoding($encode);
+        }
         // check children
         foreach ($this->children as $id => $child) {
             /** @var AbstractNode $node */
@@ -159,7 +161,7 @@ abstract class InnerNode extends ArrayNode
         ];
 
         $index = $key ? (array_search($key, $keys, true) + 1) : 0;
-        array_splice($keys, $index, 0, $child->id());
+        array_splice($keys, $index, 0, (string) $child->id());
 
         $children = array_values($this->children);
         array_splice($children, $index, 0, [$insert]);
@@ -405,7 +407,7 @@ abstract class InnerNode extends ArrayNode
         end($this->children);
         $key = key($this->children);
 
-        return $this->getChild($key);
+        return $this->getChild((int) $key);
     }
 
     /**
