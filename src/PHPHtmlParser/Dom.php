@@ -513,6 +513,11 @@ class Dom
             return $str;
         }
 
+        $is_gzip = 0 === mb_strpos($str, "\x1f" . "\x8b" . "\x08", 0, "US-ASCII");
+        if ($is_gzip) {
+            $str = gzdecode($str);
+        }
+
         // remove white space before closing tags
         $str = mb_eregi_replace("'\s+>", "'>", $str);
         $str = mb_eregi_replace('"\s+>', '">', $str);
