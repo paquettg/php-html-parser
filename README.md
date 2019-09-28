@@ -49,7 +49,7 @@ require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
-$dom->loadFromFile('tests/big.html');
+$dom->loadFromFile('tests/data/big.html');
 $contents = $dom->find('.content-border');
 echo count($contents); // 10
 
