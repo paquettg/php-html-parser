@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Dom;
@@ -491,6 +493,15 @@ class DomTest extends TestCase {
         $dom->load($str);
 
         $items = $dom->find('.summary .foo');
+        $this->assertEquals(1, count($items));
+    }
+
+    public function testMultipleSquareSelector()
+    {
+        $dom = new Dom();
+        $dom->load('<input name="foo" type="text" baz="fig">');
+
+        $items = $dom->find('input[type=text][name=foo][baz=fig]');
         $this->assertEquals(1, count($items));
     }
 }
