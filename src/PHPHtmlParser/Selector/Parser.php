@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Selector;
 
 /**
@@ -67,6 +70,23 @@ class Parser implements ParserInterface
             }
             if ( ! empty($match[6])) {
                 $value = $match[6];
+                if (strpos($value, '][') !== false) {
+                    // we have multiple type selectors
+                    $keys = [];
+                    $keys[] = $key;
+                    $key = $keys;
+                    $parts = explode('][', $value);
+                    $value = [];
+                    foreach ($parts as $part) {
+                        if (strpos($part, '=') !== false) {
+                            list($first, $second) = explode('=', $part);
+                            $key[] = $first;
+                            $value[] = $second;
+                        } else {
+                            $value[] = $part;
+                        }
+                    }
+                }
             }
 
             // check for elements that do not have a specified attribute

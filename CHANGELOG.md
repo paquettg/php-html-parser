@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed bug with multiple selectors query.
+
+## 2.1.0
+
 ### Added
 - New `removeSmartyScripts` configuration setting. Defaults to true.
 - Added `declare(strict_types=1)` to all source files.
