@@ -171,13 +171,7 @@ class Dom
      */
     public function loadFromFile(string $file, array $options = []): Dom
     {
-        $content = file_get_contents($file);
-
-        if (false === $content) {
-            $content = '';
-        }
-
-        return $this->loadStr($content, $options);
+        return $this->loadStr(file_get_contents($file), $options);
     }
 
     /**

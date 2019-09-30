@@ -132,7 +132,8 @@ class Selector
         /** @var InnerNode $node */
         foreach ($nodes as $node) {
             // check if we are a leaf
-            if (! $node->hasChildren()) {
+            if ($node instanceof LeafNode ||
+                ! $node->hasChildren()) {
                 continue;
             }
 
