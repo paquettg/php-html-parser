@@ -195,7 +195,7 @@ class NodeHtmlTest extends TestCase {
             ],
         ]);
         $node = new HtmlNode($a);
-        
+
         $this->assertEquals("<a href='http://google.com'></a>", $node->OuterHtml());
     }
 
@@ -275,9 +275,9 @@ class NodeHtmlTest extends TestCase {
         $childa->addChild(new TextNode('link'));
 
         $this->assertEquals('<div class="all"><a href=\'http://google.com\'>link</a><br /></div>', $parent->outerHtml());
-        
+
         $childa->setAttribute('href', 'https://www.google.com');
-        
+
         $this->assertEquals('<a href="https://www.google.com">link</a>', $childa->outerHtml());
     }
 
@@ -286,7 +286,7 @@ class NodeHtmlTest extends TestCase {
         $a    = new Tag('a');
         $node = new HtmlNode($a);
         $node->addChild(new TextNode('link'));
-        
+
         $this->assertEquals('link', $node->text());
     }
 
@@ -295,7 +295,7 @@ class NodeHtmlTest extends TestCase {
         $a    = new Tag('a');
         $node = new HtmlNode($a);
         $node->addChild(new TextNode('link'));
-        
+
         $text = $node->text();
         $this->assertEquals($text, $node->text());
     }
@@ -312,7 +312,7 @@ class NodeHtmlTest extends TestCase {
     {
         $node = new HtmlNode('a');
         $node->addChild(new TextNode('link'));
-        
+
         $this->assertEquals('link', $node->text);
     }
 
@@ -358,7 +358,7 @@ class NodeHtmlTest extends TestCase {
                 'doubleQuote' => true,
             ],
         ]);
-        
+
         $this->assertEquals('outerlink rounded', $node->getAttribute('class'));
     }
 
@@ -375,7 +375,7 @@ class NodeHtmlTest extends TestCase {
                 'doubleQuote' => true,
             ],
         ]);
-        
+
         $this->assertEquals('http://google.com', $node->href);
     }
 
@@ -392,7 +392,7 @@ class NodeHtmlTest extends TestCase {
                 'doubleQuote' => true,
             ],
         ]);
-        
+
         $this->assertEquals('outerlink rounded', $node->getAttributes()['class']);
     }
 
@@ -418,6 +418,18 @@ class NodeHtmlTest extends TestCase {
         $node->setAttribute('href', 'http://google.com');
         $node->removeAllAttributes();
         $this->assertEquals(0, count($node->getAttributes()));
+    }
+
+    public function testSetTag()
+    {
+        $node = new HtmlNode('div');
+        $this->assertEquals('<div></div>', $node->outerHtml());
+
+        $node->setTag('p');
+        $this->assertEquals('<p></p>', $node->outerHtml());
+
+        $node->setTag(new Tag('span'));
+        $this->assertEquals('<span></span>', $node->outerHtml());
     }
 
     public function testCountable()

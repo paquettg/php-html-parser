@@ -322,6 +322,27 @@ abstract class AbstractNode
     }
 
     /**
+     * Replaces the tag for this node
+     *
+     * @param string|Tag $tag
+     * @return AbstractNode
+     * @chainable
+     */
+    public function setTag($tag): AbstractNode
+    {
+        if (is_string($tag)) {
+            $tag = new Tag($tag);
+        }
+
+        $this->tag = $tag;
+
+        // clear any cache
+        $this->clear();
+
+        return $this;
+    }
+
+    /**
      * A wrapper method that simply calls the getAttribute method
      * on the tag of this node.
      *
@@ -512,7 +533,7 @@ abstract class AbstractNode
      *
      * @return boolean
      */
-    public function isTextNode(): bool 
+    public function isTextNode(): bool
     {
 
         return false;
