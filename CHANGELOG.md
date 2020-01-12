@@ -7,14 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- Fixed bug with multiple selectors query.
-
-## 2.1.0
-
 ### Added
-- Added support for php 7.4
+- Added support for php 7.4.
+- Added custom header support for curl request.
+- Added gzip detection and decoding.
+- Added additional type checking.
+
+### Changed
+- Fixed bug with multiple selectors query.
+- Updated documentation.
+- Fixed issue with Dom object.
+
 
 ## 2.1.0
 

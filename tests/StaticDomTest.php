@@ -61,7 +61,7 @@ class StaticDomTest extends TestCase {
         $curl = Mockery::mock('PHPHtmlParser\CurlInterface');
         $curl->shouldReceive('get')
              ->once()
-             ->with('http://google.com')
+             ->with('http://google.com', [])
              ->andReturn(file_get_contents('tests/data/files/small.html'));
 
         Dom::loadFromUrl('http://google.com', [], $curl);

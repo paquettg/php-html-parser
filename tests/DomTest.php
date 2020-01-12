@@ -224,7 +224,7 @@ class DomTest extends TestCase {
         $curl = Mockery::mock('PHPHtmlParser\CurlInterface');
         $curl->shouldReceive('get')
              ->once()
-             ->with('http://google.com')
+             ->with('http://google.com', [])
              ->andReturn(file_get_contents('tests/data/files/small.html'));
         
         $dom = new Dom;
