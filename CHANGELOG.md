@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added support for php 7.4
+
+## 2.1.0
+
+### Added
 - New `removeSmartyScripts` configuration setting. Defaults to true.
 - Added `declare(strict_types=1)` to all source files.
 - Added new option `depthFirstSearch`.

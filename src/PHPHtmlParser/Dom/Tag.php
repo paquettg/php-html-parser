@@ -296,11 +296,11 @@ class Tag
      * @param string $key
      * @return mixed
      */
-    public function getAttribute(string $key)
+    public function getAttribute(string $key):array
     {
         $key = strtolower($key);
         if ( ! isset($this->attr[$key])) {
-            return null;
+            return ['value' => null, 'doubleQuote' => true];
         }
         $value = $this->attr[$key]['value'];
         if (is_string($value) && ! is_null($this->encode)) {

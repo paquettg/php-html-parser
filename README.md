@@ -1,7 +1,7 @@
 PHP Html Parser
 ==========================
 
-Version 2.1.0
+Version 2.2.0
 
 [![Build Status](https://travis-ci.org/paquettg/php-html-parser.png)](https://travis-ci.org/paquettg/php-html-parser)
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
@@ -18,7 +18,7 @@ Install the latest version using composer.
 $ composer require paquettg/php-html-parser
 ```
 
-This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 7.1, 7.2, and 7.3.
+This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 7.1, 7.2, 7.3, and 7.4.
 
 Usage
 -----
