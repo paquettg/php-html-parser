@@ -13,7 +13,8 @@ interface CurlInterface
      * This method should return the content of the url in a string
      *
      * @param string $url
+     * @param array $options
      * @return string
      */
-    public function get(string $url): string;
+    public function get(string $url, array $options): string;
 }
