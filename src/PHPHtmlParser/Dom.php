@@ -12,6 +12,7 @@ use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
+use PHPHtmlParser\Exceptions\LogicalException;
 use stringEncode\Encode;
 
 /**
@@ -167,10 +168,15 @@ class Dom
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws StrictException
+     * @throws LogicalException
      */
     public function loadFromFile(string $file, array $options = []): Dom
     {
-        return $this->loadStr(file_get_contents($file), $options);
+        $content = file_get_contents($file);
+        if ($content === false) {
+            throw new LogicalException('file_get_contents failed and returned false when trying to read "'.$file.'".');
+        }
+        return $this->loadStr($content, $options);
     }
 
     /**
@@ -516,11 +522,20 @@ class Dom
         $is_gzip = 0 === mb_strpos($str, "\x1f" . "\x8b" . "\x08", 0, "US-ASCII");
         if ($is_gzip) {
             $str = gzdecode($str);
+            if ($str === false) {
+                throw new LogicalException('gzdecode returned false. Error when trying to decode the string.');
+            }
         }
 
         // remove white space before closing tags
         $str = mb_eregi_replace("'\s+>", "'>", $str);
+        if ($str === false) {
+            throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to clean single quotes.');
+        }
         $str = mb_eregi_replace('"\s+>', '">', $str);
+        if ($str === false) {
+            throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to clean double quotes.');
+        }
 
         // clean out the \n\r
         $replace = ' ';
@@ -528,36 +543,66 @@ class Dom
             $replace = '&#10;';
         }
         $str = str_replace(["\r\n", "\r", "\n"], $replace, $str);
+        if ($str === false) {
+            throw new LogicalException('str_replace returned false instead of a string. Error when attempting to clean input string.');
+        }
 
         // strip the doctype
         $str = mb_eregi_replace("<!doctype(.*?)>", '', $str);
+        if ($str === false) {
+            throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip the doctype.');
+        }
 
         // strip out comments
         $str = mb_eregi_replace("<!--(.*?)-->", '', $str);
+        if ($str === false) {
+            throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip comments.');
+        }
 
         // strip out cdata
         $str = mb_eregi_replace("<!\[CDATA\[(.*?)\]\]>", '', $str);
+        if ($str === false) {
+            throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip out cdata.');
+        }
 
         // strip out <script> tags
         if ($this->options->get('removeScripts')) {
             $str = mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
+            if ($str === false) {
+                throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to remove scripts 1.');
+            }
             $str = mb_eregi_replace("<\s*script\s*>(.*?)<\s*/\s*script\s*>", '', $str);
+            if ($str === false) {
+                throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to remove scripts 2.');
+            }
         }
 
         // strip out <style> tags
         if ($this->options->get('removeStyles')) {
             $str = mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
+            if ($str === false) {
+                throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip out style tags 1.');
+            }
             $str = mb_eregi_replace("<\s*style\s*>(.*?)<\s*/\s*style\s*>", '', $str);
+            if ($str === false) {
+                throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip out style tags 2.');
+            }
         }
 
         // strip out server side scripts
         if ($this->options->get('serverSideScripts')) {
             $str = mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
+            if ($str === false) {
+                throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip out service side scripts.');
+            }
         }
 
         // strip smarty scripts
         if ($this->options->get('removeSmartyScripts')) {
             $str = mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
+            if ($str === false) {
+                throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to remove smarty scripts.');
+            }
         }
 
         return $str;
@@ -658,7 +703,7 @@ class Dom
 
             // check if this closing tag counts
             $tag = strtolower($tag);
-            if (in_array($tag, $this->selfClosing)) {
+            if (in_array($tag, $this->selfClosing, true)) {
                 $return['status'] = true;
 
                 return $return;
@@ -758,7 +803,7 @@ class Dom
             // self closing tag
             $node->getTag()->selfClosing();
             $this->content->fastForward(1);
-        } elseif (in_array($tag, $this->selfClosing)) {
+        } elseif (in_array($tag, $this->selfClosing, true)) {
 
             // Should be a self closing tag, check if we are strict
             if ($this->options->strict) {
@@ -770,7 +815,7 @@ class Dom
             $node->getTag()->selfClosing();
 
             // Should this tag use a trailing slash?
-            if(in_array($tag, $this->noSlash))
+            if(in_array($tag, $this->noSlash, true))
             {
                 $node->getTag()->noTrailingSlash();
             }
@@ -798,10 +843,11 @@ class Dom
         $encode->from($this->defaultCharset);
         $encode->to($this->defaultCharset);
 
-        if ( ! is_null($this->options->enforceEncoding)) {
+        $enforceEncoding = $this->options->enforceEncoding;
+        if ( ! is_null($enforceEncoding)) {
             //  they want to enforce the given encoding
-            $encode->from($this->options->enforceEncoding);
-            $encode->to($this->options->enforceEncoding);
+            $encode->from($enforceEncoding);
+            $encode->to($enforceEncoding);
 
             return false;
         }

@@ -287,6 +287,7 @@ class Selector
             }
         } catch (ChildNotFoundException $e) {
             // no more children
+            unset($e);
             $child = null;
         }
 
@@ -395,17 +396,29 @@ class Selector
         ?int $index = null
     ) : bool {
         $check = false;
-        if (!is_array($rule['value'])) {
+        if (
+            array_key_exists('value', $rule) && !is_array($rule['value']) && 
+            !is_null($nodeValue) &&
+            array_key_exists('operator', $rule) && is_string($rule['operator']) &&
+            array_key_exists('value', $rule) && is_string($rule['value'])
+        ) {
             $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
         }
 
         // handle multiple classes
         $key = $rule['key'];
-        if (!$check && $key == 'class') {
+        if (
+            !$check && 
+            $key == 'class' &&
+            array_key_exists('value', $rule) && is_array($rule['value'])
+        ) {
             $nodeClasses = explode(' ', $node->getAttribute('class') ?? '');
             foreach ($rule['value'] as $value) {
                 foreach ($nodeClasses as $class) {
-                    if ( ! empty($class)) {
+                    if ( 
+                        !empty($class) &&
+                        array_key_exists('operator', $rule) && is_string($rule['operator'])
+                    ) {
                         $check = $this->match($rule['operator'], $value, $class);
                     }
                     if ($check) {
@@ -416,7 +429,13 @@ class Selector
                     break;
                 }
             }
-        } elseif (!$check && is_array($key)) {
+        } elseif (
+            !$check && 
+            is_array($key) && 
+            !is_null($nodeValue) &&
+            array_key_exists('operator', $rule) && is_string($rule['operator']) &&
+            array_key_exists('value', $rule) && is_string($rule['value'][$index])
+        ) {
             $check = $this->match($rule['operator'], $rule['value'][$index], $nodeValue);
         }
 

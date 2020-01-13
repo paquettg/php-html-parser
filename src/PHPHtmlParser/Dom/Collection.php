@@ -18,7 +18,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * The collection of Nodes.
      *
-     * @param array
+     * @var array
      */
     protected $collection = [];
 
@@ -139,7 +139,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      */
     public function offsetGet($offset)
     {
-        return isset($this->collection[$offset]) ? $this->collection[$offset] : null;
+        return $this->collection[$offset] ?? null;
     }
 
     /**

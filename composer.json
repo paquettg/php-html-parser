@@ -23,7 +23,8 @@
         "phpunit/phpunit": "^7.5.1",
         "mockery/mockery": "^1.2",
         "php-coveralls/php-coveralls": "^2.1",
-        "infection/infection": "^0.13.4"
+        "infection/infection": "^0.13.4",
+        "phan/phan": "^2.4"
     },
     "autoload": {
         "psr-4": { 

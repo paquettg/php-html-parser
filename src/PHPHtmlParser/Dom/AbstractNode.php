@@ -11,22 +11,27 @@ use PHPHtmlParser\Finder;
 
 /**
  * Dom node object.
- * @property string    outerhtml
- * @property string    innerhtml
- * @property string    text
- * @property int       prev
- * @property int       next
- * @property Tag       tag
- * @property InnerNode parent
+ * @property string    $outerhtml
+ * @property string    $innerhtml
+ * @property string    $text
+ * @property int       $prev
+ * @property int       $next
+ * @property Tag       $tag
+ * @property InnerNode $parent
  */
 abstract class AbstractNode
 {
+    /**
+     * @var int
+     */
     private static $count = 0;
+
     /**
      * Contains the tag name/type
-     * @var Tag
+     *
+     * @var ?Tag
      */
-    protected $tag;
+    protected $tag = null;
 
     /**
      * Contains a list of attributes on this tag.
@@ -38,7 +43,7 @@ abstract class AbstractNode
     /**
      * Contains the parent Node.
      *
-     * @var InnerNode
+     * @var ?InnerNode
      */
     protected $parent = null;
 
@@ -111,8 +116,8 @@ abstract class AbstractNode
     public function __destruct()
     {
         $this->tag      = null;
-        $this->attr     = [];
         $this->parent   = null;
+        $this->attr     = [];
         $this->children = [];
     }
 
@@ -272,11 +277,13 @@ abstract class AbstractNode
         catch (ParentNotFoundException $e)
         {
             // no parent, no next sibling
+            unset($e);
             return false;
         }
         catch (ChildNotFoundException $e)
         {
             // no sibling found
+            unset($e);
             return false;
         }
     }
@@ -347,11 +354,9 @@ abstract class AbstractNode
     public function getAttribute(string $key): ?string
     {
         $attribute = $this->tag->getAttribute($key);
-        if ( ! is_null($attribute)) {
-            $attribute = $attribute['value'];
-        }
+        $attributeValue = $attribute['value'];
 
-        return $attribute;
+        return $attributeValue;
     }
 
     /**
@@ -371,7 +376,7 @@ abstract class AbstractNode
      * on the tag of this node.
      *
      * @param string $key
-     * @param string|null $value
+     * @param string|array $value
      * @return AbstractNode
      * @chainable
      */

@@ -90,7 +90,7 @@ class Parser implements ParserInterface
             }
 
             // check for elements that do not have a specified attribute
-            if (isset($key[0]) && $key[0] == '!') {
+            if (is_string($key) && isset($key[0]) && $key[0] == '!') {
                 $key   = substr($key, 1);
                 $noKey = true;
             }
@@ -103,7 +103,7 @@ class Parser implements ParserInterface
                 'noKey'     => $noKey,
                 'alterNext' => $alterNext,
             ];
-            if (trim($match[7]) == ',') {
+            if (isset($match[7]) && is_string($match[7]) && trim($match[7]) == ',') {
                 $selectors[] = $result;
                 $result      = [];
             }

@@ -283,7 +283,7 @@ class Tag
     public function getAttributes()
     {
         $return = [];
-        foreach ($this->attr as $attr => $info) {
+        foreach (array_keys($this->attr) as $attr) {
             $return[$attr] = $this->getAttribute($attr);
         }
 
@@ -294,7 +294,7 @@ class Tag
      * Returns an attribute by the key
      *
      * @param string $key
-     * @return array|null
+     * @return array
      */
     public function getAttribute(string $key):array
     {
@@ -332,7 +332,7 @@ class Tag
         $return = '<'.$this->name;
 
         // add the attributes
-        foreach ($this->attr as $key => $info) {
+        foreach (array_keys($this->attr) as $key) {
             $info = $this->getAttribute($key);
             $val  = $info['value'];
             if (is_null($val)) {

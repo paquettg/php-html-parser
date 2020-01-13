@@ -1,5 +1,10 @@
-<?php declare(strict_types=1);
+<?php 
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Dom;
+
+use PHPHtmlParser\Exceptions\LogicalException;
 
 /**
  * Class TextNode
@@ -26,7 +31,7 @@ class TextNode extends LeafNode
     /**
      * This is the converted version of the text.
      *
-     * @var string
+     * @var ?string
      */
     protected $convertedText = null;
 
@@ -40,7 +45,11 @@ class TextNode extends LeafNode
     {
         if ($removeDoubleSpace) {
             // remove double spaces
-            $text = mb_ereg_replace('\s+', ' ', $text);
+            $replacedText = mb_ereg_replace('\s+', ' ', $text);
+            if ($replacedText === false) {
+                throw new LogicalException('mb_ereg_replace returns false when attempting to clean white space from "'.$text.'".');
+            }
+            $text = $replacedText;
         }
 
         // restore line breaks

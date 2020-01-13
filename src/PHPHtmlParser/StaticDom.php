@@ -40,10 +40,10 @@ final class StaticDom
      * this object as a $className.
      *
      * @param string $className
-     * @param Dom $dom
+     * @param ?Dom $dom
      * @return bool
      */
-    public static function mount(string $className = 'Dom', Dom $dom = null): bool
+    public static function mount(string $className = 'Dom', ?Dom $dom = null): bool
     {
         if (class_exists($className)) {
             return false;

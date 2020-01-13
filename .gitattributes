@@ -9,3 +9,4 @@
 /phpunit.php         export-ignore
 /phpunit.xml         export-ignore
 /infection.json.dist export-ignore
+/.phan               export-ignore

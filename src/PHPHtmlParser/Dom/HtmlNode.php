@@ -15,21 +15,21 @@ class HtmlNode extends InnerNode
     /**
      * Remembers what the innerHtml was if it was scanned previously.
      *
-     * @var string
+     * @var ?string
      */
     protected $innerHtml = null;
 
     /**
      * Remembers what the outerHtml was if it was scanned previously.
      *
-     * @var string
+     * @var ?string
      */
     protected $outerHtml = null;
 
     /**
      * Remembers what the text was if it was scanned previously.
      *
-     * @var string
+     * @var ?string
      */
     protected $text = null;
 
@@ -37,7 +37,7 @@ class HtmlNode extends InnerNode
      * Remembers what the text was when we looked into all our
      * children nodes.
      *
-     * @var string
+     * @var ?string
      */
     protected $textWithChildren = null;
 
@@ -100,6 +100,7 @@ class HtmlNode extends InnerNode
                 $child = $this->nextChild($child->id());
             } catch (ChildNotFoundException $e) {
                 // no more children
+                unset($e);
                 $child = null;
             }
         }

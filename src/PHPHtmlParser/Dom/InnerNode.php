@@ -1,8 +1,12 @@
-<?php declare(strict_types=1);
+<?php 
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
+use PHPHtmlParser\Exceptions\LogicalException;
 use stringEncode\Encode;
 
 /**
@@ -33,7 +37,7 @@ abstract class InnerNode extends ArrayNode
         $this->encode = $encode;
         $this->tag->setEncoding($encode);
         // check children
-        foreach ($this->children as $id => $child) {
+        foreach ($this->children as $child) {
             /** @var AbstractNode $node */
             $node = $child['node'];
             $node->propagateEncoding($encode);
@@ -75,14 +79,20 @@ abstract class InnerNode extends ArrayNode
     public function getChildren(): array
     {
         $nodes = [];
+        $childrenIds = [];
         try {
             $child = $this->firstChild();
             do {
                 $nodes[] = $child;
+                $childrenIds[] = $child->id;
                 $child = $this->nextChild($child->id());
-            } while (!is_null($child));
+                if (in_array($child->id, $childrenIds, true)) {
+                    throw new CircularException('Circular sibling referance found. Child with id '.$child->id().' found twice.');
+                }
+            } while (true);
         } catch (ChildNotFoundException $e) {
             // we are done looking for children
+            unset($e);
         }
 
         return $nodes;
@@ -158,17 +168,15 @@ abstract class InnerNode extends ArrayNode
           'prev' => $key,
         ];
 
-        $index = $key ? (array_search($key, $keys, true) + 1) : 0;
-        array_splice($keys, $index, 0, $child->id());
+        $index = $key ? (int) (array_search($key, $keys, true) + 1) : 0;
+        array_splice($keys, $index, 0, (string) $child->id());
 
         $children = array_values($this->children);
         array_splice($children, $index, 0, [$insert]);
 
         // add the child
         $combination = array_combine($keys, $children);
-        if ($combination !== false) {
-            $this->children = $combination;
-        }
+        $this->children = $combination;
 
         // tell child I am the new parent
         $child->setParent($this);
@@ -206,8 +214,8 @@ abstract class InnerNode extends ArrayNode
             return false;
         }
 
-        if ($this->children[$id]['next']) {
-            return $this->addChild($child, $this->children[$id]['next']);
+        if (isset($this->children[$id]['next']) && is_int($this->children[$id]['next'])) {
+            return $this->addChild($child, (int) $this->children[$id]['next']);
         }
 
         // clear cache
@@ -276,8 +284,8 @@ abstract class InnerNode extends ArrayNode
     {
         $child = $this->getChild($id);
         $next = $this->children[$child->id()]['next'];
-        if (is_null($next)) {
-            throw new ChildNotFoundException("Child '$id' next not found in this node.");
+        if (is_null($next) || !is_int($next)) {
+            throw new ChildNotFoundException("Child '$id' next sibling not found in this node.");
         }
 
         return $this->getChild($next);
@@ -296,7 +304,7 @@ abstract class InnerNode extends ArrayNode
     {
         $child = $this->getchild($id);
         $next = $this->children[$child->id()]['prev'];
-        if (is_null($next)) {
+        if (is_null($next) || !is_int($next)) {
             throw new ChildNotFoundException("Child '$id' previous not found in this node.");
         }
 
@@ -313,7 +321,7 @@ abstract class InnerNode extends ArrayNode
      */
     public function isChild(int $id): bool
     {
-        foreach ($this->children as $childId => $child) {
+        foreach(array_keys($this->children) as $childId) {
             if ($id == $childId) {
                 return true;
             }
@@ -335,16 +343,14 @@ abstract class InnerNode extends ArrayNode
     {
         $oldChild = $this->children[$childId];
 
-        $newChild->prev = $oldChild['prev'];
-        $newChild->next = $oldChild['next'];
+        $newChild->prev = (int) $oldChild['prev'];
+        $newChild->next = (int) $oldChild['next'];
 
         $keys = array_keys($this->children);
         $index = array_search($childId, $keys, true);
         $keys[$index] = $newChild->id();
         $combination = array_combine($keys, $this->children);
-        if ($combination !== false) {
-            $this->children = $combination;
-        }
+        $this->children = $combination;
         $this->children[$newChild->id()] = [
           'prev' => $oldChild['prev'],
           'node' => $newChild,
@@ -405,6 +411,10 @@ abstract class InnerNode extends ArrayNode
         end($this->children);
         $key = key($this->children);
 
+        if (!is_int($key)) {
+            throw new LogicalException("Children array contain child with a key that is not an int.");
+        }
+
         return $this->getChild($key);
     }
 
@@ -422,7 +432,7 @@ abstract class InnerNode extends ArrayNode
             return true;
         }
 
-        foreach ($this->children as $childId => $child) {
+        foreach ($this->children as $child) {
             /** @var InnerNode $node */
             $node = $child['node'];
             if ($node instanceof InnerNode

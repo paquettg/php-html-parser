@@ -9,6 +9,9 @@ use PHPHtmlParser\Exceptions\ParentNotFoundException;
 
 class Finder
 {
+    /**
+     * @var int
+     */
     private $id;
 
     /**

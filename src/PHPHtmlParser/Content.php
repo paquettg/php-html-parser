@@ -1,5 +1,11 @@
-<?php declare(strict_types=1);
+<?php 
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser;
+
+
+use PHPHtmlParser\Exceptions\LogicalException;
 
 /**
  * Class Content
@@ -65,10 +71,10 @@ class Content
     /**
      * Gets the current character we are at.
      *
-     * @param int $char
+     * @param ?int $char
      * @return string
      */
-    public function char(int $char = null): string
+    public function char(?int $char = null): string
     {
         $pos = $this->pos;
         if ( ! is_null($char)) {
@@ -135,8 +141,7 @@ class Content
                 $position = strpos($this->content, $string, $position);
                 if ($position === false) {
                     // reached the end
-                    $found = true;
-                    continue;
+                    break;
                 }
 
                 if ($this->char($position - 1) == '\\') {
@@ -157,6 +162,9 @@ class Content
         if ($position === false) {
             // could not find character, just return the remaining of the content
             $return    = substr($this->content, $this->pos, $this->size - $this->pos);
+            if ($return === false) {
+                throw new LogicalException('Substr returned false with position '.$this->pos.'.');
+            }
             $this->pos = $this->size;
 
             return $return;
@@ -168,6 +176,9 @@ class Content
         }
 
         $return = substr($this->content, $this->pos, $position - $this->pos);
+        if ($return === false) {
+            throw new LogicalException('Substr returned false with position '.$this->pos.'.');
+        }
         // set the new position
         $this->pos = $position;
 
@@ -229,6 +240,9 @@ class Content
         $return = $this;
         if ($copy) {
             $return = substr($this->content, $this->pos, $len);
+            if ($return === false) {
+                throw new LogicalException('Substr returned false with position '.$this->pos.'.');
+            }
         }
 
         // update the position
