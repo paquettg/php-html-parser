@@ -708,7 +708,7 @@ class Dom
                     case '"':
                         $attr['doubleQuote'] = true;
                         $this->content->fastForward(1);
-                        $string = $this->content->copyUntil('"', true, true);
+                        $string = $this->content->copyUntil('"', true);
                         do {
                             $moreString = $this->content->copyUntilUnless('"', '=>');
                             $string .= $moreString;
@@ -720,7 +720,7 @@ class Dom
                     case "'":
                         $attr['doubleQuote'] = false;
                         $this->content->fastForward(1);
-                        $string = $this->content->copyUntil("'", true, true);
+                        $string = $this->content->copyUntil("'", true);
                         do {
                             $moreString = $this->content->copyUntilUnless("'", '=>');
                             $string .= $moreString;

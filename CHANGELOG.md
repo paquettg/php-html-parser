@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Fixed issue with \ causing an infite loop.
+
+## 2.2.0
+
 ### Added
 - Added support for php 7.4.
 - Added custom header support for curl request.

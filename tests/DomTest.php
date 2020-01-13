@@ -142,6 +142,13 @@ class DomTest extends TestCase {
         $this->assertEquals('<div class="content"><div class="grid-container" ui-view>Main content here</div></div>', $dom->innerHtml);
     }
 
+    public function testLoadBackslashAttributeValue()
+    {
+        $dom = new Dom;
+        $dom->load('<div class="content"><div id="\" class="grid-container" ui-view>Main content here</div></div>');
+        $this->assertEquals('<div class="content"><div id="\" class="grid-container" ui-view>Main content here</div></div>', $dom->innerHtml);
+    }
+
     public function testLoadNoValueAttributeBefore()
     {
         $dom = new Dom;
@@ -503,5 +510,14 @@ class DomTest extends TestCase {
 
         $items = $dom->find('input[type=text][name=foo][baz=fig]');
         $this->assertEquals(1, count($items));
+    }
+
+    public function testLoadGetAttributeWithBackslash()
+    {
+        $dom = new Dom();
+        $dom->load('<div><a href="/test/"><img alt="\" src="/img/test.png" /><br /></a><a href="/demo/"><img alt="demo" src="/img/demo.png" /></a></div>');
+        $imgs = $dom->find('img', 0);
+        $this->assertEquals("/img/test.png", $imgs->getAttribute('src'));
+
     }
 }
