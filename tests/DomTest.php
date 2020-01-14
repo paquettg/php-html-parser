@@ -520,4 +520,13 @@ class DomTest extends TestCase {
         $this->assertEquals("/img/test.png", $imgs->getAttribute('src'));
 
     }
+
+    public function test25ChildrenFound()
+    {
+        $dom = new Dom();
+		$dom->setOptions(['whitespaceTextNode' => false]);
+        $dom->loadFromFile('tests/data/files/51children.html');
+        $children = $dom->find('#red-line-g *');
+        $this->assertEquals(25, count($children));
+    }
 }
