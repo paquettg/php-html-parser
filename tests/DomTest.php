@@ -480,7 +480,7 @@ class DomTest extends TestCase {
         $dom->loadStr($str);
 
         $FooBar = $dom->find('FooBar');
-        $this->assertEquals('asdf', $FooBar->attribute);
+        $this->assertEquals('asdf', $FooBar->getAttribute('attribute'));
     }
 
     public function testCaseSensitivity()

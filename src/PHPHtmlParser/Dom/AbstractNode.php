@@ -4,6 +4,7 @@ namespace PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
 use PHPHtmlParser\Selector\Selector;
 use PHPHtmlParser\Selector\Parser as SelectorParser;
 use stringEncode\Encode;
@@ -337,8 +338,8 @@ abstract class AbstractNode
     public function getAttributes(): array
     {
         $attributes = $this->tag->getAttributes();
-        foreach ($attributes as $name => $info) {
-            $attributes[$name] = $info['value'];
+        foreach ($attributes as $name => $attributeDTO) {
+            $attributes[$name] = $attributeDTO->getValue();
         }
 
         return $attributes;
@@ -353,10 +354,14 @@ abstract class AbstractNode
      */
     public function getAttribute(string $key): ?string
     {
-        $attribute = $this->tag->getAttribute($key);
-        $attributeValue = $attribute['value'];
-
-        return $attributeValue;
+        try {
+            $attributeDTO = $this->tag->getAttribute($key);
+        } catch (AttributeNotFoundException $e) {
+            // no attribute with this key exists, returning null.
+            unset($e);
+            return null;
+        }
+        return $attributeDTO->getValue();
     }
 
     /**
@@ -376,13 +381,14 @@ abstract class AbstractNode
      * on the tag of this node.
      *
      * @param string $key
-     * @param string|array $value
+     * @param string|null $value
+     * @param bool $doubleQuote
      * @return AbstractNode
      * @chainable
      */
-    public function setAttribute(string $key, $value): AbstractNode
+    public function setAttribute(string $key, ?string $value, bool $doubleQuote = true): AbstractNode
     {
-        $this->tag->setAttribute($key, $value);
+        $this->tag->setAttribute($key, $value, $doubleQuote);
 
         //clear any cache
         $this->clear();

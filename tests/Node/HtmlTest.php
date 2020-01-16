@@ -54,10 +54,7 @@ class NodeHtmlTest extends TestCase {
 
         $parent  = new HtmlNode($div);
         $childa  = new HtmlNode($a);
-        $childa->setAttribute('href', [
-            'value'       => 'http://google.com',
-            'doubleQuote' => false,
-        ]);
+        $childa->setAttribute('href', 'http://google.com', false);
         $childbr = new HtmlNode($br);
         $parent->addChild($childa);
         $parent->addChild($childbr);
@@ -228,15 +225,9 @@ class NodeHtmlTest extends TestCase {
     public function testOuterHtmlNoValueAttribute()
     {
         $parent  = new HtmlNode('div');
-        $parent->setAttribute('class', [
-            'value'       => 'all',
-            'doubleQuote' => true,
-        ]);
+        $parent->setAttribute('class', 'all');
         $childa  = new HtmlNode('a');
-        $childa->setAttribute('href', [
-            'value'       => 'http://google.com',
-            'doubleQuote' => false,
-        ]);
+        $childa->setAttribute('href', 'http://google.com', false);
         $childa->setAttribute('ui-view', null);
         $childbr = new HtmlNode('br');
         $childbr->getTag()->selfClosing();

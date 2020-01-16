@@ -746,38 +746,31 @@ class Dom
 
             $this->content->skipByToken('blank');
             if ($this->content->char() == '=') {
-                $attr = [];
                 $this->content->fastForward(1)
                               ->skipByToken('blank');
                 switch ($this->content->char()) {
                     case '"':
-                        $attr['doubleQuote'] = true;
                         $this->content->fastForward(1);
                         $string = $this->content->copyUntil('"', true);
                         do {
                             $moreString = $this->content->copyUntilUnless('"', '=>');
                             $string .= $moreString;
                         } while ( ! empty($moreString));
-                        $attr['value'] = $string;
                         $this->content->fastForward(1);
-                        $node->getTag()->$name = $attr;
+                        $node->getTag()->setAttribute($name, $string);
                         break;
                     case "'":
-                        $attr['doubleQuote'] = false;
                         $this->content->fastForward(1);
                         $string = $this->content->copyUntil("'", true);
                         do {
                             $moreString = $this->content->copyUntilUnless("'", '=>');
                             $string .= $moreString;
                         } while ( ! empty($moreString));
-                        $attr['value'] = $string;
                         $this->content->fastForward(1);
-                        $node->getTag()->$name = $attr;
+                        $node->getTag()->setAttribute($name, $string, false);
                         break;
                     default:
-                        $attr['doubleQuote']   = true;
-                        $attr['value']         = $this->content->copyByToken('attr', true);
-                        $node->getTag()->$name = $attr;
+                        $node->getTag()->setAttribute($name, $this->content->copyByToken('attr', true));
                         break;
                 }
             } else {
@@ -787,10 +780,7 @@ class Dom
                     $character = $this->content->getPosition();
                     throw new StrictException("Tag '$tag' has an attribute '$name' with out a value! (character #$character)");
                 }
-                $node->getTag()->$name = [
-                    'value'       => null,
-                    'doubleQuote' => true,
-                ];
+                $node->getTag()->setAttribute($name, null);
                 if ($this->content->char() != '>') {
                     $this->content->rewind(1);
                 }
