@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added PHAN support and fixed all issues from PHAN.
+
 ### Changed
 - Fixed issue with \ causing an infite loop.
 
