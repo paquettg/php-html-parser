@@ -97,4 +97,13 @@ class Options
 
         return null;
     }
+
+    /**
+     * Return current options as array
+     *
+     * @return array
+     */
+    public function asArray() {
+        return $this->options;
+    }
 }
