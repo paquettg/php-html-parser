@@ -21,7 +21,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector   = new Selector('a', new Parser());
+        $selector   = new Selector('a', Parser::getInstance());
         $collection = $selector->find($root);
         $count      = 0;
         $collection->each(function ($node) use (&$count) {
@@ -58,7 +58,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a', new Parser());
+        $selector = new Selector('div * a', Parser::getInstance());
         $this->assertEquals($child3->id(), $selector->find($root)->id());
     }
 
@@ -74,7 +74,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a', new Parser());
+        $selector = new Selector('div * a', Parser::getInstance());
         $this->assertEquals($child3->innerHtml, $selector->find($root)->innerHtml);
     }
 
@@ -99,7 +99,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a', new Parser());
+        $selector = new Selector('div * a', Parser::getInstance());
         $this->assertEquals((string)$child3, (string)$selector->find($root));
     }
 
@@ -115,7 +115,7 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector   = new Selector('a', new Parser());
+        $selector   = new Selector('a', Parser::getInstance());
         $collection = $selector->find($root);
         $array      = $collection->toArray();
         $lastA      = end($array);

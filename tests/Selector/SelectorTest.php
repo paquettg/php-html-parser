@@ -10,28 +10,28 @@ class SelectorTest extends TestCase {
     
     public function testParseSelectorStringId()
     {
-        $selector  = new Selector('#all', new Parser());
+        $selector  = new Selector('#all', Parser::getInstance());
         $selectors = $selector->getSelectors();
         $this->assertEquals('id', $selectors[0][0]['key']);
     }
 
     public function testParseSelectorStringClass()
     {
-        $selector  = new Selector('div.post', new Parser());
+        $selector  = new Selector('div.post', Parser::getInstance());
         $selectors = $selector->getSelectors();
         $this->assertEquals('class', $selectors[0][0]['key']);
     }
 
     public function testParseSelectorStringAttribute()
     {
-        $selector  = new Selector('div[visible=yes]', new Parser());
+        $selector  = new Selector('div[visible=yes]', Parser::getInstance());
         $selectors = $selector->getSelectors();
         $this->assertEquals('yes', $selectors[0][0]['value']);
     }
 
     public function testParseSelectorStringNoKey()
     {
-        $selector  = new Selector('div[!visible]', new Parser());
+        $selector  = new Selector('div[!visible]', Parser::getInstance());
         $selectors = $selector->getSelectors();
         $this->assertTrue($selectors[0][0]['noKey']);
     }
@@ -46,7 +46,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $root->addChild($parent);
 
-        $selector = new Selector('div a', new Parser());
+        $selector = new Selector('div a', Parser::getInstance());
         $this->assertEquals($child1->id(), $selector->find($root)[0]->id());
     }
 
@@ -64,7 +64,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child1);
         $parent->addChild($child2);
 
-        $selector = new Selector('#content', new Parser());
+        $selector = new Selector('#content', Parser::getInstance());
         $this->assertEquals($child2->id(), $selector->find($parent)[0]->id());
     }
 
@@ -84,7 +84,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $parent->addChild($child3);
 
-        $selector = new Selector('.link', new Parser());
+        $selector = new Selector('.link', Parser::getInstance());
         $this->assertEquals($child3->id(), $selector->find($parent)[0]->id());
     }
 
@@ -104,7 +104,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $parent->addChild($child3);
 
-        $selector = new Selector('.outer', new Parser());
+        $selector = new Selector('.outer', Parser::getInstance());
         $this->assertEquals($child3->id(), $selector->find($parent)[0]->id());
     }
 
@@ -120,7 +120,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('div * a', new Parser());
+        $selector = new Selector('div * a', Parser::getInstance());
         $this->assertEquals($child3->id(), $selector->find($root)[0]->id());
     }
 
@@ -136,7 +136,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector = new Selector('a, p', new Parser());
+        $selector = new Selector('a, p', Parser::getInstance());
         $this->assertEquals(3, count($selector->find($root)));
     }
 
@@ -156,7 +156,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
         $parent->addChild($child3);
 
-        $selector = new Selector('div[1]', new Parser());
+        $selector = new Selector('div[1]', Parser::getInstance());
         $this->assertEquals($parent->id(), $selector->find($parent)[0]->id());
     }
 
@@ -170,7 +170,7 @@ class SelectorTest extends TestCase {
         $parent->addChild($child1);
         $child1->addChild($child2);
 
-        $selector = new Selector('div li', new Parser());
+        $selector = new Selector('div li', Parser::getInstance());
         $this->assertEquals(1, count($selector->find($root)));
     }
 
@@ -186,7 +186,7 @@ class SelectorTest extends TestCase {
         $child2->addChild($child3);
         $parent->addChild($child2);
 
-        $selector = new Selector('div ul', new Parser());
+        $selector = new Selector('div ul', Parser::getInstance());
         $this->assertEquals(2, count($selector->find($root)));
     }
 
@@ -202,7 +202,7 @@ class SelectorTest extends TestCase {
         $child2->addChild($child3);
         $parent->addChild($child2);
 
-        $selector = new Selector('div > ul', new Parser());
+        $selector = new Selector('div > ul', Parser::getInstance());
         $this->assertEquals(1, count($selector->find($root)));
     }
 
@@ -213,7 +213,7 @@ class SelectorTest extends TestCase {
         $child1->setAttribute('custom-attr', null);
         $root->addChild($child1);
 
-        $selector = new Selector('[custom-attr]', new Parser());
+        $selector = new Selector('[custom-attr]', Parser::getInstance());
         $this->assertEquals(1, count($selector->find($root)));
     }
 
@@ -227,7 +227,7 @@ class SelectorTest extends TestCase {
         $root->addChild($child1);
         $root->addChild($child2);
 
-        $selector = new Selector('a.b.c', new Parser());
+        $selector = new Selector('a.b.c', Parser::getInstance());
         $this->assertEquals(1, count($selector->find($root)));
     }
 }

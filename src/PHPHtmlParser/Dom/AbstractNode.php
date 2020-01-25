@@ -452,7 +452,7 @@ abstract class AbstractNode
     public function find(string $selector, int $nth = null, bool $depthFirst = false)
     {
         if (is_null($nth)) {
-            $selector = new Selector($selector, new SelectorParser());
+            $selector = new Selector($selector, SelectorParser::getInstance());
             $selector->setDepthFirstFind($depthFirst);
             return $selector->find($this);
         } else {
@@ -469,7 +469,7 @@ abstract class AbstractNode
      */
     public function get(string $selector, int $nth=0)
     {
-        $selector = new Selector($selector, new SelectorParser());
+        $selector = new Selector($selector, SelectorParser::getInstance());
         $selector->setDepthFirstFind(true);
 
         $nodes = $selector->findGenerator($this);

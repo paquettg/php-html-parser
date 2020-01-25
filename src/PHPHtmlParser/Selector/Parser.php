@@ -12,6 +12,19 @@ namespace PHPHtmlParser\Selector;
 class Parser implements ParserInterface
 {
 
+    private static $instance = null;
+
+    public static function getInstance(): Parser {
+        if (is_null(self::$instance)) {
+            self::$instance = new Parser();
+        }
+        return self::$instance;
+    }
+
+    private function __construct() {
+        // use getInstance()
+    }
+
     /**
      * Pattern of CSS selectors, modified from 'mootools'
      *
