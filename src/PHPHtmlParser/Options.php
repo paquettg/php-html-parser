@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Exceptions\UnknownOptionException;
+
 /**
  * Class Options.
  *
@@ -73,10 +75,14 @@ class Options
      * Sets a new options param to override the current option array.
      *
      * @chainable
+     * @throws UnknownOptionException
      */
     public function setOptions(array $options): Options
     {
         foreach ($options as $key => $option) {
+            if (!isset($this->defaults[$key])) {
+                throw new UnknownOptionException("Option '$option' is not recognized");
+            }
             $this->options[$key] = $option;
         }
 
