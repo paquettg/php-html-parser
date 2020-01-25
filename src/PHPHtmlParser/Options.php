@@ -79,8 +79,8 @@ class Options
     public function setOptions(array $options): Options
     {
         foreach ($options as $key => $option) {
-            if (!isset($this->defaults[$key])) {
-                throw new UnknownOptionException("Option '$option' is not recognized");
+            if (!array_key_exists($key, $this->defaults)) {
+                throw new UnknownOptionException("Option '$key' is not recognized");
             }
             $this->options[$key] = $option;
         }
