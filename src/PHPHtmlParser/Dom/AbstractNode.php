@@ -453,18 +453,21 @@ abstract class AbstractNode
     {
         $selector = new Selector($selector, new SelectorParser());
         $selector->setDepthFirstFind($depthFirst);
-        $nodes    = $selector->find($this);
 
-        if ( ! is_null($nth)) {
-            // return nth-element or array
-            if (isset($nodes[$nth])) {
-                return $nodes[$nth];
+        if (is_null($nth)) {
+            return $selector->find($this);
+        } else {
+            $nodes = $selector->findGenerator($this);
+            for ($i=0; $i<$nth-1; $i++) {
+                if (!$nodes->valid()) { break; }
+                $nodes->next();
+            }
+            if ($nodes->valid()) {
+                return $nodes->current();
             }
 
             return null;
         }
-
-        return $nodes;
     }
 
     /**

@@ -65,7 +65,22 @@ class Selector
      */
     public function find(AbstractNode $node): Collection
     {
-        $results = new Collection;
+        $collection = new Collection();
+        foreach($this->findGenerator($node) as $item) {
+            $collection[] = $item;
+        }
+        return $collection;
+    }
+
+    /**
+     * Attempts to find the selectors starting from the given
+     * node object.
+     * @param AbstractNode $node
+     * @return \Generator
+     * @throws ChildNotFoundException
+     */
+    public function findGenerator(AbstractNode $node): \Generator
+    {
         foreach ($this->selectors as $selector) {
             $nodes = [$node];
             if (count($selector) == 0) {
@@ -73,25 +88,29 @@ class Selector
             }
 
             $options = [];
-            foreach ($selector as $rule) {
+            for ($i=0; $i<count($selector); $i++) {
+                $rule = $selector[$i];
+                $isLast = ($i == count($selector) - 1);
+
                 if ($rule['alterNext']) {
                     $options[] = $this->alterNext($rule);
                     continue;
                 }
-                $nodes = $this->seek($nodes, $rule, $options);
+                $next = [];
+
+                foreach($this->seek($nodes, $rule, $options) as $foundNode) {
+                    if (!$isLast) {
+                        $next[] = $foundNode;
+                    } else {
+                        yield $foundNode;
+                    }
+                }
+                $nodes = $next;
                 // clear the options
                 $options = [];
             }
-
-            // this is the final set of nodes
-            foreach ($nodes as $result) {
-                $results[] = $result;
-            }
         }
-
-        return $results;
     }
-
 
     /**
      * Attempts to find all children that match the rule
@@ -99,10 +118,10 @@ class Selector
      * @param array $nodes
      * @param array $rule
      * @param array $options
-     * @return array
+     * @return \Generator
      * @throws ChildNotFoundException
      */
-    protected function seek(array $nodes, array $rule, array $options): array
+    protected function seek(array $nodes, array $rule, array $options): \Generator
     {
         // XPath index
         if (array_key_exists('tag', $rule) && array_key_exists('key', $rule)
@@ -118,17 +137,16 @@ class Selector
                     ++$count;
                     if ($count == $rule['key']) {
                         // found the node we wanted
-                        return [$node];
+                        yield $node;
                     }
                 }
             }
 
-            return [];
+            return;
         }
 
         $options = $this->flattenOptions($options);
 
-        $return = [];
         /** @var InnerNode $node */
         foreach ($nodes as $node) {
             // check if we are a leaf
@@ -142,7 +160,7 @@ class Selector
             while (!is_null($child)) {
                 // wild card, grab all
                 if ($rule['tag'] == '*' && is_null($rule['key'])) {
-                    $return[] = $child;
+                    yield $child;
                     $child = $this->getNextChild($node, $child);
                     continue;
                 }
@@ -159,7 +177,7 @@ class Selector
 
                 if ($pass) {
                     // it passed all checks
-                    $return[] = $child;
+                    yield $child;
                 } else {
                     // this child failed to be matched
                     if ($child instanceof InnerNode && $child->hasChildren()
@@ -169,10 +187,9 @@ class Selector
                               || $options['checkGrandChildren']
                             ) {
                                 // we have a child that failed but are not leaves.
-                                $matches = $this->seek([$child], $rule,
-                                  $options);
+                                $matches = $this->seek([$child], $rule, $options);
                                 foreach ($matches as $match) {
-                                    $return[] = $match;
+                                    yield $match;
                                 }
                             }
                         } else {
@@ -192,12 +209,10 @@ class Selector
                 // we have children that failed but are not leaves.
                 $matches = $this->seek($children, $rule, $options);
                 foreach ($matches as $match) {
-                    $return[] = $match;
+                    yield $match;
                 }
             }
         }
-
-        return $return;
     }
 
     /**
