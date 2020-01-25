@@ -451,23 +451,37 @@ abstract class AbstractNode
      */
     public function find(string $selector, int $nth = null, bool $depthFirst = false)
     {
-        $selector = new Selector($selector, new SelectorParser());
-        $selector->setDepthFirstFind($depthFirst);
-
         if (is_null($nth)) {
+            $selector = new Selector($selector, new SelectorParser());
+            $selector->setDepthFirstFind($depthFirst);
             return $selector->find($this);
         } else {
-            $nodes = $selector->findGenerator($this);
-            for ($i=0; $i<$nth-1; $i++) {
-                if (!$nodes->valid()) { break; }
-                $nodes->next();
-            }
-            if ($nodes->valid()) {
-                return $nodes->current();
-            }
-
-            return null;
+            return $this->get($selector, $nth);
         }
+    }
+
+    /**
+     * Get nth element by css selector
+     * @param string   $selector
+     * @param int|null $nth
+     * @return AbstractNode|null
+     * @throws ChildNotFoundException
+     */
+    public function get(string $selector, int $nth=0)
+    {
+        $selector = new Selector($selector, new SelectorParser());
+        $selector->setDepthFirstFind(true);
+
+        $nodes = $selector->findGenerator($this);
+        for ($i=0; $i<$nth-1; $i++) {
+            if (!$nodes->valid()) { break; }
+            $nodes->next();
+        }
+        if ($nodes->valid()) {
+            return $nodes->current();
+        }
+
+        return null;
     }
 
     /**

@@ -269,6 +269,21 @@ class Dom
     }
 
     /**
+     * Get nth element by css selector on the root node.
+     * @param string   $selector
+     * @param int|null $nth
+     * @return AbstractNode|null
+     * @throws ChildNotFoundException
+     * @throws NotLoadedException
+     */
+    public function get(string $selector, int $nth = 0)
+    {
+        $this->isLoaded();
+
+        return $this->root->get($selector, $nth);
+    }
+
+    /**
      * Find element by Id on the root node
      * @param int $id
      * @return bool|AbstractNode

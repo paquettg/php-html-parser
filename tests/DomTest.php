@@ -529,4 +529,13 @@ class DomTest extends TestCase {
         $children = $dom->find('#red-line-g *');
         $this->assertEquals(25, count($children));
     }
+
+    public function testGet()
+    {
+        $dom = new Dom();
+        $dom->load('<div><a href="/test/"><img alt="\" src="/img/test.png" /><br /></a><a href="/demo/"><img alt="demo" src="/img/demo.png" /></a></div>');
+        $imgs = $dom->get('img');
+        $this->assertEquals("/img/test.png", $imgs->getAttribute('src'));
+    }
+
 }
