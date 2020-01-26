@@ -19,7 +19,7 @@ use PHPHtmlParser\Finder;
  * @property Tag       $tag
  * @property InnerNode $parent
  */
-abstract class AbstractNode
+abstract class AbstractNode implements \ArrayAccess
 {
     /**
      * @var int
@@ -522,4 +522,24 @@ abstract class AbstractNode
 
         return false;
     }
-}
+
+    /**
+     * Array Access
+     */
+
+     public function offsetExists($offset): bool {
+         return $this->hasAttribute($offset);
+     }
+
+     public function offsetGet($offset): ?string {
+         return $this->getAttribute($offset);
+     }
+
+     public function offsetSet($offset, $value): AbstractNode {
+         return $this->setAttribute($offset, $value);
+     }
+
+     public function offsetUnset($offset): void {
+         $this->removeAttribute($offset);
+     }
+ }

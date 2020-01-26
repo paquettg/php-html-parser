@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-require_once('tests/data/MockNode.php');
+require_once(__DIR__.'/../data/MockNode.php');
 
 use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Dom;
@@ -358,7 +358,7 @@ class NodeHtmlTest extends TestCase {
                 'doubleQuote' => true,
             ],
         ]);
-        
+
         $this->assertEquals('outerlink rounded', $node->getAttribute('class'));
     }
 
@@ -379,6 +379,25 @@ class NodeHtmlTest extends TestCase {
         $this->assertEquals('http://google.com', $node->href);
     }
 
+    public function testGetAttributeArrayAccess()
+    {
+        $node = new HtmlNode('a');
+        $this->assertNull($node['class']);
+
+        $node->getTag()->setAttributes([
+            'href' => [
+                'value'       => 'http://google.com',
+                'doubleQuote' => false,
+            ],
+            'class' => [
+                'value'       => 'outerlink rounded',
+                'doubleQuote' => true,
+            ],
+        ]);
+
+        $this->assertEquals('outerlink rounded', $node['class']);
+    }
+
     public function testGetAttributes()
     {
         $node = new HtmlNode('a');
@@ -396,11 +415,29 @@ class NodeHtmlTest extends TestCase {
         $this->assertEquals('outerlink rounded', $node->getAttributes()['class']);
     }
 
+    public function testAttributeExistsArrayAccess()
+    {
+        $node = new HtmlNode('a');
+        $this->assertFalse(isset($node['class']));
+
+        $node['class'] = "cls";
+        $this->assertTrue(isset($node['class']));
+    }
+
     public function testSetAttribute()
     {
         $node = new HtmlNode('a');
         $node->setAttribute('class', 'foo');
         $this->assertEquals('foo', $node->getAttribute('class'));
+    }
+
+    public function testSetAttributeArrayAccess()
+    {
+        $node = new HtmlNode('a');
+        $this->assertNull($node['class']);
+
+        $node['class'] = "foo";
+        $this->assertEquals('foo', $node['class']);
     }
 
     public function testRemoveAttribute()
@@ -409,6 +446,19 @@ class NodeHtmlTest extends TestCase {
         $node->setAttribute('class', 'foo');
         $node->removeAttribute('class');
         $this->assertnull($node->getAttribute('class'));
+    }
+
+
+    public function testRemoveAttributeArrayAccess()
+    {
+        $node = new HtmlNode('a');
+        $this->assertNull($node['class']);
+
+        $node['class'] = 'foo';
+        $this->assertEquals("foo", $node['class']);
+
+        unset($node['class']);
+        $this->assertNull($node['class']);
     }
 
     public function testRemoveAllAttributes()
