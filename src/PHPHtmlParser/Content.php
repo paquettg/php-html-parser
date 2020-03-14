@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -76,16 +76,7 @@ class Content
      */
     public function char(?int $char = null): string
     {
-        $pos = $this->pos;
-        if ( ! is_null($char)) {
-            $pos = $char;
-        }
-
-        if ( ! isset($this->content[$pos])) {
-            return '';
-        }
-
-        return $this->content[$pos];
+        return $this->content[$char ?? $this->pos] ?? '';
     }
 
     /**
@@ -137,7 +128,7 @@ class Content
         if ($escape) {
             $position = $this->pos;
             $found    = false;
-            while ( ! $found) {
+            while (!$found) {
                 $position = strpos($this->content, $string, $position);
                 if ($position === false) {
                     // reached the end
@@ -163,7 +154,7 @@ class Content
             // could not find character, just return the remaining of the content
             $return    = substr($this->content, $this->pos, $this->size - $this->pos);
             if ($return === false) {
-                throw new LogicalException('Substr returned false with position '.$this->pos.'.');
+                throw new LogicalException('Substr returned false with position ' . $this->pos . '.');
             }
             $this->pos = $this->size;
 
@@ -177,7 +168,7 @@ class Content
 
         $return = substr($this->content, $this->pos, $position - $this->pos);
         if ($return === false) {
-            throw new LogicalException('Substr returned false with position '.$this->pos.'.');
+            throw new LogicalException('Substr returned false with position ' . $this->pos . '.');
         }
         // set the new position
         $this->pos = $position;
@@ -201,7 +192,7 @@ class Content
 
         $position = strcspn($foundString, $unless);
         if ($position == strlen($foundString)) {
-            return $string.$foundString;
+            return $string . $foundString;
         }
         // rewind changes and return nothing
         $this->pos = $lastPos;
@@ -241,7 +232,7 @@ class Content
         if ($copy) {
             $return = substr($this->content, $this->pos, $len);
             if ($return === false) {
-                throw new LogicalException('Substr returned false with position '.$this->pos.'.');
+                throw new LogicalException('Substr returned false with position ' . $this->pos . '.');
             }
         }
 

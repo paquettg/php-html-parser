@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
@@ -48,7 +51,7 @@ class HtmlNode extends InnerNode
      */
     public function __construct($tag)
     {
-        if ( ! $tag instanceof Tag) {
+        if (!$tag instanceof Tag) {
             $tag = new Tag($tag);
         }
         $this->tag = $tag;
@@ -73,12 +76,12 @@ class HtmlNode extends InnerNode
      */
     public function innerHtml(): string
     {
-        if ( ! $this->hasChildren()) {
+        if (!$this->hasChildren()) {
             // no children
             return '';
         }
 
-        if ( ! is_null($this->innerHtml)) {
+        if ($this->innerHtml !== null) {
             // we already know the result.
             return $this->innerHtml;
         }
@@ -87,13 +90,13 @@ class HtmlNode extends InnerNode
         $string = '';
 
         // continue to loop until we are out of children
-        while ( ! is_null($child)) {
+        while ($child !== null) {
             if ($child instanceof TextNode) {
                 $string .= $child->text();
             } elseif ($child instanceof HtmlNode) {
                 $string .= $child->outerHtml();
             } else {
-                throw new UnknownChildTypeException('Unknown child type "'.get_class($child).'" found in node');
+                throw new UnknownChildTypeException('Unknown child type "' . get_class($child) . '" found in node');
             }
 
             try {
@@ -125,7 +128,7 @@ class HtmlNode extends InnerNode
             return $this->innerHtml();
         }
 
-        if ( ! is_null($this->outerHtml)) {
+        if ($this->outerHtml !== null) {
             // we already know the results.
             return $this->outerHtml;
         }
@@ -158,11 +161,11 @@ class HtmlNode extends InnerNode
     public function text(bool $lookInChildren = false): string
     {
         if ($lookInChildren) {
-            if ( ! is_null($this->textWithChildren)) {
+            if ($this->textWithChildren !== null) {
                 // we already know the results.
                 return $this->textWithChildren;
             }
-        } elseif ( ! is_null($this->text)) {
+        } elseif ($this->text !== null) {
             // we already know the results.
             return $this->text;
         }
@@ -174,7 +177,8 @@ class HtmlNode extends InnerNode
             $node = $child['node'];
             if ($node instanceof TextNode) {
                 $text .= $child['node']->text;
-            } elseif ($lookInChildren &&
+            } elseif (
+                $lookInChildren &&
                 $node instanceof HtmlNode
             ) {
                 $text .= $node->text($lookInChildren);
@@ -202,7 +206,7 @@ class HtmlNode extends InnerNode
         $this->text      = null;
         $this->textWithChildren = null;
 
-        if (!is_null($this->parent)) {
+        if ($this->parent !== null) {
             $this->parent->clear();
         }
     }
