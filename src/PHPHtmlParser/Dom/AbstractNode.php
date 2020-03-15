@@ -252,8 +252,11 @@ abstract class AbstractNode
      */
     public function getAncestor(int $id)
     {
-        if ($this->parent !== null && $this->parent->id() == $id) {
-            return $this->parent;
+        if ($this->parent !== null) {
+            if ($this->parent->id() == $id) {
+                return $this->parent;
+            }
+            return $this->parent->getAncestor($id);
         }
         return null;
     }
