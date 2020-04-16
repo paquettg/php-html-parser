@@ -623,7 +623,13 @@ class Dom
         $this->root->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
         $activeNode = $this->root;
         while ( ! is_null($activeNode)) {
-            $str = $this->content->copyUntil('<');
+            if ($activeNode && $activeNode->tag->name() === 'script'
+                && $this->options->get('cleanupInput') != true
+            ) {
+                $str = $this->content->copyUntil('</');
+            } else {
+                $str = $this->content->copyUntil('<');
+            }
             if ($str == '') {
                 $info = $this->parseTag();
                 if ( ! $info['status']) {
