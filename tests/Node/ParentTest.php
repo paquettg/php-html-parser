@@ -302,6 +302,7 @@ class NodeParentTest extends TestCase
         $parent->addChild($child);
         $child->addChild($child2);
         $ancestor = $child2->getAncestor($parent->id());
+        $this->assertNotNull($ancestor);
         $this->assertEquals($parent->id(), $ancestor->id());
     }
 

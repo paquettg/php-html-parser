@@ -193,10 +193,10 @@ class Dom
      */
     public function loadFromUrl(string $url, array $options = [], ?ClientInterface $client = null, ?RequestInterface $request = null): Dom
     {
-        if (\is_null($client)) {
+        if ($client === null) {
             $client = new Client();
         }
-        if (\is_null($request)) {
+        if ($request === null) {
             $request = new Request('GET', $url);
         }
 
@@ -218,7 +218,7 @@ class Dom
     {
         $this->options = new Options();
         $this->options->setOptions($this->globalOptions)
-                      ->setOptions($option);
+            ->setOptions($option);
 
         $this->rawSize = \strlen($str);
         $this->raw = $str;
@@ -614,7 +614,7 @@ class Dom
         $this->root = new HtmlNode('root');
         $this->root->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
         $activeNode = $this->root;
-        while (!\is_null($activeNode)) {
+        while ($activeNode!== null) {
             if ($activeNode && $activeNode->tag->name() === 'script'
                 && $this->options->get('cleanupInput') != true
             ) {
@@ -636,7 +636,7 @@ class Dom
                     $originalNode = $activeNode;
                     while ($activeNode->getTag()->name() != $info['tag']) {
                         $activeNode = $activeNode->getParent();
-                        if (\is_null($activeNode)) {
+                        if ($activeNode === null) {
                             // we could not find opening tag
                             $activeNode = $originalNode;
                             $foundOpeningTag = false;
@@ -693,7 +693,7 @@ class Dom
         if ($this->content->fastForward(1)->char() == '/') {
             // end tag
             $tag = $this->content->fastForward(1)
-                                 ->copyByToken('slash', true);
+                ->copyByToken('slash', true);
             // move to end of tag
             $this->content->copyUntil('>');
             $this->content->fastForward(1);
@@ -721,8 +721,10 @@ class Dom
         $node->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
 
         // attributes
-        while ($this->content->char() != '>' &&
-            $this->content->char() != '/') {
+        while (
+            $this->content->char() != '>' &&
+            $this->content->char() != '/'
+        ) {
             $space = $this->content->skipByToken('blank', true);
             if (empty($space)) {
                 $this->content->fastForward(1);
@@ -742,7 +744,7 @@ class Dom
             $this->content->skipByToken('blank');
             if ($this->content->char() == '=') {
                 $this->content->fastForward(1)
-                              ->skipByToken('blank');
+                    ->skipByToken('blank');
                 switch ($this->content->char()) {
                     case '"':
                         $this->content->fastForward(1);
@@ -751,6 +753,7 @@ class Dom
                             $moreString = $this->content->copyUntilUnless('"', '=>');
                             $string .= $moreString;
                         } while (!empty($moreString));
+                        $attr['value'] = $string;
                         $this->content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string);
                         break;
@@ -761,6 +764,7 @@ class Dom
                             $moreString = $this->content->copyUntilUnless("'", '=>');
                             $string .= $moreString;
                         } while (!empty($moreString));
+                        $attr['value'] = $string;
                         $this->content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string, false);
                         break;
@@ -825,7 +829,7 @@ class Dom
         $encode->to($this->defaultCharset);
 
         $enforceEncoding = $this->options->enforceEncoding;
-        if (!\is_null($enforceEncoding)) {
+        if ($enforceEncoding !== null) {
             //  they want to enforce the given encoding
             $encode->from($enforceEncoding);
             $encode->to($enforceEncoding);

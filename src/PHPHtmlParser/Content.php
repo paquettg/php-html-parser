@@ -67,16 +67,7 @@ class Content
      */
     public function char(?int $char = null): string
     {
-        $pos = $this->pos;
-        if (!\is_null($char)) {
-            $pos = $char;
-        }
-
-        if (!isset($this->content[$pos])) {
-            return '';
-        }
-
-        return $this->content[$pos];
+        return $this->content[$char ?? $this->pos] ?? '';
     }
 
     /**
