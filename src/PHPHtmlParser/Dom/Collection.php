@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Dom;
 
 use ArrayAccess;
@@ -8,13 +11,10 @@ use IteratorAggregate;
 use PHPHtmlParser\Exceptions\EmptyCollectionException;
 
 /**
- * Class Collection
- *
- * @package PHPHtmlParser\Dom
+ * Class Collection.
  */
 class Collection implements IteratorAggregate, ArrayAccess, Countable
 {
-
     /**
      * The collection of Nodes.
      *
@@ -26,19 +26,17 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      * Attempts to call the method on the first node in
      * the collection.
      *
-     * @param string $method
-     * @param array $arguments
-     * @return mixed
      * @throws EmptyCollectionException
+     *
+     * @return mixed
      */
     public function __call(string $method, array $arguments)
     {
-        $node = reset($this->collection);
+        $node = \reset($this->collection);
         if ($node instanceof AbstractNode) {
-            return call_user_func_array([$node, $method], $arguments);
-        } else {
-            throw new EmptyCollectionException('The collection does not contain any Nodes.');
+            return \call_user_func_array([$node, $method], $arguments);
         }
+        throw new EmptyCollectionException('The collection does not contain any Nodes.');
     }
 
     /**
@@ -46,49 +44,44 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      * in the collection.
      *
      * @param mixed $key
-     * @return mixed
+     *
      * @throws EmptyCollectionException
+     *
+     * @return mixed
      */
     public function __get($key)
     {
-        $node = reset($this->collection);
+        $node = \reset($this->collection);
         if ($node instanceof AbstractNode) {
             return $node->$key;
-        } else {
-            throw new EmptyCollectionException('The collection does not contain any Nodes.');
         }
+        throw new EmptyCollectionException('The collection does not contain any Nodes.');
     }
 
     /**
      * Applies the magic string method to the first node in
      * the collection.
-     *
-     * @return string
      */
     public function __toString(): string
     {
-        $node = reset($this->collection);
+        $node = \reset($this->collection);
         if ($node instanceof AbstractNode) {
-            return (string)$node;
-        } else {
-            return '';
+            return (string) $node;
         }
+
+        return '';
     }
 
     /**
      * Returns the count of the collection.
-     *
-     * @return int
      */
     public function count(): int
     {
-        return count($this->collection);
+        return \count($this->collection);
     }
 
     /**
      * Returns an iterator for the collection.
-     *
-     * @return ArrayIterator
      */
     public function getIterator(): ArrayIterator
     {
@@ -96,14 +89,14 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * Set an attribute by the given offset
+     * Set an attribute by the given offset.
      *
      * @param mixed $offset
      * @param mixed $value
      */
     public function offsetSet($offset, $value): void
     {
-        if (is_null($offset)) {
+        if (\is_null($offset)) {
             $this->collection[] = $value;
         } else {
             $this->collection[$offset] = $value;
@@ -114,7 +107,6 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      * Checks if an offset exists.
      *
      * @param mixed $offset
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -132,9 +124,10 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * Gets a node at the given offset, or null
+     * Gets a node at the given offset, or null.
      *
      * @param mixed $offset
+     *
      * @return mixed
      */
     public function offsetGet($offset)
@@ -144,8 +137,6 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns this collection as an array.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -155,8 +146,6 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Similar to jQuery "each" method. Calls the callback with each
      * Node in this collection.
-     *
-     * @param callable $callback
      */
     public function each(callable $callback)
     {

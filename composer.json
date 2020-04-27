@@ -15,9 +15,9 @@
     "require": {
         "php": ">=7.1",
         "ext-mbstring": "*",
-        "paquettg/string-encode": "~1.0.0",
         "ext-zlib": "*",
         "ext-curl": "*",
+        "paquettg/string-encode": "~1.0.0",
         "php-http/httplug": "^2.1",
         "php-http/guzzle6-adapter": "^2.0",
         "guzzlehttp/psr7": "^1.6"
@@ -27,7 +27,8 @@
         "mockery/mockery": "^1.2",
         "php-coveralls/php-coveralls": "^2.1",
         "infection/infection": "^0.13.4",
-        "phan/phan": "^2.4"
+        "phan/phan": "^2.4",
+        "friendsofphp/php-cs-fixer": "^2.16"
     },
     "autoload": {
         "psr-4": { 

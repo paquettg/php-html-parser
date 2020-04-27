@@ -1,13 +1,15 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
+
 use PHPHtmlParser\Dom;
+use PHPUnit\Framework\TestCase;
 
-class WhitespaceTextNodeTest extends TestCase {
-
+class WhitespaceTextNodeTest extends TestCase
+{
     public function testConfigGlobalNoWhitespaceTextNode()
     {
-        $dom = new Dom;
+        $dom = new Dom();
         $dom->setOptions([
             'whitespaceTextNode' => false,
         ]);
@@ -17,7 +19,7 @@ class WhitespaceTextNodeTest extends TestCase {
 
     public function testConfigLocalOverride()
     {
-        $dom = new Dom;
+        $dom = new Dom();
         $dom->setOptions([
             'whitespaceTextNode' => false,
         ]);

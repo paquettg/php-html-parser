@@ -1,17 +1,19 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
-use PHPHtmlParser\Selector\Selector;
-use PHPHtmlParser\Selector\Parser;
+declare(strict_types=1);
+
+use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
-use PHPHtmlParser\Dom\Collection;
+use PHPHtmlParser\Selector\Parser;
+use PHPHtmlParser\Selector\Selector;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends TestCase {
-    
+class CollectionTest extends TestCase
+{
     public function testEach()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('a'));
         $child2 = new HtmlNode(new Tag('p'));
@@ -21,9 +23,9 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector   = new Selector('a', new Parser());
+        $selector = new Selector('a', new Parser());
         $collection = $selector->find($root);
-        $count      = 0;
+        $count = 0;
         $collection->each(function ($node) use (&$count) {
             ++$count;
         });
@@ -31,7 +33,7 @@ class CollectionTest extends TestCase {
     }
 
     /**
-     * @expectedException PHPHtmlParser\Exceptions\EmptyCollectionException
+     * @expectedException \PHPHtmlParser\Exceptions\EmptyCollectionException
      */
     public function testCallNoNodes()
     {
@@ -48,7 +50,7 @@ class CollectionTest extends TestCase {
 
     public function testCallMagic()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('a'));
         $child2 = new HtmlNode(new Tag('p'));
@@ -64,7 +66,7 @@ class CollectionTest extends TestCase {
 
     public function testGetMagic()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('a'));
         $child2 = new HtmlNode(new Tag('p'));
@@ -79,7 +81,7 @@ class CollectionTest extends TestCase {
     }
 
     /**
-     * @expectedException PHPHtmlParser\Exceptions\EmptyCollectionException
+     * @expectedException \PHPHtmlParser\Exceptions\EmptyCollectionException
      */
     public function testGetNoNodes()
     {
@@ -89,7 +91,7 @@ class CollectionTest extends TestCase {
 
     public function testToStringMagic()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('a'));
         $child2 = new HtmlNode(new Tag('p'));
@@ -100,12 +102,12 @@ class CollectionTest extends TestCase {
         $child2->addChild($child3);
 
         $selector = new Selector('div * a', new Parser());
-        $this->assertEquals((string)$child3, (string)$selector->find($root));
+        $this->assertEquals((string) $child3, (string) $selector->find($root));
     }
 
     public function testToArray()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('a'));
         $child2 = new HtmlNode(new Tag('p'));
@@ -115,10 +117,10 @@ class CollectionTest extends TestCase {
         $parent->addChild($child2);
         $child2->addChild($child3);
 
-        $selector   = new Selector('a', new Parser());
+        $selector = new Selector('a', new Parser());
         $collection = $selector->find($root);
-        $array      = $collection->toArray();
-        $lastA      = end($array);
+        $array = $collection->toArray();
+        $lastA = \end($array);
         $this->assertEquals($child3->id(), $lastA->id());
     }
 
@@ -127,7 +129,6 @@ class CollectionTest extends TestCase {
         $collection = new Collection();
         $iterator = $collection->getIterator();
         $this->assertTrue($iterator instanceof \ArrayIterator);
-        
     }
 
     public function testOffsetSet()
@@ -142,6 +143,6 @@ class CollectionTest extends TestCase {
         $collection = new Collection();
         $collection->offsetSet(7, true);
         $collection->offsetUnset(7);
-        $this->assertTrue(is_null($collection->offsetGet(7)));
+        $this->assertTrue(\is_null($collection->offsetGet(7)));
     }
 }

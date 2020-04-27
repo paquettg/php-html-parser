@@ -3,4 +3,5 @@ composer.lock
 infection.log
 /vendor/
 .idea/
+.php_cs.cache
 *.swp

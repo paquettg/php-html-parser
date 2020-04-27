@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
@@ -16,6 +18,7 @@ class Finder
 
     /**
      * Finder constructor.
+     *
      * @param $id
      */
     public function __construct($id)
@@ -24,11 +27,12 @@ class Finder
     }
 
     /**
-     * Find node in tree by id
-     * @param AbstractNode $node
-     * @return bool|AbstractNode
+     * Find node in tree by id.
+     *
      * @throws ChildNotFoundException
      * @throws ParentNotFoundException
+     *
+     * @return bool|AbstractNode
      */
     public function find(AbstractNode $node)
     {
@@ -51,7 +55,7 @@ class Finder
             if ($nextSibling->id() < $this->id) {
                 return $this->find($nextSibling);
             }
-        } else if (!$node->isTextNode() && $node instanceof InnerNode) {
+        } elseif (!$node->isTextNode() && $node instanceof InnerNode) {
             return $this->find($node->firstChild());
         }
 

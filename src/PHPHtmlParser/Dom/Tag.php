@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\DTO\Tag\AttributeDTO;
@@ -6,13 +9,10 @@ use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
 use stringEncode\Encode;
 
 /**
- * Class Tag
- *
- * @package PHPHtmlParser\Dom
+ * Class Tag.
  */
 class Tag
 {
-
     /**
      * The name of the tag.
      *
@@ -35,23 +35,23 @@ class Tag
     protected $selfClosing = false;
 
     /**
-     * If self-closing, will this use a trailing slash. />
+     * If self-closing, will this use a trailing slash. />.
      *
      * @var bool
      */
     protected $trailingSlash = true;
 
     /**
-     * Tag noise
+     * Tag noise.
      */
     protected $noise = '';
 
     /**
-     * The encoding class to... encode the tags
+     * The encoding class to... encode the tags.
      *
      * @var Encode|null
      */
-    protected $encode = null;
+    protected $encode;
 
     /**
      * @var bool
@@ -70,8 +70,6 @@ class Tag
 
     /**
      * Returns the name of this tag.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -81,7 +79,6 @@ class Tag
     /**
      * Sets the tag to be self closing.
      *
-     * @return Tag
      * @chainable
      */
     public function selfClosing(): Tag
@@ -91,11 +88,9 @@ class Tag
         return $this;
     }
 
-
     /**
      * Sets the tag to not use a trailing slash.
      *
-     * @return Tag
      * @chainable
      */
     public function noTrailingSlash(): Tag
@@ -107,8 +102,6 @@ class Tag
 
     /**
      * Checks if the tag is self closing.
-     *
-     * @return bool
      */
     public function isSelfClosing(): bool
     {
@@ -117,9 +110,6 @@ class Tag
 
     /**
      * Sets the encoding type to be used.
-     *
-     * @param Encode $encode
-     * @return void
      */
     public function setEncoding(Encode $encode): void
     {
@@ -128,7 +118,6 @@ class Tag
 
     /**
      * @param bool $htmlSpecialCharsDecode
-     * @return void
      */
     public function setHtmlSpecialCharsDecode($htmlSpecialCharsDecode = false): void
     {
@@ -136,11 +125,7 @@ class Tag
     }
 
     /**
-     * Sets the noise for this tag (if any)
-     *
-     * @param string $noise
-     * @return Tag
-     * @chainable
+     * Sets the noise for this tag (if any).
      */
     public function noise(string $noise): Tag
     {
@@ -151,23 +136,17 @@ class Tag
 
     /**
      * Set an attribute for this tag.
-     *
-     * @param string $key
-     * @param string $attributeValue
-     * @param bool $doubleQuote
-     * @return Tag
-     * @chainable
      */
     public function setAttribute(string $key, ?string $attributeValue, bool $doubleQuote = true): Tag
     {
         $attributeDTO = new AttributeDTO([
-            'value' => $attributeValue,
+            'value'       => $attributeValue,
             'doubleQuote' => $doubleQuote,
         ]);
         if ($this->HtmlSpecialCharsDecode) {
             $attributeDTO->htmlspecialcharsDecode();
         }
-        $this->attr[strtolower($key)] = $attributeDTO;
+        $this->attr[\strtolower($key)] = $attributeDTO;
 
         return $this;
     }
@@ -192,40 +171,40 @@ class Tag
     }
 
     /**
-     * Get style attribute in array
-     *
-     * @return array
+     * Get style attribute in array.
      */
     public function getStyleAttributeArray(): array
     {
         try {
             $value = $this->getAttribute('style')->getValue();
+            if (\is_null($value)) {
+                return [];
+            }
+            $value = \explode(';', \substr(\trim($value), 0, -1));
+            $result = [];
+            foreach ($value as $attr) {
+                $attr = \explode(':', $attr);
+                $result[$attr[0]] = $attr[1];
+            }
+
+            return $result;
         } catch (AttributeNotFoundException $e) {
             unset($e);
+
             return [];
         }
-
-        $value = explode(';', substr(trim($value), 0, -1));
-        $result = [];
-        foreach ($value as $attr) {
-            $attr = explode(':', $attr);
-            $result[$attr[0]] = $attr[1];
-        }
-
-        return $result;
     }
-
-
 
     /**
      * Removes an attribute from this tag.
      *
      * @param mixed $key
+     *
      * @return void
      */
     public function removeAttribute($key)
     {
-        $key = strtolower($key);
+        $key = \strtolower($key);
         unset($this->attr[$key]);
     }
 
@@ -240,15 +219,14 @@ class Tag
     }
 
     /**
-     * Sets the attributes for this tag
+     * Sets the attributes for this tag.
      *
-     * @param array $attr
      * @return $this
      */
     public function setAttributes(array $attr)
     {
         foreach ($attr as $key => $info) {
-            if (is_array($info)) {
+            if (\is_array($info)) {
                 $this->setAttribute($key, $info['value'], $info['doubleQuote']);
             } else {
                 $this->setAttribute($key, $info);
@@ -261,12 +239,14 @@ class Tag
     /**
      * Returns all attributes of this tag.
      *
+     * @throws \stringEncode\Exception
+     *
      * @return AttributeDTO[]
      */
     public function getAttributes(): array
     {
         $return = [];
-        foreach (array_keys($this->attr) as $attr) {
+        foreach (\array_keys($this->attr) as $attr) {
             try {
                 $return[$attr] = $this->getAttribute($attr);
             } catch (AttributeNotFoundException $e) {
@@ -279,21 +259,19 @@ class Tag
     }
 
     /**
-     * Returns an attribute by the key
+     * Returns an attribute by the key.
      *
-     * @param string $key
-     * @return AttributeDTO
      * @throws AttributeNotFoundException
      * @throws \stringEncode\Exception
      */
-    public function getAttribute(string $key):AttributeDTO
+    public function getAttribute(string $key): AttributeDTO
     {
-        $key = strtolower($key);
-        if ( ! isset($this->attr[$key])) {
-            throw new AttributeNotFoundException('Attribute with key "'.$key.'" not found.');
+        $key = \strtolower($key);
+        if (!isset($this->attr[$key])) {
+            throw new AttributeNotFoundException('Attribute with key "' . $key . '" not found.');
         }
         $attributeDTO = $this->attr[$key];
-        if (! is_null($this->encode)) {
+        if (!\is_null($this->encode)) {
             // convert charset
             $attributeDTO->encodeValue($this->encode);
         }
@@ -302,9 +280,8 @@ class Tag
     }
 
     /**
-     * Returns TRUE if node has attribute
+     * Returns TRUE if node has attribute.
      *
-     * @param string $key
      * @return bool
      */
     public function hasAttribute(string $key)
@@ -319,31 +296,31 @@ class Tag
      */
     public function makeOpeningTag()
     {
-        $return = '<'.$this->name;
+        $return = '<' . $this->name;
 
         // add the attributes
-        foreach (array_keys($this->attr) as $key) {
+        foreach (\array_keys($this->attr) as $key) {
             try {
                 $attributeDTO = $this->getAttribute($key);
             } catch (AttributeNotFoundException $e) {
                 // attribute that was in the array not found in the array... let's continue.
                 continue;
             }
-            $val  = $attributeDTO->getValue();
-            if (is_null($val)) {
-                $return .= ' '.$key;
+            $val = $attributeDTO->getValue();
+            if (\is_null($val)) {
+                $return .= ' ' . $key;
             } elseif ($attributeDTO->isDoubleQuote()) {
-                $return .= ' '.$key.'="'.$val.'"';
+                $return .= ' ' . $key . '="' . $val . '"';
             } else {
-                $return .= ' '.$key.'=\''.$val.'\'';
+                $return .= ' ' . $key . '=\'' . $val . '\'';
             }
         }
 
         if ($this->selfClosing && $this->trailingSlash) {
-            return $return.' />';
-        } else {
-            return $return.'>';
+            return $return . ' />';
         }
+
+        return $return . '>';
     }
 
     /**
@@ -357,6 +334,6 @@ class Tag
             return '';
         }
 
-        return '</'.$this->name.'>';
+        return '</' . $this->name . '>';
     }
 }

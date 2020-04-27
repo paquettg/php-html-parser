@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Dom;
 
 /**
@@ -10,7 +13,6 @@ namespace PHPHtmlParser\Dom;
  */
 class MockNode extends InnerNode
 {
-
     /**
      * Mock of innner html.
      */
@@ -36,22 +38,20 @@ class MockNode extends InnerNode
     }
 
     /**
-     * Clear content of this node
+     * Clear content of this node.
      */
     protected function clear(): void
     {
         $this->innerHtml = null;
         $this->outerHtml = null;
-        $this->text      = null;
-        if (is_null($this->parent) === false) {
+        $this->text = null;
+        if (\is_null($this->parent) === false) {
             $this->parent->clear();
         }
     }
 
     /**
      * Returns all children of this html node.
-     *
-     * @return array
      */
     protected function getIteratorArray(): array
     {

@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
+
 use PHPHtmlParser\Content;
+use PHPUnit\Framework\TestCase;
 
-class ContentTest extends TestCase {
-
+class ContentTest extends TestCase
+{
     public function testChar()
     {
         $content = new Content('abcde');
@@ -91,5 +93,4 @@ class ContentTest extends TestCase {
         $content->skipByToken('blank');
         $this->assertEquals('b', $content->char());
     }
-
 }

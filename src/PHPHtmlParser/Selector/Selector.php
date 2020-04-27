@@ -11,13 +11,10 @@ use PHPHtmlParser\Dom\LeafNode;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
 /**
- * Class Selector
- *
- * @package PHPHtmlParser
+ * Class Selector.
  */
 class Selector
 {
-
     /**
      * @var array
      */
@@ -29,9 +26,7 @@ class Selector
     private $depthFirst = false;
 
     /**
-     * Constructs with the selector string
-     * @param string          $selector
-     * @param ParserInterface $parser
+     * Constructs with the selector string.
      */
     public function __construct(string $selector, ParserInterface $parser)
     {
@@ -39,7 +34,8 @@ class Selector
     }
 
     /**
-     * Returns the selectors that where found in __construct
+     * Returns the selectors that where found in __construct.
+     *
      * @return array
      */
     public function getSelectors()
@@ -47,10 +43,6 @@ class Selector
         return $this->selectors;
     }
 
-    /**
-     * @param bool $status
-     * @return void
-     */
     public function setDepthFirstFind(bool $status): void
     {
         $this->depthFirst = $status;
@@ -59,16 +51,15 @@ class Selector
     /**
      * Attempts to find the selectors starting from the given
      * node object.
-     * @param AbstractNode $node
-     * @return Collection
+     *
      * @throws ChildNotFoundException
      */
     public function find(AbstractNode $node): Collection
     {
-        $results = new Collection;
+        $results = new Collection();
         foreach ($this->selectors as $selector) {
             $nodes = [$node];
-            if (count($selector) == 0) {
+            if (\count($selector) == 0) {
                 continue;
             }
 
@@ -92,21 +83,44 @@ class Selector
         return $results;
     }
 
+    /**
+     * Checks comparison condition from rules against node.
+     */
+    public function checkComparison(array $rule, AbstractNode $node): bool
+    {
+        if ($rule['key'] == 'plaintext') {
+            // plaintext search
+            $nodeValue = $node->text();
+            $result = $this->checkNodeValue($nodeValue, $rule, $node);
+        } else {
+            // normal search
+            if (!\is_array($rule['key'])) {
+                $nodeValue = $node->getAttribute($rule['key']);
+                $result = $this->checkNodeValue($nodeValue, $rule, $node);
+            } else {
+                $result = true;
+                foreach ($rule['key'] as $index => $key) {
+                    $nodeValue = $node->getAttribute($key);
+                    $result = $result &&
+                        $this->checkNodeValue($nodeValue, $rule, $node, $index);
+                }
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * Attempts to find all children that match the rule
      * given.
-     * @param array $nodes
-     * @param array $rule
-     * @param array $options
-     * @return array
+     *
      * @throws ChildNotFoundException
      */
     protected function seek(array $nodes, array $rule, array $options): array
     {
         // XPath index
-        if (array_key_exists('tag', $rule) && array_key_exists('key', $rule)
-          && is_numeric($rule['key'])
+        if (\array_key_exists('tag', $rule) && \array_key_exists('key', $rule)
+          && \is_numeric($rule['key'])
         ) {
             $count = 0;
             /** @var AbstractNode $node */
@@ -139,19 +153,19 @@ class Selector
 
             $children = [];
             $child = $node->firstChild();
-            while (!is_null($child)) {
+            while (!\is_null($child)) {
                 // wild card, grab all
-                if ($rule['tag'] == '*' && is_null($rule['key'])) {
+                if ($rule['tag'] == '*' && \is_null($rule['key'])) {
                     $return[] = $child;
                     $child = $this->getNextChild($node, $child);
                     continue;
                 }
 
                 $pass = $this->checkTag($rule, $child);
-                if ($pass && !is_null($rule['key'])) {
+                if ($pass && !\is_null($rule['key'])) {
                     $pass = $this->checkKey($rule, $child);
                 }
-                if ($pass && !is_null($rule['key']) && !is_null($rule['value'])
+                if ($pass && !\is_null($rule['key']) && !\is_null($rule['value'])
                   && $rule['value'] != '*'
                 ) {
                     $pass = $this->checkComparison($rule, $child);
@@ -187,7 +201,7 @@ class Selector
 
             if ((!isset($options['checkGrandChildren'])
                 || $options['checkGrandChildren'])
-              && count($children) > 0
+              && \count($children) > 0
             ) {
                 // we have children that failed but are not leaves.
                 $matches = $this->seek($children, $rule, $options);
@@ -202,35 +216,31 @@ class Selector
 
     /**
      * Attempts to match the given arguments with the given operator.
-     * @param string $operator
-     * @param string $pattern
-     * @param string $value
-     * @return bool
      */
     protected function match(
       string $operator,
       string $pattern,
       string $value
     ): bool {
-        $value = strtolower($value);
-        $pattern = strtolower($pattern);
+        $value = \strtolower($value);
+        $pattern = \strtolower($pattern);
         switch ($operator) {
             case '=':
                 return $value === $pattern;
             case '!=':
                 return $value !== $pattern;
             case '^=':
-                return preg_match('/^' . preg_quote($pattern, '/') . '/',
+                return \preg_match('/^' . \preg_quote($pattern, '/') . '/',
                     $value) == 1;
             case '$=':
-                return preg_match('/' . preg_quote($pattern, '/') . '$/',
+                return \preg_match('/' . \preg_quote($pattern, '/') . '$/',
                     $value) == 1;
             case '*=':
                 if ($pattern[0] == '/') {
-                    return preg_match($pattern, $value) == 1;
+                    return \preg_match($pattern, $value) == 1;
                 }
 
-                return preg_match("/" . $pattern . "/i", $value) == 1;
+                return \preg_match('/' . $pattern . '/i', $value) == 1;
         }
 
         return false;
@@ -239,8 +249,6 @@ class Selector
     /**
      * Attempts to figure out what the alteration will be for
      * the next element.
-     * @param array $rule
-     * @return array
      */
     protected function alterNext(array $rule): array
     {
@@ -254,7 +262,7 @@ class Selector
 
     /**
      * Flattens the option array.
-     * @param array $optionsArray
+     *
      * @return array
      */
     protected function flattenOptions(array $optionsArray)
@@ -271,8 +279,7 @@ class Selector
 
     /**
      * Returns the next child or null if no more children.
-     * @param AbstractNode $node
-     * @param AbstractNode $currentChild
+     *
      * @return AbstractNode|null
      */
     protected function getNextChild(
@@ -296,9 +303,6 @@ class Selector
 
     /**
      * Checks tag condition from rules against node.
-     * @param array        $rule
-     * @param AbstractNode $node
-     * @return bool
      */
     protected function checkTag(array $rule, AbstractNode $node): bool
     {
@@ -313,15 +317,12 @@ class Selector
 
     /**
      * Checks key condition from rules against node.
-     * @param array        $rule
-     * @param AbstractNode $node
-     * @return bool
      */
     protected function checkKey(array $rule, AbstractNode $node): bool
     {
-        if (!is_array($rule['key'])) {
+        if (!\is_array($rule['key'])) {
             if ($rule['noKey']) {
-                if (!is_null($node->getAttribute($rule['key']))) {
+                if (!\is_null($node->getAttribute($rule['key']))) {
                     return false;
                 }
             } else {
@@ -334,7 +335,7 @@ class Selector
         } else {
             if ($rule['noKey']) {
                 foreach ($rule['key'] as $key) {
-                    if (!is_null($node->getAttribute($key))) {
+                    if (!\is_null($node->getAttribute($key))) {
                         return false;
                     }
                 }
@@ -352,55 +353,18 @@ class Selector
         return true;
     }
 
-    /**
-     * Checks comparison condition from rules against node.
-     * @param array        $rule
-     * @param AbstractNode $node
-     * @return bool
-     */
-    public function checkComparison(array $rule, AbstractNode $node): bool
-    {
-        if ($rule['key'] == 'plaintext') {
-            // plaintext search
-            $nodeValue = $node->text();
-            $result = $this->checkNodeValue($nodeValue, $rule, $node);
-        } else {
-            // normal search
-            if (!is_array($rule['key'])) {
-                $nodeValue = $node->getAttribute($rule['key']);
-                $result = $this->checkNodeValue($nodeValue, $rule, $node);
-            } else {
-                $result = true;
-                foreach ($rule['key'] as $index => $key) {
-                    $nodeValue = $node->getAttribute($key);
-                    $result = $result &&
-                        $this->checkNodeValue($nodeValue, $rule, $node, $index);
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string|null  $nodeValue
-     * @param array        $rule
-     * @param AbstractNode $node
-     * @param int|null     $index
-     * @return bool
-     */
     private function checkNodeValue(
         ?string $nodeValue,
         array $rule,
         AbstractNode $node,
         ?int $index = null
-    ) : bool {
+    ): bool {
         $check = false;
         if (
-            array_key_exists('value', $rule) && !is_array($rule['value']) && 
-            !is_null($nodeValue) &&
-            array_key_exists('operator', $rule) && is_string($rule['operator']) &&
-            array_key_exists('value', $rule) && is_string($rule['value'])
+            \array_key_exists('value', $rule) && !\is_array($rule['value']) &&
+            !\is_null($nodeValue) &&
+            \array_key_exists('operator', $rule) && \is_string($rule['operator']) &&
+            \array_key_exists('value', $rule) && \is_string($rule['value'])
         ) {
             $check = $this->match($rule['operator'], $rule['value'], $nodeValue);
         }
@@ -408,16 +372,16 @@ class Selector
         // handle multiple classes
         $key = $rule['key'];
         if (
-            !$check && 
+            !$check &&
             $key == 'class' &&
-            array_key_exists('value', $rule) && is_array($rule['value'])
+            \array_key_exists('value', $rule) && \is_array($rule['value'])
         ) {
-            $nodeClasses = explode(' ', $node->getAttribute('class') ?? '');
+            $nodeClasses = \explode(' ', $node->getAttribute('class') ?? '');
             foreach ($rule['value'] as $value) {
                 foreach ($nodeClasses as $class) {
-                    if ( 
+                    if (
                         !empty($class) &&
-                        array_key_exists('operator', $rule) && is_string($rule['operator'])
+                        \array_key_exists('operator', $rule) && \is_string($rule['operator'])
                     ) {
                         $check = $this->match($rule['operator'], $value, $class);
                     }
@@ -430,11 +394,11 @@ class Selector
                 }
             }
         } elseif (
-            !$check && 
-            is_array($key) && 
-            !is_null($nodeValue) &&
-            array_key_exists('operator', $rule) && is_string($rule['operator']) &&
-            array_key_exists('value', $rule) && is_string($rule['value'][$index])
+            !$check &&
+            \is_array($key) &&
+            !\is_null($nodeValue) &&
+            \array_key_exists('operator', $rule) && \is_string($rule['operator']) &&
+            \array_key_exists('value', $rule) && \is_string($rule['value'][$index])
         ) {
             $check = $this->match($rule['operator'], $rule['value'][$index], $nodeValue);
         }

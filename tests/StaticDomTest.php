@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
+
 use PHPHtmlParser\StaticDom;
+use PHPUnit\Framework\TestCase;
 
-class StaticDomTest extends TestCase {
-
+class StaticDomTest extends TestCase
+{
     public function setUp()
     {
         StaticDom::mount();
@@ -17,7 +19,7 @@ class StaticDomTest extends TestCase {
 
     public function testMountWithDom()
     {
-        $dom = new PHPHtmlParser\Dom;
+        $dom = new PHPHtmlParser\Dom();
         StaticDom::unload();
         $status = StaticDom::mount('newDom', $dom);
         $this->assertTrue($status);
@@ -43,7 +45,7 @@ class StaticDomTest extends TestCase {
     }
 
     /**
-     * @expectedException PHPHtmlParser\Exceptions\NotLoadedException
+     * @expectedException \PHPHtmlParser\Exceptions\NotLoadedException
      */
     public function testFindNoLoad()
     {
@@ -61,7 +63,7 @@ class StaticDomTest extends TestCase {
         $streamMock = Mockery::mock(\Psr\Http\Message\StreamInterface::class);
         $streamMock->shouldReceive('getContents')
             ->once()
-            ->andReturn(file_get_contents('tests/data/files/small.html'));
+            ->andReturn(\file_get_contents('tests/data/files/small.html'));
         $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
         $responseMock->shouldReceive('getBody')
             ->once()
@@ -74,5 +76,4 @@ class StaticDomTest extends TestCase {
         Dom::loadFromUrl('http://google.com', [], $clientMock);
         $this->assertEquals('VonBurgermeister', Dom::find('.post-row div .post-user font', 0)->text);
     }
-
 }

@@ -1,12 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Exceptions;
 
 use Exception;
 
 /**
- * Class CircularException
- *
- * @package PHPHtmlParser\Exceptions
+ * Class CircularException.
  */
 final class CircularException extends Exception
 {

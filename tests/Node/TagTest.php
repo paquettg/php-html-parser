@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
+
 use PHPHtmlParser\Dom\Tag;
+use PHPUnit\Framework\TestCase;
 
-class NodeTagTest extends TestCase {
-
+class NodeTagTest extends TestCase
+{
     public function testSelfClosing()
     {
         $tag = new Tag('a');
@@ -43,7 +45,7 @@ class NodeTagTest extends TestCase {
         $tag->setAttribute('href', 'http://google.com');
         $tag->setAttribute('class', 'clear-fix', true);
         $tag->removeAllAttributes();
-        $this->assertEquals(0, count($tag->getAttributes()));
+        $this->assertEquals(0, \count($tag->getAttributes()));
     }
 
     public function testSetAttributeNoArray()
@@ -74,14 +76,13 @@ class NodeTagTest extends TestCase {
                 'doubleQuote' => false,
             ],
             'class' => [
-                'value' => null,
+                'value'       => null,
                 'doubleQuote' => true,
             ],
         ]);
 
         $this->assertEquals(null, $tag->getAttribute('class')->getValue());
         $this->assertEquals('http://google.com', $tag->getAttribute('href')->getValue());
-
 
         $attr = [
             'href'  => 'https://www.google.com',

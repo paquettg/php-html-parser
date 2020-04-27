@@ -1,27 +1,28 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser;
 
 /**
- * Class Options
+ * Class Options.
  *
- * @package PHPHtmlParser
- * @property bool $whitespaceTextNode
- * @property bool $strict
+ * @property bool        $whitespaceTextNode
+ * @property bool        $strict
  * @property string|null $enforceEncoding
- * @property bool $cleanupInput
- * @property bool $removeScripts
- * @property bool $removeStyles
- * @property bool $preserveLineBreaks
- * @property bool $removeDoubleSpace
- * @property bool $removeSmartyScripts
- * @property bool $depthFirstSearch
- * @property bool $htmlSpecialCharsDecode
+ * @property bool        $cleanupInput
+ * @property bool        $removeScripts
+ * @property bool        $removeStyles
+ * @property bool        $preserveLineBreaks
+ * @property bool        $removeDoubleSpace
+ * @property bool        $removeSmartyScripts
+ * @property bool        $depthFirstSearch
+ * @property bool        $htmlSpecialCharsDecode
  */
 class Options
 {
-
     /**
-     * The default options array
+     * The default options array.
      *
      * @var array
      */
@@ -47,7 +48,7 @@ class Options
     protected $options = [];
 
     /**
-     * Sets the default options in the options array
+     * Sets the default options in the options array.
      */
     public function __construct()
     {
@@ -58,7 +59,9 @@ class Options
      * A magic get to call the get() method.
      *
      * @param string $key
+     *
      * @return mixed
+     *
      * @uses $this->get()
      */
     public function __get($key)
@@ -69,8 +72,6 @@ class Options
     /**
      * Sets a new options param to override the current option array.
      *
-     * @param array $options
-     * @return Options
      * @chainable
      */
     public function setOptions(array $options): Options
@@ -86,7 +87,6 @@ class Options
      * Gets the value associated to the key, or null if the key is not
      * found.
      *
-     * @param string $key
      * @return mixed
      */
     public function get(string $key)
@@ -94,7 +94,5 @@ class Options
         if (isset($this->options[$key])) {
             return $this->options[$key];
         }
-
-        return null;
     }
 }

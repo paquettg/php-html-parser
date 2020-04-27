@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser;
 
 use GuzzleHttp\Psr7\Request;
 use Http\Adapter\Guzzle6\Client;
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\Psr17FactoryDiscovery;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\CurlException;
@@ -14,47 +15,40 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Class StaticDom
- *
- * @package PHPHtmlParser
+ * Class StaticDom.
  */
 final class StaticDom
 {
-
     private static $dom = null;
 
     /**
      * Attempts to call the given method on the most recent created dom
      * from bellow.
      *
-     * @param string $method
-     * @param array $arguments
      * @throws NotLoadedException
+     *
      * @return mixed
      */
     public static function __callStatic(string $method, array $arguments)
     {
         if (self::$dom instanceof Dom) {
-            return call_user_func_array([self::$dom, $method], $arguments);
-        } else {
-            throw new NotLoadedException('The dom is not loaded. Can not call a dom method.');
+            return \call_user_func_array([self::$dom, $method], $arguments);
         }
+        throw new NotLoadedException('The dom is not loaded. Can not call a dom method.');
     }
 
     /**
      * Call this to mount the static facade. The facade allows you to use
      * this object as a $className.
      *
-     * @param string $className
      * @param ?Dom $dom
-     * @return bool
      */
     public static function mount(string $className = 'Dom', ?Dom $dom = null): bool
     {
-        if (class_exists($className)) {
+        if (\class_exists($className)) {
             return false;
         }
-        class_alias(__CLASS__, $className);
+        \class_alias(__CLASS__, $className);
         if ($dom instanceof Dom) {
             self::$dom = $dom;
         }
@@ -65,8 +59,7 @@ final class StaticDom
     /**
      * Creates a new dom object and calls load() on the
      * new object.
-     * @param string $str
-     * @return Dom
+     *
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws CurlException
@@ -74,7 +67,7 @@ final class StaticDom
      */
     public static function load(string $str): Dom
     {
-        $dom       = new Dom;
+        $dom = new Dom();
         self::$dom = $dom;
 
         return $dom->load($str);
@@ -83,8 +76,7 @@ final class StaticDom
     /**
      * Creates a new dom object and calls loadFromFile() on the
      * new object.
-     * @param string $file
-     * @return Dom
+     *
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws StrictException
@@ -92,7 +84,7 @@ final class StaticDom
      */
     public static function loadFromFile(string $file): Dom
     {
-        $dom       = new Dom;
+        $dom = new Dom();
         self::$dom = $dom;
 
         return $dom->loadFromFile($file);
@@ -101,11 +93,7 @@ final class StaticDom
     /**
      * Creates a new dom object and calls loadFromUrl() on the
      * new object.
-     * @param string $url
-     * @param array $options
-     * @param ClientInterface|null $client
-     * @param RequestInterface|null $request
-     * @return Dom
+     *
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws StrictException
@@ -113,13 +101,13 @@ final class StaticDom
      */
     public static function loadFromUrl(string $url, array $options = [], ClientInterface $client = null, RequestInterface $request = null): Dom
     {
-        $dom       = new Dom;
+        $dom = new Dom();
         self::$dom = $dom;
 
-        if (is_null($client)) {
+        if (\is_null($client)) {
             $client = new Client();
         }
-        if (is_null($request)) {
+        if (\is_null($request)) {
             $request = new Request('GET', $url);
         }
 

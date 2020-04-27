@@ -1,14 +1,16 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
+
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\StrictException;
+use PHPUnit\Framework\TestCase;
 
-class StrictTest extends TestCase {
-
+class StrictTest extends TestCase
+{
     public function testConfigStrict()
     {
-        $dom = new Dom;
+        $dom = new Dom();
         $dom->setOptions([
             'strict' => true,
         ]);
@@ -18,47 +20,41 @@ class StrictTest extends TestCase {
 
     public function testConfigStrictMissingSelfClosing()
     {
-        $dom = new Dom;
+        $dom = new Dom();
         $dom->setOptions([
             'strict' => true,
         ]);
-        try
-        {
+        try {
             // should throw an exception
             $dom->load('<div><p id="hey">Hey you</p><br><p id="ya">Ya you!</p></div>');
             // we should not get here
             $this->assertTrue(false);
-        }
-        catch (StrictException $e)
-        {
+        } catch (StrictException $e) {
             $this->assertEquals("Tag 'br' is not self closing! (character #31)", $e->getMessage());
         }
     }
 
     public function testConfigStrictMissingAttribute()
     {
-        $dom = new Dom;
+        $dom = new Dom();
         $dom->setOptions([
             'strict' => true,
         ]);
-        try
-        {
+        try {
             // should throw an exception
             $dom->load('<div><p id="hey" block>Hey you</p> <p id="ya">Ya you!</p></div>');
             // we should not get here
             $this->assertTrue(false);
-        }
-        catch (StrictException $e)
-        {
+        } catch (StrictException $e) {
             $this->assertEquals("Tag 'p' has an attribute 'block' with out a value! (character #22)", $e->getMessage());
         }
     }
 
     public function testConfigStrictBRTag()
     {
-        $dom = new Dom;
+        $dom = new Dom();
         $dom->setOptions([
-          'strict' => true,
+            'strict' => true,
         ]);
         $dom->load('<br />');
         $this->assertTrue(true);

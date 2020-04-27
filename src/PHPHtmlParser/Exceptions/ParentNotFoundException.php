@@ -1,12 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Exceptions;
 
 use Exception;
 
 /**
- * Class ParentNotFoundException
- *
- * @package PHPHtmlParser\Exceptions
+ * Class ParentNotFoundException.
  */
 final class ParentNotFoundException extends Exception
 {

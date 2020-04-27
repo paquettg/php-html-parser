@@ -1,8 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Dom;
 
-use Countable;
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 
 /**
@@ -11,11 +14,8 @@ use IteratorAggregate;
  */
 abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Countable
 {
-
     /**
-     * Gets the iterator
-     *
-     * @return ArrayIterator
+     * Gets the iterator.
      */
     public function getIterator(): ArrayIterator
     {
@@ -24,18 +24,14 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
 
     /**
      * Returns the count of the iterator array.
-     *
-     * @return int
      */
     public function count(): int
     {
-        return count($this->getIteratorArray());
+        return \count($this->getIteratorArray());
     }
 
     /**
      * Returns the array to be used the the iterator.
-     *
-     * @return array
      */
     abstract protected function getIteratorArray(): array;
 }

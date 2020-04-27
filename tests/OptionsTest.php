@@ -1,20 +1,22 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
+
 use PHPHtmlParser\Options;
+use PHPUnit\Framework\TestCase;
 
-class OptionsTest extends TestCase {
-
+class OptionsTest extends TestCase
+{
     public function testDefaultWhitespaceTextNode()
     {
-        $options = new Options;
+        $options = new Options();
 
         $this->assertTrue($options->whitespaceTextNode);
     }
 
     public function testAddingOption()
     {
-        $options = new Options;
+        $options = new Options();
         $options->setOptions([
             'test' => true,
         ]);
@@ -24,11 +26,11 @@ class OptionsTest extends TestCase {
 
     public function testAddingOver()
     {
-        $options = new Options;
+        $options = new Options();
         $options->setOptions([
             'test' => false,
         ])->setOptions([
-            'test' => true,
+            'test'               => true,
             'whitespaceTextNode' => false,
         ]);
 
@@ -37,8 +39,7 @@ class OptionsTest extends TestCase {
 
     public function testGettingNoOption()
     {
-        $options = new Options;
+        $options = new Options();
         $this->assertEquals(null, $options->get('doesnotexist'));
     }
 }
-

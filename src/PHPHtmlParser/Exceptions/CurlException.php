@@ -1,12 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Exceptions;
 
 use Exception;
 
 /**
- * Class CurlException
- *
- * @package PHPHtmlParser\Exceptions
+ * Class CurlException.
  */
 class CurlException extends Exception
 {

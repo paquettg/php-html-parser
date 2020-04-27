@@ -1,44 +1,46 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
-use PHPHtmlParser\Selector\Selector;
-use PHPHtmlParser\Selector\Parser;
+declare(strict_types=1);
+
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
+use PHPHtmlParser\Selector\Parser;
+use PHPHtmlParser\Selector\Selector;
+use PHPUnit\Framework\TestCase;
 
-class SelectorTest extends TestCase {
-    
+class SelectorTest extends TestCase
+{
     public function testParseSelectorStringId()
     {
-        $selector  = new Selector('#all', new Parser());
+        $selector = new Selector('#all', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertEquals('id', $selectors[0][0]['key']);
     }
 
     public function testParseSelectorStringClass()
     {
-        $selector  = new Selector('div.post', new Parser());
+        $selector = new Selector('div.post', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertEquals('class', $selectors[0][0]['key']);
     }
 
     public function testParseSelectorStringAttribute()
     {
-        $selector  = new Selector('div[visible=yes]', new Parser());
+        $selector = new Selector('div[visible=yes]', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertEquals('yes', $selectors[0][0]['value']);
     }
 
     public function testParseSelectorStringNoKey()
     {
-        $selector  = new Selector('div[!visible]', new Parser());
+        $selector = new Selector('div[!visible]', new Parser());
         $selectors = $selector->getSelectors();
         $this->assertTrue($selectors[0][0]['noKey']);
     }
 
     public function testFind()
     {
-        $root   = new HtmlNode('root');
+        $root = new HtmlNode('root');
         $parent = new HtmlNode('div');
         $child1 = new HtmlNode('a');
         $child2 = new HtmlNode('p');
@@ -110,7 +112,7 @@ class SelectorTest extends TestCase {
 
     public function testFindWild()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('a'));
         $child2 = new HtmlNode(new Tag('p'));
@@ -126,7 +128,7 @@ class SelectorTest extends TestCase {
 
     public function testFindMultipleSelectors()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('a'));
         $child2 = new HtmlNode(new Tag('p'));
@@ -137,7 +139,7 @@ class SelectorTest extends TestCase {
         $child2->addChild($child3);
 
         $selector = new Selector('a, p', new Parser());
-        $this->assertEquals(3, count($selector->find($root)));
+        $this->assertEquals(3, \count($selector->find($root)));
     }
 
     public function testFindXpathKeySelector()
@@ -162,7 +164,7 @@ class SelectorTest extends TestCase {
 
     public function testFindChildMultipleLevelsDeep()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('ul'));
         $child2 = new HtmlNode(new Tag('li'));
@@ -171,12 +173,12 @@ class SelectorTest extends TestCase {
         $child1->addChild($child2);
 
         $selector = new Selector('div li', new Parser());
-        $this->assertEquals(1, count($selector->find($root)));
+        $this->assertEquals(1, \count($selector->find($root)));
     }
 
     public function testFindAllChildren()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('ul'));
         $child2 = new HtmlNode(new Tag('span'));
@@ -187,12 +189,12 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
 
         $selector = new Selector('div ul', new Parser());
-        $this->assertEquals(2, count($selector->find($root)));
+        $this->assertEquals(2, \count($selector->find($root)));
     }
 
     public function testFindChildUsingChildSelector()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $parent = new HtmlNode(new Tag('div'));
         $child1 = new HtmlNode(new Tag('ul'));
         $child2 = new HtmlNode(new Tag('span'));
@@ -203,23 +205,23 @@ class SelectorTest extends TestCase {
         $parent->addChild($child2);
 
         $selector = new Selector('div > ul', new Parser());
-        $this->assertEquals(1, count($selector->find($root)));
+        $this->assertEquals(1, \count($selector->find($root)));
     }
 
     public function testFindNodeByAttributeOnly()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $child1 = new HtmlNode(new Tag('ul'));
         $child1->setAttribute('custom-attr', null);
         $root->addChild($child1);
 
         $selector = new Selector('[custom-attr]', new Parser());
-        $this->assertEquals(1, count($selector->find($root)));
+        $this->assertEquals(1, \count($selector->find($root)));
     }
 
     public function testFindMultipleClasses()
     {
-        $root   = new HtmlNode(new Tag('root'));
+        $root = new HtmlNode(new Tag('root'));
         $child1 = new HtmlNode(new Tag('a'));
         $child1->setAttribute('class', 'b');
         $child2 = new HtmlNode(new Tag('a'));
@@ -228,6 +230,6 @@ class SelectorTest extends TestCase {
         $root->addChild($child2);
 
         $selector = new Selector('a.b.c', new Parser());
-        $this->assertEquals(1, count($selector->find($root)));
+        $this->assertEquals(1, \count($selector->find($root)));
     }
 }

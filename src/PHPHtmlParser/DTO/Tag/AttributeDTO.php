@@ -25,17 +25,11 @@ class AttributeDTO
         $this->doubleQuote = $values['doubleQuote'];
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /**
-     * @return bool
-     */
     public function isDoubleQuote(): bool
     {
         return $this->doubleQuote;
@@ -43,11 +37,12 @@ class AttributeDTO
 
     public function htmlspecialcharsDecode(): void
     {
-        $this->value = htmlspecialchars_decode($this->value);
+        if (!\is_null($this->value)) {
+            $this->value = \htmlspecialchars_decode($this->value);
+        }
     }
 
     /**
-     * @param Encode $encode
      * @throws Exception
      */
     public function encodeValue(Encode $encode)
