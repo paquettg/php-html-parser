@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added support for PSR7 HTTP clients and requests for URL calls.
+- Added PHAN support and fixed all issues from PHAN.
 
 ### Changed
 - Fixed issue with \ causing an infite loop.
