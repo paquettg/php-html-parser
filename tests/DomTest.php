@@ -13,13 +13,13 @@ class DomTest extends TestCase
     }
 
     /**
-     * <![CDATA[ should not be modified when cleanupInput is set to false
+     * <![CDATA[ should not be modified when cleanupInput is set to false.
      */
     public function testParsingCData()
     {
         $html = "<script type=\"text/javascript\">/* <![CDATA[ */var et_core_api_spam_recaptcha = '';/* ]]> */</script>";
         $dom = new Dom();
-        $dom->setOptions(['cleanupInput' => false,]);
+        $dom->setOptions(['cleanupInput' => false]);
         $dom->load($html);
         $this->assertSame($html, $dom->root->outerHtml());
     }

@@ -520,11 +520,6 @@ class Dom
             }
         }
 
-        //sometime need predicate an encode is from encoding 
-        if ($this->options->get('useFromEncoding') != NULL) {
-            $str = mb_convert_encoding( $str, "UTF-8", $this->options->get('useFromEncoding'));
-        }
-
         // remove white space before closing tags
         $str = \mb_eregi_replace("'\s+>", "'>", $str);
         if ($str === false) {
@@ -619,7 +614,7 @@ class Dom
         $this->root = new HtmlNode('root');
         $this->root->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
         $activeNode = $this->root;
-        while ($activeNode!== null) {
+        while ($activeNode !== null) {
             if ($activeNode && $activeNode->tag->name() === 'script'
                 && $this->options->get('cleanupInput') != true
             ) {

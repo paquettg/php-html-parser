@@ -244,6 +244,7 @@ abstract class AbstractNode
             if ($this->parent->id() == $id) {
                 return $this->parent;
             }
+
             return $this->parent->getAncestor($id);
         }
     }

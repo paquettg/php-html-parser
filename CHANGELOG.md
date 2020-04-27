@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Fixed issue with \ causing an infite loop.
+- CDATA should not be altered when cleanupInput is false.
+
 
 ### Removed
 - Removed curl interface and curl implementation.
