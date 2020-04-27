@@ -1,11 +1,17 @@
 <?php declare(strict_types=1);
 namespace PHPHtmlParser;
 
+use GuzzleHttp\Psr7\Request;
+use Http\Adapter\Guzzle6\Client;
+use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\CurlException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\Exceptions\StrictException;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Class StaticDom
@@ -82,6 +88,7 @@ final class StaticDom
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws StrictException
+     * @throws Exceptions\LogicalException
      */
     public static function loadFromFile(string $file): Dom
     {
@@ -94,25 +101,29 @@ final class StaticDom
     /**
      * Creates a new dom object and calls loadFromUrl() on the
      * new object.
-     * @param string                            $url
-     * @param array                             $options
-     * @param CurlInterface|null $curl
+     * @param string $url
+     * @param array $options
+     * @param ClientInterface|null $client
+     * @param RequestInterface|null $request
      * @return Dom
      * @throws ChildNotFoundException
      * @throws CircularException
-     * @throws CurlException
      * @throws StrictException
+     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
-    public static function loadFromUrl(string $url, array $options = [], CurlInterface $curl = null): Dom
+    public static function loadFromUrl(string $url, array $options = [], ClientInterface $client = null, RequestInterface $request = null): Dom
     {
         $dom       = new Dom;
         self::$dom = $dom;
-        if (is_null($curl)) {
-            // use the default curl interface
-            $curl = new Curl;
+
+        if (is_null($client)) {
+            $client = new Client();
+        }
+        if (is_null($request)) {
+            $request = new Request('GET', $url);
         }
 
-        return $dom->loadFromUrl($url, $options, $curl);
+        return $dom->loadFromUrl($url, $options, $client, $request);
     }
 
     /**

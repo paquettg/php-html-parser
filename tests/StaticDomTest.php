@@ -58,13 +58,20 @@ class StaticDomTest extends TestCase {
 
     public function testLoadFromUrl()
     {
-        $curl = Mockery::mock('PHPHtmlParser\CurlInterface');
-        $curl->shouldReceive('get')
-             ->once()
-             ->with('http://google.com', [])
-             ->andReturn(file_get_contents('tests/data/files/small.html'));
+        $streamMock = Mockery::mock(\Psr\Http\Message\StreamInterface::class);
+        $streamMock->shouldReceive('getContents')
+            ->once()
+            ->andReturn(file_get_contents('tests/data/files/small.html'));
+        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock->shouldReceive('getBody')
+            ->once()
+            ->andReturn($streamMock);
+        $clientMock = Mockery::mock(\Psr\Http\Client\ClientInterface::class);
+        $clientMock->shouldReceive('sendRequest')
+            ->once()
+            ->andReturn($responseMock);
 
-        Dom::loadFromUrl('http://google.com', [], $curl);
+        Dom::loadFromUrl('http://google.com', [], $clientMock);
         $this->assertEquals('VonBurgermeister', Dom::find('.post-row div .post-user font', 0)->text);
     }
 

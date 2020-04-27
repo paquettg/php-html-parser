@@ -1,6 +1,11 @@
 <?php declare(strict_types=1);
 namespace PHPHtmlParser;
 
+use GuzzleHttp\Psr7\Request;
+use Http\Adapter\Guzzle6\Client;
+use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
 use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Dom\HtmlNode;
@@ -13,6 +18,8 @@ use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 use PHPHtmlParser\Exceptions\LogicalException;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
 use stringEncode\Encode;
 
 /**
@@ -182,22 +189,27 @@ class Dom
     /**
      * Use a curl interface implementation to attempt to load
      * the content from a url.
-     * @param string                            $url
-     * @param array                             $options
-     * @param CurlInterface|null $curl
+     * @param string $url
+     * @param array $options
+     * @param ClientInterface $client
+     * @param RequestInterface|null $request
      * @return Dom
      * @throws ChildNotFoundException
      * @throws CircularException
-     * @throws CurlException
      * @throws StrictException
+     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
-    public function loadFromUrl(string $url, array $options = [], CurlInterface $curl = null): Dom
+    public function loadFromUrl(string $url, array $options = [], ClientInterface $client = null, RequestInterface $request = null): Dom
     {
-        if (is_null($curl)) {
-            // use the default curl interface
-            $curl = new Curl;
+        if (is_null($client)) {
+            $client = new Client();
         }
-        $content = $curl->get($url, $options);
+        if (is_null($request)) {
+            $request = new Request('GET', $url);
+        }
+
+        $response = $client->sendRequest($request);
+        $content = $response->getBody()->getContents();
 
         return $this->loadStr($content, $options);
     }

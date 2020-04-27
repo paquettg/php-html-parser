@@ -10,8 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added support for PSR7 HTTP clients and requests for URL calls.
+
 ### Changed
 - Fixed issue with \ causing an infite loop.
+
+### Removed
+- Removed curl interface and curl implementation.
 
 ## 2.2.0
 
