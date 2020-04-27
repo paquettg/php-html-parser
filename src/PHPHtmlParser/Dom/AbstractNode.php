@@ -105,7 +105,7 @@ abstract class AbstractNode
     public function __get(string $key)
     {
         // check attribute first
-        if (!\is_null($this->getAttribute($key))) {
+        if ($this->getAttribute($key) !== null) {
             return $this->getAttribute($key);
         }
         switch (\strtolower($key)) {
@@ -177,7 +177,7 @@ abstract class AbstractNode
     public function setParent(InnerNode $parent): AbstractNode
     {
         // remove from old parent
-        if (!\is_null($this->parent)) {
+        if ($this->parent !== null) {
             if ($this->parent->id() == $parent->id()) {
                 // already the parent
                 return $this;
@@ -202,7 +202,7 @@ abstract class AbstractNode
      */
     public function delete()
     {
-        if (!\is_null($this->parent)) {
+        if ($this->parent !== null) {
             $this->parent->removeChild($this->id);
         }
         $this->parent->clear();
@@ -226,7 +226,7 @@ abstract class AbstractNode
      */
     public function isAncestor(int $id): bool
     {
-        if (!\is_null($this->getAncestor($id))) {
+        if ($this->getAncestor($id) !== null) {
             return true;
         }
 
@@ -240,11 +240,10 @@ abstract class AbstractNode
      */
     public function getAncestor(int $id)
     {
-        if (!\is_null($this->parent)) {
+        if ($this->parent !== null) {
             if ($this->parent->id() == $id) {
                 return $this->parent;
             }
-
             return $this->parent->getAncestor($id);
         }
     }
@@ -280,7 +279,7 @@ abstract class AbstractNode
      */
     public function nextSibling(): AbstractNode
     {
-        if (\is_null($this->parent)) {
+        if ($this->parent === null) {
             throw new ParentNotFoundException('Parent is not set for this node.');
         }
 
@@ -295,7 +294,7 @@ abstract class AbstractNode
      */
     public function previousSibling(): AbstractNode
     {
-        if (\is_null($this->parent)) {
+        if ($this->parent === null) {
             throw new ParentNotFoundException('Parent is not set for this node.');
         }
 
@@ -401,13 +400,13 @@ abstract class AbstractNode
         // Start by including ourselves in the comparison.
         $node = $this;
 
-        while (!\is_null($node)) {
+        do {
             if ($node->tag->name() == $tag) {
                 return $node;
             }
 
             $node = $node->getParent();
-        }
+        } while ($node !== null);
 
         throw new ParentNotFoundException('Could not find an ancestor with "' . $tag . '" tag');
     }
@@ -419,13 +418,13 @@ abstract class AbstractNode
      *
      * @return mixed|Collection|null
      */
-    public function find(string $selector, int $nth = null, bool $depthFirst = false)
+    public function find(string $selector, ?int $nth = null, bool $depthFirst = false)
     {
         $selector = new Selector($selector, new SelectorParser());
         $selector->setDepthFirstFind($depthFirst);
         $nodes = $selector->find($this);
 
-        if (!\is_null($nth)) {
+        if ($nth !== null) {
             // return nth-element or array
             if (isset($nodes[$nth])) {
                 return $nodes[$nth];
