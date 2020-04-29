@@ -413,6 +413,18 @@ class NodeHtmlTest extends TestCase
         $this->assertEquals(0, \count($node->getAttributes()));
     }
 
+    public function testSetTag()
+    {
+        $node = new HtmlNode('div');
+        $this->assertEquals('<div></div>', $node->outerHtml());
+
+        $node->setTag('p');
+        $this->assertEquals('<p></p>', $node->outerHtml());
+
+        $node->setTag(new Tag('span'));
+        $this->assertEquals('<span></span>', $node->outerHtml());
+    }
+
     public function testCountable()
     {
         $div = new Tag('div');
