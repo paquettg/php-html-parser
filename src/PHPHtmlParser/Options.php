@@ -95,4 +95,13 @@ class Options
             return $this->options[$key];
         }
     }
+
+    /**
+     * Return current options as array
+     *
+     * @return array
+     */
+    public function asArray() {
+        return $this->options;
+    }
 }
