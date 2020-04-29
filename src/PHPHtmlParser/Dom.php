@@ -146,6 +146,7 @@ class Dom
      * @throws CircularException
      * @throws CurlException
      * @throws StrictException
+     * @throws LogicalException
      */
     public function load(string $str, array $options = []): Dom
     {
@@ -607,6 +608,7 @@ class Dom
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws StrictException
+     * @throws LogicalException
      */
     protected function parse(): void
     {
