@@ -527,6 +527,9 @@ class Dom
             }
         }
 
+	// Fix #190
+	$str = mb_eregi_replace("'\s+>", "'>", utf8_encode($str));
+	    
         // remove white space before closing tags
         $str = mb_eregi_replace("'\s+>", "'>", $str);
         if ($str === false) {
