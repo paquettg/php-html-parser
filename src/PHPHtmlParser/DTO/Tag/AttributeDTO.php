@@ -7,17 +7,17 @@ namespace PHPHtmlParser\DTO\Tag;
 use stringEncode\Encode;
 use stringEncode\Exception;
 
-class AttributeDTO
+final class AttributeDTO
 {
     /**
      * @var ?string
      */
-    protected $value;
+    private $value;
 
     /**
      * @var bool
      */
-    protected $doubleQuote = true;
+    private $doubleQuote = true;
 
     public function __construct(array $values)
     {

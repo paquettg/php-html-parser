@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Dom;
 
+use PHPHtmlParser\Contracts\Selector\SelectorInterface;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
 use PHPHtmlParser\Finder;
-use PHPHtmlParser\Selector\Parser as SelectorParser;
 use PHPHtmlParser\Selector\Selector;
 use stringEncode\Encode;
 
@@ -311,15 +311,14 @@ abstract class AbstractNode
     }
 
     /**
-     * Replaces the tag for this node
+     * Replaces the tag for this node.
      *
      * @param string|Tag $tag
-     * @return AbstractNode
      * @chainable
      */
     public function setTag($tag): AbstractNode
     {
-        if (is_string($tag)) {
+        if (\is_string($tag)) {
             $tag = new Tag($tag);
         }
 
@@ -440,9 +439,12 @@ abstract class AbstractNode
      *
      * @return mixed|Collection|null
      */
-    public function find(string $selector, ?int $nth = null, bool $depthFirst = false)
+    public function find(string $selectorString, ?int $nth = null, bool $depthFirst = false, ?SelectorInterface $selector = null)
     {
-        $selector = new Selector($selector, new SelectorParser());
+        if (\is_null($selector)) {
+            $selector = new Selector($selectorString);
+        }
+
         $selector->setDepthFirstFind($depthFirst);
         $nodes = $selector->find($this);
 

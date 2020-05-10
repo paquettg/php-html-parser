@@ -13,29 +13,29 @@ class SelectorTest extends TestCase
     public function testParseSelectorStringId()
     {
         $selector = new Selector('#all', new Parser());
-        $selectors = $selector->getSelectors();
-        $this->assertEquals('id', $selectors[0][0]['key']);
+        $selectors = $selector->getParsedSelectorCollectionDTO();
+        $this->assertEquals('id', $selectors->getParsedSelectorDTO()[0]->getRules()[0]->getKey());
     }
 
     public function testParseSelectorStringClass()
     {
         $selector = new Selector('div.post', new Parser());
-        $selectors = $selector->getSelectors();
-        $this->assertEquals('class', $selectors[0][0]['key']);
+        $selectors = $selector->getParsedSelectorCollectionDTO();
+        $this->assertEquals('class', $selectors->getParsedSelectorDTO()[0]->getRules()[0]->getKey());
     }
 
     public function testParseSelectorStringAttribute()
     {
         $selector = new Selector('div[visible=yes]', new Parser());
-        $selectors = $selector->getSelectors();
-        $this->assertEquals('yes', $selectors[0][0]['value']);
+        $selectors = $selector->getParsedSelectorCollectionDTO();
+        $this->assertEquals('yes', $selectors->getParsedSelectorDTO()[0]->getRules()[0]->getValue());
     }
 
     public function testParseSelectorStringNoKey()
     {
         $selector = new Selector('div[!visible]', new Parser());
-        $selectors = $selector->getSelectors();
-        $this->assertTrue($selectors[0][0]['noKey']);
+        $selectors = $selector->getParsedSelectorCollectionDTO();
+        $this->assertTrue($selectors->getParsedSelectorDTO()[0]->getRules()[0]->isNoKey());
     }
 
     public function testFind()

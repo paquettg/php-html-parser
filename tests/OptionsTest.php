@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\UnknownOptionException;
-use PHPUnit\Framework\TestCase;
 use PHPHtmlParser\Options;
+use PHPUnit\Framework\TestCase;
 
 class OptionsTest extends TestCase
 {
@@ -18,7 +18,7 @@ class OptionsTest extends TestCase
 
     public function testSettingOption()
     {
-        $options = new Options;
+        $options = new Options();
         $options->setOptions([
             'strict' => true,
         ]);
@@ -42,7 +42,7 @@ class OptionsTest extends TestCase
         $options->setOptions([
             'strict' => false,
         ])->setOptions([
-            'strict' => true,
+            'strict'             => true,
             'whitespaceTextNode' => false,
         ]);
 
@@ -56,7 +56,8 @@ class OptionsTest extends TestCase
         $this->assertEquals(null, $options->get('doesnotexist'));
     }
 
-    public function testSetters() {
+    public function testSetters()
+    {
         $options = new Options();
 
         $options->setOptions([
@@ -79,8 +80,8 @@ class OptionsTest extends TestCase
         $options->setStrict(true);
         $this->assertTrue($options->get('strict'));
 
-        $options->setEnforceEncoding("utf8");
-        $this->assertEquals("utf8", $options->get('enforceEncoding'));
+        $options->setEnforceEncoding('utf8');
+        $this->assertEquals('utf8', $options->get('enforceEncoding'));
 
         $options->setCleanupInput(true);
         $this->assertTrue($options->get('cleanupInput'));
@@ -142,8 +143,9 @@ class OptionsTest extends TestCase
         $this->assertFalse($options->get('htmlSpecialCharsDecode'));
     }
 
-    public function testUnknownOptionDom() {
-        $dom = new Dom;
+    public function testUnknownOptionDom()
+    {
+        $dom = new Dom();
         $dom->setOptions([
             'unknown_option' => true,
         ]);

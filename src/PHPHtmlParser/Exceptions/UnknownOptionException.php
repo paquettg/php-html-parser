@@ -1,12 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace PHPHtmlParser\Exceptions;
 
 use Exception;
 
 /**
- * Class UnknownOptionException
- *
- * @package PHPHtmlParser\Exceptions
+ * Class UnknownOptionException.
  */
 final class UnknownOptionException extends Exception
 {

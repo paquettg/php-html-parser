@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Selector;
 
+use PHPHtmlParser\Contracts\Selector\ParserInterface;
+use PHPHtmlParser\DTO\Selector\ParsedSelectorCollectionDTO;
+use PHPHtmlParser\DTO\Selector\ParsedSelectorDTO;
+use PHPHtmlParser\DTO\Selector\RuleDTO;
+
 /**
- * This is the parser for the selector.
+ * This is the default parser for the selector.
  */
 class Parser implements ParserInterface
 {
@@ -14,20 +19,19 @@ class Parser implements ParserInterface
      *
      * @var string
      */
-    protected $pattern = "/([\w\-:\*>]*)(?:\#([\w\-]+)|\.([\w\.\-]+))?(?:\[@?(!?[\w\-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
+    private $pattern = "/([\w\-:\*>]*)(?:\#([\w\-]+)|\.([\w\.\-]+))?(?:\[@?(!?[\w\-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
 
     /**
      * Parses the selector string.
      */
-    public function parseSelectorString(string $selector): array
+    public function parseSelectorString(string $selector): ParsedSelectorCollectionDTO
     {
         $selectors = [];
-
         $matches = [];
+        $rules = [];
         \preg_match_all($this->pattern, \trim($selector) . ' ', $matches, PREG_SET_ORDER);
 
         // skip tbody
-        $result = [];
         foreach ($matches as $match) {
             // default values
             $tag = \strtolower(\trim($match[1]));
@@ -88,25 +92,25 @@ class Parser implements ParserInterface
                 $noKey = true;
             }
 
-            $result[] = [
+            $rules[] = new RuleDTO([
                 'tag'       => $tag,
                 'key'       => $key,
                 'value'     => $value,
                 'operator'  => $operator,
                 'noKey'     => $noKey,
                 'alterNext' => $alterNext,
-            ];
+            ]);
             if (isset($match[7]) && \is_string($match[7]) && \trim($match[7]) == ',') {
-                $selectors[] = $result;
-                $result = [];
+                $selectors[] = new ParsedSelectorDTO($rules);
+                $rules = [];
             }
         }
 
         // save last results
-        if (\count($result) > 0) {
-            $selectors[] = $result;
+        if (\count($rules) > 0) {
+            $selectors[] = new ParsedSelectorDTO($rules);
         }
 
-        return $selectors;
+        return new ParsedSelectorCollectionDTO($selectors);
     }
 }
