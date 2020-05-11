@@ -314,8 +314,8 @@ class Seeker implements SeekerInterface
                 }
 
                 return \preg_match('/' . $pattern . '/i', $value) == 1;
+            default:
+                return false;
         }
-
-        return false;
     }
 }

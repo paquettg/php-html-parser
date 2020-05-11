@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added support for PSR7 HTTP clients and requests for URL calls.
 - Added PHAN support and fixed all issues from PHAN.
+- Added support for html5 charset detection.
 
 ### Changed
 - Fixed issue with \ causing an infite loop.
 - CDATA should not be altered when cleanupInput is false.
 - Added tag attribute DTO.
 - Cleaned up the selector logic.
+- Fixed issue with greedy regex for charset detection.
 
 ### Removed
 - Removed curl interface and curl implementation.

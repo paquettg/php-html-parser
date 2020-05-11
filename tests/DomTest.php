@@ -196,6 +196,13 @@ class DomTest extends TestCase
         $this->assertEquals('VonBurgermeister', $dom->find('.post-row div .post-user font', 0)->text);
     }
 
+    public function testLoadFromFileNotFound()
+    {
+        $dom = new Dom();
+        $this->expectException(\PHPHtmlParser\Exceptions\LogicalException::class);
+        $dom->loadFromFile('tests/data/files/unkowne.html');
+    }
+
     public function testLoadUtf8()
     {
         $dom = new Dom();
@@ -531,6 +538,60 @@ class DomTest extends TestCase
         $this->assertEquals(1, \count($items));
     }
 
+    public function testNotSquareSelector()
+    {
+        $dom = new Dom();
+        $dom->load('<input name="foo" type="text" baz="fig">');
+
+        $items = $dom->find('input[type!=foo]');
+        $this->assertEquals(1, \count($items));
+    }
+
+    public function testStartSquareSelector()
+    {
+        $dom = new Dom();
+        $dom->load('<input name="foo" type="text" baz="fig">');
+
+        $items = $dom->find('input[name^=f]');
+        $this->assertEquals(1, \count($items));
+    }
+
+    public function testEndSquareSelector()
+    {
+        $dom = new Dom();
+        $dom->load('<input name="foo" type="text" baz="fig">');
+
+        $items = $dom->find('input[baz$=g]');
+        $this->assertEquals(1, \count($items));
+    }
+
+    public function testStarSquareSelector()
+    {
+        $dom = new Dom();
+        $dom->load('<input name="foo" type="text" baz="fig">');
+
+        $items = $dom->find('input[baz*=*]');
+        $this->assertEquals(1, \count($items));
+    }
+
+    public function testStarFullRegexSquareSelector()
+    {
+        $dom = new Dom();
+        $dom->load('<input name="foo" type="text" baz="fig">');
+
+        $items = $dom->find('input[baz*=/\w+/]');
+        $this->assertEquals(1, \count($items));
+    }
+
+    public function testFailedSquareSelector()
+    {
+        $dom = new Dom();
+        $dom->load('<input name="foo" type="text" baz="fig">');
+
+        $items = $dom->find('input[baz%=g]');
+        $this->assertEquals(1, \count($items));
+    }
+
     public function testLoadGetAttributeWithBackslash()
     {
         $dom = new Dom();
@@ -546,5 +607,15 @@ class DomTest extends TestCase
         $dom->loadFromFile('tests/data/files/51children.html');
         $children = $dom->find('#red-line-g *');
         $this->assertEquals(25, \count($children));
+    }
+
+    public function testHtml5PageLoad()
+    {
+        $dom = new Dom();
+        $dom->loadFromFile('tests/data/files/html5.html');
+
+        /** @var Dom\AbstractNode $meta */
+        $div = $dom->find('div.d-inline-block', 0);
+        $this->assertEquals('max-width: 29px', $div->getAttribute('style'));
     }
 }

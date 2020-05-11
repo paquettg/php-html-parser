@@ -39,42 +39,42 @@ class Dom
      *
      * @var string
      */
-    protected $defaultCharset = 'UTF-8';
+    private $defaultCharset = 'UTF-8';
 
     /**
      * The raw version of the document string.
      *
      * @var string
      */
-    protected $raw;
+    private $raw;
 
     /**
      * The document string.
      *
      * @var Content
      */
-    protected $content;
+    private $content;
 
     /**
      * The original file size of the document.
      *
      * @var int
      */
-    protected $rawSize;
+    private $rawSize;
 
     /**
      * The size of the document after it is cleaned.
      *
      * @var int
      */
-    protected $size;
+    private $size;
 
     /**
      * A global options array to be used by all load calls.
      *
      * @var array
      */
-    protected $globalOptions = [];
+    private $globalOptions = [];
 
     /**
      * A persistent option object to be used for all options in the
@@ -82,14 +82,14 @@ class Dom
      *
      * @var Options
      */
-    protected $options;
+    private $options;
 
     /**
      * A list of tags which will always be self closing.
      *
      * @var array
      */
-    protected $selfClosing = [
+    private $selfClosing = [
         'area',
         'base',
         'basefont',
@@ -114,7 +114,7 @@ class Dom
      *
      * @var array
      */
-    protected $noSlash = [];
+    private $noSlash = [];
 
     /**
      * Returns the inner html of the root node.
@@ -173,7 +173,7 @@ class Dom
      */
     public function loadFromFile(string $file, array $options = []): Dom
     {
-        $content = \file_get_contents($file);
+        $content = @\file_get_contents($file);
         if ($content === false) {
             throw new LogicalException('file_get_contents failed and returned false when trying to read "' . $file . '".');
         }
@@ -496,7 +496,7 @@ class Dom
      *
      * @throws NotLoadedException
      */
-    protected function isLoaded(): void
+    private function isLoaded(): void
     {
         if (\is_null($this->content)) {
             throw new NotLoadedException('Content is not loaded!');
@@ -506,7 +506,7 @@ class Dom
     /**
      * Cleans the html of any none-html information.
      */
-    protected function clean(string $str): string
+    private function clean(string $str): string
     {
         if ($this->options->get('cleanupInput') != true) {
             // skip entire cleanup step
@@ -610,7 +610,7 @@ class Dom
      * @throws StrictException
      * @throws LogicalException
      */
-    protected function parse(): void
+    private function parse(): void
     {
         // add the root node
         $this->root = new HtmlNode('root');
@@ -679,7 +679,7 @@ class Dom
      *
      * @throws StrictException
      */
-    protected function parseTag(): array
+    private function parseTag(): array
     {
         $return = [
             'status'  => false,
@@ -823,7 +823,7 @@ class Dom
      *
      * @throws ChildNotFoundException
      */
-    protected function detectCharset(): bool
+    private function detectCharset(): bool
     {
         // set the default
         $encode = new Encode();
@@ -841,11 +841,15 @@ class Dom
 
         /** @var AbstractNode $meta */
         $meta = $this->root->find('meta[http-equiv=Content-Type]', 0);
-        if (\is_null($meta)) {
-            // could not find meta tag
-            $this->root->propagateEncoding($encode);
+        if ($meta == null) {
+            if (!$this->detectHTML5Charset($encode)) {
+                // could not find meta tag
+                $this->root->propagateEncoding($encode);
 
-            return false;
+                return false;
+            }
+
+            return true;
         }
         $content = $meta->getAttribute('content');
         if (\is_null($content)) {
@@ -855,7 +859,7 @@ class Dom
             return false;
         }
         $matches = [];
-        if (\preg_match('/charset=(.+)/', $content, $matches)) {
+        if (\preg_match('/charset=([^;]+)/', $content, $matches)) {
             $encode->from(\trim($matches[1]));
             $this->root->propagateEncoding($encode);
 
@@ -866,5 +870,19 @@ class Dom
         $this->root->propagateEncoding($encode);
 
         return false;
+    }
+
+    private function detectHTML5Charset(Encode $encode): bool
+    {
+        /** @var AbstractNode|null $meta */
+        $meta = $this->root->find('meta[charset]', 0);
+        if ($meta == null) {
+            return false;
+        }
+
+        $encode->from(\trim($meta->getAttribute('charset')));
+        $this->root->propagateEncoding($encode);
+
+        return true;
     }
 }
