@@ -8,9 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added support for PSR7 HTTP clients and requests for URL calls.
-- Added PHAN support and fixed all issues from PHAN.
-- Added support for html5 charset detection.
+- Support for PSR7 HTTP clients and requests for URL calls has been added.
+- PHAN support and fixed all issues from PHAN has been added.
+- PHP-CS-Fixer added.
+- Support for html5 charset detection.
+- Added the ability to match both parent and children.
 
 ### Changed
 - Fixed issue with \ causing an infite loop.
@@ -20,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issue with greedy regex for charset detection.
 
 ### Removed
-- Removed curl interface and curl implementation.
+- Curl interface and curl implementation has been removed.
 
 ## 2.2.0
 

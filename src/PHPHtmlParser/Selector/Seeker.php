@@ -17,6 +17,7 @@ class Seeker implements SeekerInterface
      * Attempts to find all children that match the rule
      * given.
      *
+     * @var InnerNode[] $nodes
      * @throws ChildNotFoundException
      */
     public function seek(array $nodes, RuleDTO $rule, array $options, bool $depthFirst): array
@@ -24,7 +25,6 @@ class Seeker implements SeekerInterface
         // XPath index
         if ($rule->getTag() !== null && \is_numeric($rule->getKey())) {
             $count = 0;
-            /** @var AbstractNode $node */
             foreach ($nodes as $node) {
                 if ($rule->getTag() == '*'
                     || $rule->getTag() == $node->getTag()
@@ -44,7 +44,6 @@ class Seeker implements SeekerInterface
         $options = $this->flattenOptions($options);
 
         $return = [];
-        /** @var InnerNode $node */
         foreach ($nodes as $node) {
             // check if we are a leaf
             if ($node instanceof LeafNode || !$node->hasChildren()
@@ -77,24 +76,23 @@ class Seeker implements SeekerInterface
                 if ($pass) {
                     // it passed all checks
                     $return[] = $child;
-                } else {
-                    // this child failed to be matched
-                    if ($child instanceof InnerNode && $child->hasChildren()
-                    ) {
-                        if ($depthFirst) {
-                            if (!isset($options['checkGrandChildren'])
-                                || $options['checkGrandChildren']
-                            ) {
-                                // we have a child that failed but are not leaves.
-                                $matches = $this->seek([$child], $rule, $options, $depthFirst);
-                                foreach ($matches as $match) {
-                                    $return[] = $match;
-                                }
+                }
+                // this child failed to be matched
+                if ($child instanceof InnerNode && $child->hasChildren()
+                ) {
+                    if ($depthFirst) {
+                        if (!isset($options['checkGrandChildren'])
+                            || $options['checkGrandChildren']
+                        ) {
+                            // we have a child that failed but are not leaves.
+                            $matches = $this->seek([$child], $rule, $options, $depthFirst);
+                            foreach ($matches as $match) {
+                                $return[] = $match;
                             }
-                        } else {
-                            // we still want to check its children
-                            $children[] = $child;
                         }
+                    } else {
+                        // we still want to check its children
+                        $children[] = $child;
                     }
                 }
 

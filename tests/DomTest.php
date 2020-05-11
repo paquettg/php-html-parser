@@ -223,7 +223,7 @@ class DomTest extends TestCase
     {
         $dom = new Dom();
         $dom->loadFromFile('tests/data/files/big.html');
-        $this->assertEquals(10, \count($dom->find('.content-border')));
+        $this->assertEquals(20, \count($dom->find('.content-border')));
     }
 
     public function testLoadFileBigTwice()
@@ -617,5 +617,17 @@ class DomTest extends TestCase
         /** @var Dom\AbstractNode $meta */
         $div = $dom->find('div.d-inline-block', 0);
         $this->assertEquals('max-width: 29px', $div->getAttribute('style'));
+    }
+
+    public function testFindAttributeInBothParentAndChild()
+    {
+        $dom = new Dom();
+        $dom->load('<parent attribute="something">
+    <child attribute="anything"></child>
+</parent>');
+
+        /** @var Dom\AbstractNode $meta */
+        $nodes = $dom->find('[attribute]');
+        $this->assertCount(2, $nodes);
     }
 }
