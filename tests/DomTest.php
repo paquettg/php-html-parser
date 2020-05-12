@@ -617,4 +617,16 @@ class DomTest extends TestCase
         $nodes = $dom->find('[attribute]');
         $this->assertCount(2, $nodes);
     }
+
+    public function testLessThanCharacterInJavascript()
+    {
+        $results = (new Dom())->load('<html><head><script type="text/javascript">
+            console.log(1 < 3);
+        </script></head><body><div id="panel"></div></body></html>',
+            [
+                'cleanupInput' => false,
+                'removeScripts' => false
+            ])->find('body');
+        $this->assertCount(1, $results);
+    }
 }
