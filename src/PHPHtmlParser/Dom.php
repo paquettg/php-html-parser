@@ -749,7 +749,7 @@ class Dom
                         do {
                             $moreString = $this->content->copyUntilUnless('"', '=>');
                             $string .= $moreString;
-                        } while (!empty($moreString));
+                        } while (strlen($moreString) > 0 && $this->content->getPosition() < $this->size);
                         $attr['value'] = $string;
                         $this->content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string);
@@ -760,7 +760,7 @@ class Dom
                         do {
                             $moreString = $this->content->copyUntilUnless("'", '=>');
                             $string .= $moreString;
-                        } while (!empty($moreString));
+                        } while (strlen($moreString) > 0 && $this->content->getPosition() < $this->size);
                         $attr['value'] = $string;
                         $this->content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string, false);

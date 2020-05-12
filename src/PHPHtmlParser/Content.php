@@ -164,7 +164,7 @@ class Content
      *
      * @return string
      */
-    public function copyUntilUnless(string $string, string $unless)
+    public function copyUntilUnless(string $string, string $unless): string
     {
         $lastPos = $this->pos;
         $this->fastForward(1);

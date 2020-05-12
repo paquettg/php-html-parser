@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added tag attribute DTO.
 - Cleaned up the selector logic.
 - Fixed issue with greedy regex for charset detection.
+- Fixed bug causing infinite loops in some cases.
 
 ### Removed
 - Curl interface and curl implementation has been removed.
