@@ -21,8 +21,6 @@ interface SelectorInterface
      */
     public function getParsedSelectorCollectionDTO(): ParsedSelectorCollectionDTO;
 
-    public function setDepthFirstFind(bool $status): void;
-
     /**
      * Attempts to find the selectors starting from the given
      * node object.

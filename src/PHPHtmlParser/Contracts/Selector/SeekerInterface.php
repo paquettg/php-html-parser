@@ -13,5 +13,5 @@ interface SeekerInterface
      *
      * @throws ChildNotFoundException
      */
-    public function seek(array $nodes, RuleDTO $rule, array $options, bool $depthFirst): array;
+    public function seek(array $nodes, RuleDTO $rule, array $options): array;
 }

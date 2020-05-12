@@ -70,7 +70,6 @@ class OptionsTest extends TestCase
             'preserveLineBreaks'     => false,
             'removeDoubleSpace'      => false,
             'removeSmartyScripts'    => false,
-            'depthFirstSearch'       => false,
             'htmlSpecialCharsDecode' => false,
         ]);
 
@@ -100,9 +99,6 @@ class OptionsTest extends TestCase
 
         $options->setRemoveSmartyScripts(true);
         $this->assertTrue($options->get('removeSmartyScripts'));
-
-        $options->setDepthFirstSearch(true);
-        $this->assertTrue($options->get('depthFirstSearch'));
 
         $options->setHtmlSpecialCharsDecode(true);
         $this->assertTrue($options->get('htmlSpecialCharsDecode'));
@@ -135,9 +131,6 @@ class OptionsTest extends TestCase
 
         $options->setRemoveSmartyScripts(false);
         $this->assertFalse($options->get('removeSmartyScripts'));
-
-        $options->setDepthFirstSearch(false);
-        $this->assertFalse($options->get('depthFirstSearch'));
 
         $options->setHtmlSpecialCharsDecode(false);
         $this->assertFalse($options->get('htmlSpecialCharsDecode'));

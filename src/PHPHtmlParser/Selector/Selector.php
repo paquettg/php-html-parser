@@ -26,11 +26,6 @@ class Selector implements SelectorInterface
     private $ParsedSelectorCollectionDTO;
 
     /**
-     * @var bool
-     */
-    private $depthFirst = false;
-
-    /**
      * @var SeekerInterface
      */
     private $seeker;
@@ -61,11 +56,6 @@ class Selector implements SelectorInterface
         return $this->ParsedSelectorCollectionDTO;
     }
 
-    public function setDepthFirstFind(bool $status): void
-    {
-        $this->depthFirst = $status;
-    }
-
     /**
      * Attempts to find the selectors starting from the given
      * node object.
@@ -87,7 +77,7 @@ class Selector implements SelectorInterface
                     $options[] = $this->alterNext($rule);
                     continue;
                 }
-                $nodes = $this->seeker->seek($nodes, $rule, $options, $this->depthFirst);
+                $nodes = $this->seeker->seek($nodes, $rule, $options);
                 // clear the options
                 $options = [];
             }

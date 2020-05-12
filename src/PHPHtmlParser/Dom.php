@@ -259,12 +259,7 @@ class Dom
     {
         $this->isLoaded();
 
-        $depthFirstSearch = $this->options->get('depthFirstSearch');
-        if (\is_bool($depthFirstSearch)) {
-            $result = $this->root->find($selector, $nth, $depthFirstSearch);
-        } else {
-            $result = $this->root->find($selector, $nth);
-        }
+        $result = $this->root->find($selector, $nth);
 
         return $result;
     }

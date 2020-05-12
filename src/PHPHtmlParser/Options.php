@@ -18,7 +18,6 @@ use PHPHtmlParser\Exceptions\UnknownOptionException;
  * @property bool        $preserveLineBreaks
  * @property bool        $removeDoubleSpace
  * @property bool        $removeSmartyScripts
- * @property bool        $depthFirstSearch
  * @property bool        $htmlSpecialCharsDecode
  */
 class Options
@@ -38,7 +37,6 @@ class Options
         'preserveLineBreaks'     => false,
         'removeDoubleSpace'      => true,
         'removeSmartyScripts'    => true,
-        'depthFirstSearch'       => false,
         'htmlSpecialCharsDecode' => false,
     ];
 
@@ -187,21 +185,6 @@ class Options
     public function setRemoveSmartyScripts(bool $value): self
     {
         $this->options['removeSmartyScripts'] = $value;
-
-        return $this;
-    }
-
-    /**
-     * By default this is set to false for legacy support. Setting this to true will change the behavior of find
-     * to order elements by depth first. This will properly preserve the order of elements as they where in the HTML.
-     *
-     * @return Options
-     *
-     * @deprecated This option will be removed in version 3.0.0 with the new behavior being as if it was set to true.
-     */
-    public function setDepthFirstSearch(bool $value): self
-    {
-        $this->options['depthFirstSearch'] = $value;
 
         return $this;
     }

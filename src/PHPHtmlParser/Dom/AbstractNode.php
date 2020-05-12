@@ -439,13 +439,12 @@ abstract class AbstractNode
      *
      * @return mixed|Collection|null
      */
-    public function find(string $selectorString, ?int $nth = null, bool $depthFirst = false, ?SelectorInterface $selector = null)
+    public function find(string $selectorString, ?int $nth = null, ?SelectorInterface $selector = null)
     {
         if (\is_null($selector)) {
             $selector = new Selector($selectorString);
         }
 
-        $selector->setDepthFirstFind($depthFirst);
         $nodes = $selector->find($this);
 
         if ($nth !== null) {

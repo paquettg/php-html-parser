@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Curl interface and curl implementation has been removed.
+- Removed support for the depth first search option.
 
 ## 2.2.0
 

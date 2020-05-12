@@ -20,7 +20,7 @@ class Seeker implements SeekerInterface
      * @var InnerNode[] $nodes
      * @throws ChildNotFoundException
      */
-    public function seek(array $nodes, RuleDTO $rule, array $options, bool $depthFirst): array
+    public function seek(array $nodes, RuleDTO $rule, array $options): array
     {
         // XPath index
         if ($rule->getTag() !== null && \is_numeric($rule->getKey())) {
@@ -80,19 +80,14 @@ class Seeker implements SeekerInterface
                 // this child failed to be matched
                 if ($child instanceof InnerNode && $child->hasChildren()
                 ) {
-                    if ($depthFirst) {
-                        if (!isset($options['checkGrandChildren'])
-                            || $options['checkGrandChildren']
-                        ) {
-                            // we have a child that failed but are not leaves.
-                            $matches = $this->seek([$child], $rule, $options, $depthFirst);
-                            foreach ($matches as $match) {
-                                $return[] = $match;
-                            }
+                    if (!isset($options['checkGrandChildren'])
+                        || $options['checkGrandChildren']
+                    ) {
+                        // we have a child that failed but are not leaves.
+                        $matches = $this->seek([$child], $rule, $options);
+                        foreach ($matches as $match) {
+                            $return[] = $match;
                         }
-                    } else {
-                        // we still want to check its children
-                        $children[] = $child;
                     }
                 }
 
@@ -104,7 +99,7 @@ class Seeker implements SeekerInterface
                 && \count($children) > 0
             ) {
                 // we have children that failed but are not leaves.
-                $matches = $this->seek($children, $rule, $options, $depthFirst);
+                $matches = $this->seek($children, $rule, $options);
                 foreach ($matches as $match) {
                     $return[] = $match;
                 }
