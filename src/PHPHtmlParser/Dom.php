@@ -150,7 +150,6 @@ class Dom
      */
     public function load(string $str, array $options = []): Dom
     {
-        AbstractNode::resetCount();
         // check if it's a file
         if (\strpos($str, "\n") === false && \is_file($str)) {
             return $this->loadFromFile($str, $options);
@@ -262,22 +261,6 @@ class Dom
         $result = $this->root->find($selector, $nth);
 
         return $result;
-    }
-
-    /**
-     * Find element by Id on the root node.
-     *
-     * @throws ChildNotFoundException
-     * @throws NotLoadedException
-     * @throws ParentNotFoundException
-     *
-     * @return bool|AbstractNode
-     */
-    public function findById(int $id)
-    {
-        $this->isLoaded();
-
-        return $this->root->findById($id);
     }
 
     /**

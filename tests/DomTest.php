@@ -394,33 +394,6 @@ class DomTest extends TestCase
         $this->assertTrue($dom->hasChildren());
     }
 
-    public function testFindByIdVar1()
-    {
-        $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
-        /** @var Dom\AbstractNode $result */
-        $result = $dom->findById(4);
-        $this->assertEquals(4, $result->id());
-    }
-
-    public function testFindByIdVar2()
-    {
-        $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
-        /** @var Dom\AbstractNode $result */
-        $result = $dom->findById(5);
-        $this->assertEquals(5, $result->id());
-    }
-
-    public function testFindByIdNotFountEleement()
-    {
-        $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
-        /** @var Dom\AbstractNode $result */
-        $result = $dom->findById(8);
-        $this->assertFalse($result);
-    }
-
     public function testWhitespaceInText()
     {
         $dom = new Dom();
@@ -628,5 +601,22 @@ class DomTest extends TestCase
                 'removeScripts' => false
             ])->find('body');
         $this->assertCount(1, $results);
+    }
+
+    public function testUniqueIdForAllObjects()
+    {
+        // Create a dom which will be used as a parent/container for a paragraph
+        $dom1 = new \PHPHtmlParser\Dom;
+        $dom1->load('<div>A container div</div>'); // Resets the counter (doesn't matter here as the counter was 0 even without resetting)
+        $div = $dom1->firstChild();
+
+        // Create a paragraph outside of the first dom
+        $dom2 = new \PHPHtmlParser\Dom;
+        $dom2->load('<p>Our new paragraph.</p>'); // Resets the counter
+        $paragraph = $dom2->firstChild();
+
+        $div->addChild($paragraph);
+
+        $this->assertEquals('A container div<p>Our new paragraph.</p>', $div->innerhtml);
     }
 }

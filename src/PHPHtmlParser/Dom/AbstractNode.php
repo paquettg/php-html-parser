@@ -141,16 +141,6 @@ abstract class AbstractNode
     }
 
     /**
-     * Reset node counter.
-     *
-     * @return void
-     */
-    public static function resetCount()
-    {
-        self::$count = 0;
-    }
-
-    /**
      * Returns the id of this object.
      */
     public function id(): int
