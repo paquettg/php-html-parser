@@ -619,4 +619,23 @@ class DomTest extends TestCase
 
         $this->assertEquals('A container div<p>Our new paragraph.</p>', $div->innerhtml);
     }
+
+    public function testFindDescendantsOfMatch()
+    {
+        $dom = new Dom();
+        $dom->load('<p>
+        <b>
+            test
+            <b>testing</b>
+            <b>This is a test</b>
+            <i>italic</i>
+            <b>password123</b>
+        </b>
+        <i><b>another</b></i>
+    </p>');
+
+        /** @var Dom\AbstractNode $meta */
+        $nodes = $dom->find('b');
+        $this->assertCount(5, $nodes);
+    }
 }
