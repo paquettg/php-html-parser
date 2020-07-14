@@ -25,16 +25,16 @@ class StaticDomTest extends TestCase
         $this->assertTrue($status);
     }
 
-    public function testLoad()
+    public function testloadStr()
     {
-        $dom = Dom::load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom = Dom::loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $div = $dom->find('div', 0);
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $div->outerHtml);
     }
 
     public function testLoadWithFile()
     {
-        $dom = Dom::load('tests/data/files/small.html');
+        $dom = Dom::loadFromFile('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
@@ -47,14 +47,14 @@ class StaticDomTest extends TestCase
     /**
      * @expectedException \PHPHtmlParser\Exceptions\NotLoadedException
      */
-    public function testFindNoLoad()
+    public function testFindNoloadStr()
     {
         Dom::find('.post-user font', 0);
     }
 
     public function testFindI()
     {
-        Dom::load('tests/data/files/big.html');
+        Dom::loadFromFile('tests/data/files/big.html');
         $this->assertEquals('В кустах блестит металл<br /> И искрится ток<br /> Человечеству конец', Dom::find('i')[1]->innerHtml);
     }
 

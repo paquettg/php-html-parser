@@ -144,6 +144,6 @@ class OptionsTest extends TestCase
         ]);
 
         $this->expectException(UnknownOptionException::class);
-        $dom->load('<div></div>');
+        $dom->loadStr('<div></div>');
     }
 }

@@ -76,7 +76,7 @@ class CleanupTest extends TestCase
     public function testSmartyScripts()
     {
         $dom = new Dom();
-        $dom->load('
+        $dom->loadStr('
         aa={123}
         ');
         $this->assertEquals(' aa= ', $dom->innerHtml);
@@ -88,7 +88,7 @@ class CleanupTest extends TestCase
         $dom->setOptions([
             'removeSmartyScripts' => false,
         ]);
-        $dom->load('
+        $dom->loadStr('
         aa={123}
         ');
         $this->assertEquals(' aa={123} ', $dom->innerHtml);

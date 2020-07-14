@@ -13,7 +13,7 @@ class WhitespaceTextNodeTest extends TestCase
         $dom->setOptions([
             'whitespaceTextNode' => false,
         ]);
-        $dom->load('<div><p id="hey">Hey you</p> <p id="ya">Ya you!</p></div>');
+        $dom->loadStr('<div><p id="hey">Hey you</p> <p id="ya">Ya you!</p></div>');
         $this->assertEquals('Ya you!', $dom->getElementById('hey')->nextSibling()->text);
     }
 
@@ -23,7 +23,7 @@ class WhitespaceTextNodeTest extends TestCase
         $dom->setOptions([
             'whitespaceTextNode' => false,
         ]);
-        $dom->load('<div><p id="hey">Hey you</p> <p id="ya">Ya you!</p></div>', [
+        $dom->loadStr('<div><p id="hey">Hey you</p> <p id="ya">Ya you!</p></div>', [
             'whitespaceTextNode' => true,
         ]);
         $this->assertEquals(' ', $dom->getElementById('hey')->nextSibling()->text);

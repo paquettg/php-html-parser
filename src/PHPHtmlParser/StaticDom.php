@@ -57,23 +57,6 @@ final class StaticDom
     }
 
     /**
-     * Creates a new dom object and calls load() on the
-     * new object.
-     *
-     * @throws ChildNotFoundException
-     * @throws CircularException
-     * @throws CurlException
-     * @throws StrictException
-     */
-    public static function load(string $str): Dom
-    {
-        $dom = new Dom();
-        self::$dom = $dom;
-
-        return $dom->load($str);
-    }
-
-    /**
      * Creates a new dom object and calls loadFromFile() on the
      * new object.
      *
@@ -112,6 +95,14 @@ final class StaticDom
         }
 
         return $dom->loadFromUrl($url, $options, $client, $request);
+    }
+
+    public static function loadStr(string $str, array $options = []): Dom
+    {
+        $dom = new Dom();
+        self::$dom = $dom;
+
+        return $dom->loadStr($str, $options);
     }
 
     /**

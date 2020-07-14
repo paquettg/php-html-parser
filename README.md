@@ -31,7 +31,7 @@ require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 
 $dom = new Dom;
-$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
 $a = $dom->find('a')[0];
 echo $a->text; // "click here"
 ```
@@ -86,7 +86,7 @@ $dom->loadFromUrl('http://google.com');
 $html = $dom->outerHtml;
 
 // or
-$dom->load('http://google.com');
+$dom->loadFromUrl('http://google.com');
 $html = $dom->outerHtml; // same result as the first example
 ```
 
@@ -137,11 +137,11 @@ $dom->setOptions([
 	'strict' => true, // Set a global option to enable strict html parsing.
 ]);
 
-$dom->load('http://google.com', [
+$dom->loadFromUrl('http://google.com', [
 	'whitespaceTextNode' => false, // Only applies to this load.
 ]);
 
-$dom->load('http://gmail.com'); // will not have whitespaceTextNode set to false.
+$dom->loadFromUrl('http://gmail.com'); // will not have whitespaceTextNode set to false.
 ```
 
 At the moment we support 8 options.

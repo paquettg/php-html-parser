@@ -15,7 +15,6 @@ use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\CurlException;
 use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
-use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 use Psr\Http\Client\ClientInterface;
@@ -137,29 +136,6 @@ class Dom
     public function __get($name)
     {
         return $this->root->$name;
-    }
-
-    /**
-     * Attempts to load the dom from any resource, string, file, or URL.
-     *
-     * @throws ChildNotFoundException
-     * @throws CircularException
-     * @throws CurlException
-     * @throws StrictException
-     * @throws LogicalException
-     */
-    public function load(string $str, array $options = []): Dom
-    {
-        // check if it's a file
-        if (\strpos($str, "\n") === false && \is_file($str)) {
-            return $this->loadFromFile($str, $options);
-        }
-        // check if it's a url
-        if (\preg_match("/^https?:\/\//i", $str)) {
-            return $this->loadFromUrl($str, $options);
-        }
-
-        return $this->loadStr($str, $options);
     }
 
     /**

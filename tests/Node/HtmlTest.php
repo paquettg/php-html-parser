@@ -500,7 +500,7 @@ class NodeHtmlTest extends TestCase
     public function testReplaceNode()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $id = $dom->find('p')[0]->id();
         $newChild = new HtmlNode('h1');
         $dom->find('p')[0]->getParent()->replaceChild($id, $newChild);
@@ -510,7 +510,7 @@ class NodeHtmlTest extends TestCase
     public function testTextNodeFirstChild()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $p = $dom->find('p');
         foreach ($p as $element) {
             $child = $element->firstChild();

@@ -14,7 +14,7 @@ class StrictTest extends TestCase
         $dom->setOptions([
             'strict' => true,
         ]);
-        $dom->load('<div><p id="hey">Hey you</p> <p id="ya">Ya you!</p></div>');
+        $dom->loadStr('<div><p id="hey">Hey you</p> <p id="ya">Ya you!</p></div>');
         $this->assertEquals(' ', $dom->getElementById('hey')->nextSibling()->text);
     }
 
@@ -26,7 +26,7 @@ class StrictTest extends TestCase
         ]);
         try {
             // should throw an exception
-            $dom->load('<div><p id="hey">Hey you</p><br><p id="ya">Ya you!</p></div>');
+            $dom->loadStr('<div><p id="hey">Hey you</p><br><p id="ya">Ya you!</p></div>');
             // we should not get here
             $this->assertTrue(false);
         } catch (StrictException $e) {
@@ -42,7 +42,7 @@ class StrictTest extends TestCase
         ]);
         try {
             // should throw an exception
-            $dom->load('<div><p id="hey" block>Hey you</p> <p id="ya">Ya you!</p></div>');
+            $dom->loadStr('<div><p id="hey" block>Hey you</p> <p id="ya">Ya you!</p></div>');
             // we should not get here
             $this->assertTrue(false);
         } catch (StrictException $e) {
@@ -56,7 +56,7 @@ class StrictTest extends TestCase
         $dom->setOptions([
             'strict' => true,
         ]);
-        $dom->load('<br />');
+        $dom->loadStr('<br />');
         $this->assertTrue(true);
     }
 }

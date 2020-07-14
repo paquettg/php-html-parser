@@ -20,14 +20,14 @@ class DomTest extends TestCase
         $html = "<script type=\"text/javascript\">/* <![CDATA[ */var et_core_api_spam_recaptcha = '';/* ]]> */</script>";
         $dom = new Dom();
         $dom->setOptions(['cleanupInput' => false]);
-        $dom->load($html);
+        $dom->loadStr($html);
         $this->assertSame($html, $dom->root->outerHtml());
     }
 
-    public function testLoad()
+    public function testloadStr()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $div = $dom->find('div', 0);
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $div->outerHtml);
     }
@@ -44,7 +44,7 @@ class DomTest extends TestCase
     public function testIncorrectAccess()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $div = $dom->find('div', 0);
         $this->assertEquals(null, $div->foo);
     }
@@ -52,7 +52,7 @@ class DomTest extends TestCase
     public function testLoadSelfclosingAttr()
     {
         $dom = new Dom();
-        $dom->load("<div class='all'><br  foo  bar  />baz</div>");
+        $dom->loadStr("<div class='all'><br  foo  bar  />baz</div>");
         $br = $dom->find('br', 0);
         $this->assertEquals('<br foo bar />', $br->outerHtml);
     }
@@ -60,7 +60,7 @@ class DomTest extends TestCase
     public function testLoadSelfclosingAttrToString()
     {
         $dom = new Dom();
-        $dom->load("<div class='all'><br  foo  bar  />baz</div>");
+        $dom->loadStr("<div class='all'><br  foo  bar  />baz</div>");
         $br = $dom->find('br', 0);
         $this->assertEquals('<br foo bar />', (string) $br);
     }
@@ -68,7 +68,7 @@ class DomTest extends TestCase
     public function testLoadEscapeQuotes()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div>');
         $div = $dom->find('div', 0);
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div>', $div->outerHtml);
     }
@@ -76,14 +76,14 @@ class DomTest extends TestCase
     public function testLoadNoOpeningTag()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><font color="red"><strong>PR Manager</strong></font></b><div class="content">content</div></div>');
+        $dom->loadStr('<div class="all"><font color="red"><strong>PR Manager</strong></font></b><div class="content">content</div></div>');
         $this->assertEquals('content', $dom->find('.content', 0)->text);
     }
 
     public function testLoadNoClosingTag()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
         $root = $dom->find('div', 0)->getParent();
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div><br />', $root->outerHtml);
     }
@@ -91,7 +91,7 @@ class DomTest extends TestCase
     public function testLoadAttributeOnSelfClosing()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br class="both" />');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br class="both" />');
         $br = $dom->find('br', 0);
         $this->assertEquals('both', $br->getAttribute('class'));
     }
@@ -99,7 +99,7 @@ class DomTest extends TestCase
     public function testLoadClosingTagOnSelfClosing()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+        $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
         $this->assertEquals('<br /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
@@ -108,7 +108,7 @@ class DomTest extends TestCase
         $dom = new Dom();
         $dom->addNoSlashTag('br');
 
-        $dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+        $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
         $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
@@ -116,7 +116,7 @@ class DomTest extends TestCase
     {
         $dom = new Dom();
         $dom->addSelfClosingTag('mytag');
-        $dom->load('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></mytag></div>');
+        $dom->loadStr('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></mytag></div>');
         $this->assertEquals('<mytag /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
@@ -127,7 +127,7 @@ class DomTest extends TestCase
             'mytag',
             'othertag',
         ]);
-        $dom->load('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a><othertag></div>');
+        $dom->loadStr('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a><othertag></div>');
         $this->assertEquals('<mytag /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a><othertag /></p>', $dom->find('div', 0)->innerHtml);
     }
 
@@ -135,7 +135,7 @@ class DomTest extends TestCase
     {
         $dom = new Dom();
         $dom->removeSelfClosingTag('br');
-        $dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+        $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
         $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></br>', $dom->find('div', 0)->innerHtml);
     }
 
@@ -143,35 +143,35 @@ class DomTest extends TestCase
     {
         $dom = new Dom();
         $dom->clearSelfClosingTags();
-        $dom->load('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
+        $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
         $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></br>', $dom->find('div', 0)->innerHtml);
     }
 
     public function testLoadNoValueAttribute()
     {
         $dom = new Dom();
-        $dom->load('<div class="content"><div class="grid-container" ui-view>Main content here</div></div>');
+        $dom->loadStr('<div class="content"><div class="grid-container" ui-view>Main content here</div></div>');
         $this->assertEquals('<div class="content"><div class="grid-container" ui-view>Main content here</div></div>', $dom->innerHtml);
     }
 
     public function testLoadBackslashAttributeValue()
     {
         $dom = new Dom();
-        $dom->load('<div class="content"><div id="\" class="grid-container" ui-view>Main content here</div></div>');
+        $dom->loadStr('<div class="content"><div id="\" class="grid-container" ui-view>Main content here</div></div>');
         $this->assertEquals('<div class="content"><div id="\" class="grid-container" ui-view>Main content here</div></div>', $dom->innerHtml);
     }
 
     public function testLoadNoValueAttributeBefore()
     {
         $dom = new Dom();
-        $dom->load('<div class="content"><div ui-view class="grid-container">Main content here</div></div>');
+        $dom->loadStr('<div class="content"><div ui-view class="grid-container">Main content here</div></div>');
         $this->assertEquals('<div class="content"><div ui-view class="grid-container">Main content here</div></div>', $dom->innerHtml);
     }
 
     public function testLoadUpperCase()
     {
         $dom = new Dom();
-        $dom->load('<DIV CLASS="ALL"><BR><P>hEY BRO, <A HREF="GOOGLE.COM" DATA-QUOTE="\"">CLICK HERE</A></BR></DIV>');
+        $dom->loadStr('<DIV CLASS="ALL"><BR><P>hEY BRO, <A HREF="GOOGLE.COM" DATA-QUOTE="\"">CLICK HERE</A></BR></DIV>');
         $this->assertEquals('<br /><p>hEY BRO, <a href="GOOGLE.COM" data-quote="\"">CLICK HERE</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
@@ -206,7 +206,7 @@ class DomTest extends TestCase
     public function testLoadUtf8()
     {
         $dom = new Dom();
-        $dom->load('<p>Dzień</p>');
+        $dom->loadStr('<p>Dzień</p>');
         $this->assertEquals('Dzień', $dom->find('p', 0)->text);
     }
 
@@ -268,56 +268,56 @@ class DomTest extends TestCase
     public function testToStringMagic()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', (string) $dom);
     }
 
     public function testGetMagic()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $dom->innerHtml);
     }
 
     public function testFirstChild()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></div>', $dom->firstChild()->outerHtml);
     }
 
     public function testLastChild()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></div><br />');
         $this->assertEquals('<br />', $dom->lastChild()->outerHtml);
     }
 
     public function testGetElementById()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
         $this->assertEquals('<a href="google.com" id="78">click here</a>', $dom->getElementById('78')->outerHtml);
     }
 
     public function testGetElementsByTag()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
         $this->assertEquals('<p>Hey bro, <a href="google.com" id="78">click here</a></p>', $dom->getElementsByTag('p')[0]->outerHtml);
     }
 
     public function testGetElementsByClass()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com" id="78">click here</a></div><br />');
         $this->assertEquals('<p>Hey bro, <a href="google.com" id="78">click here</a></p>', $dom->getElementsByClass('all')[0]->innerHtml);
     }
 
     public function testScriptCleanerScriptTag()
     {
         $dom = new Dom();
-        $dom->load('
+        $dom->loadStr('
         <p>.....</p>
         <script>
         Some code ... 
@@ -331,42 +331,42 @@ class DomTest extends TestCase
     public function testClosingSpan()
     {
         $dom = new Dom();
-        $dom->load("<div class='foo'></span>sometext</div>");
+        $dom->loadStr("<div class='foo'></span>sometext</div>");
         $this->assertEquals('sometext', $dom->getElementsByTag('div')[0]->innerHtml);
     }
 
     public function testMultipleDoubleQuotes()
     {
         $dom = new Dom();
-        $dom->load('<a title="This is a "test" of double quotes" href="http://www.example.com">Hello</a>');
+        $dom->loadStr('<a title="This is a "test" of double quotes" href="http://www.example.com">Hello</a>');
         $this->assertEquals('This is a "test" of double quotes', $dom->getElementsByTag('a')[0]->title);
     }
 
     public function testMultipleSingleQuotes()
     {
         $dom = new Dom();
-        $dom->load("<a title='Ain't this the best' href=\"http://www.example.com\">Hello</a>");
+        $dom->loadStr("<a title='Ain't this the best' href=\"http://www.example.com\">Hello</a>");
         $this->assertEquals("Ain't this the best", $dom->getElementsByTag('a')[0]->title);
     }
 
     public function testBeforeClosingTag()
     {
         $dom = new Dom();
-        $dom->load('<div class="stream-container "  > <div class="stream-item js-new-items-bar-container"> </div> <div class="stream">');
+        $dom->loadStr('<div class="stream-container "  > <div class="stream-item js-new-items-bar-container"> </div> <div class="stream">');
         $this->assertEquals('<div class="stream-container "> <div class="stream-item js-new-items-bar-container"> </div> <div class="stream"></div></div>', (string) $dom);
     }
 
     public function testCodeTag()
     {
         $dom = new Dom();
-        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $dom->loadStr('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
         $this->assertEquals('<strong>hello</strong><code class="language-php">$foo = "bar";</code>', (string) $dom);
     }
 
     public function testDeleteNode()
     {
         $dom = new Dom();
-        $dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+        $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $a = $dom->find('a')[0];
         $a->delete();
         unset($a);
@@ -376,21 +376,21 @@ class DomTest extends TestCase
     public function testCountChildren()
     {
         $dom = new Dom();
-        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $dom->loadStr('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
         $this->assertEquals(2, $dom->countChildren());
     }
 
     public function testGetChildrenArray()
     {
         $dom = new Dom();
-        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $dom->loadStr('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
         $this->assertInternalType('array', $dom->getChildren());
     }
 
     public function testHasChildren()
     {
         $dom = new Dom();
-        $dom->load('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
+        $dom->loadStr('<strong>hello</strong><code class="language-php">$foo = "bar";</code>');
         $this->assertTrue($dom->hasChildren());
     }
 
@@ -400,14 +400,14 @@ class DomTest extends TestCase
         $dom->setOptions([
             'removeDoubleSpace' => false,
         ]);
-        $dom->load('<pre>    Hello world</pre>');
+        $dom->loadStr('<pre>    Hello world</pre>');
         $this->assertEquals('<pre>    Hello world</pre>', (string) $dom);
     }
 
     public function testGetComplexAttribute()
     {
         $dom = new Dom();
-        $dom->load('<a href="?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4" class="pagination-next">Next <span class="chevron">&gt;</span></a>');
+        $dom->loadStr('<a href="?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4" class="pagination-next">Next <span class="chevron">&gt;</span></a>');
         $href = $dom->find('a', 0)->href;
         $this->assertEquals('?search=Fort+William&session_type=face&distance=100&uqs=119846&page=4', $href);
     }
@@ -416,7 +416,7 @@ class DomTest extends TestCase
     {
         $dom = new Dom();
         $dom->setOptions(['htmlSpecialCharsDecode' => true]);
-        $dom->load('<a href="?search=Fort+William&amp;session_type=face&amp;distance=100&amp;uqs=119846&amp;page=4" class="pagination-next">Next <span class="chevron">&gt;</span></a>');
+        $dom->loadStr('<a href="?search=Fort+William&amp;session_type=face&amp;distance=100&amp;uqs=119846&amp;page=4" class="pagination-next">Next <span class="chevron">&gt;</span></a>');
         $a = $dom->find('a', 0);
         $this->assertEquals('Next <span class="chevron">></span>', $a->innerHtml);
         $href = $a->href;
@@ -453,7 +453,7 @@ class DomTest extends TestCase
     {
         $str = '<p><img src="http://example.com/first.jpg"></p><img src="http://example.com/second.jpg">';
         $dom = new Dom();
-        $dom->load($str);
+        $dom->loadStr($str);
         $images = $dom->find('img');
 
         $this->assertEquals('<img src="http://example.com/first.jpg" />', (string) $images[0]);
@@ -483,7 +483,7 @@ class DomTest extends TestCase
     {
         $str = '<ul class="summary"><li class></li>blah<li class="foo">what</li></ul>';
         $dom = new Dom();
-        $dom->load($str);
+        $dom->loadStr($str);
 
         $items = $dom->find('.summary .foo');
         $this->assertEquals(1, \count($items));
@@ -492,7 +492,7 @@ class DomTest extends TestCase
     public function testMultipleSquareSelector()
     {
         $dom = new Dom();
-        $dom->load('<input name="foo" type="text" baz="fig">');
+        $dom->loadStr('<input name="foo" type="text" baz="fig">');
 
         $items = $dom->find('input[type=text][name=foo][baz=fig]');
         $this->assertEquals(1, \count($items));
@@ -501,7 +501,7 @@ class DomTest extends TestCase
     public function testNotSquareSelector()
     {
         $dom = new Dom();
-        $dom->load('<input name="foo" type="text" baz="fig">');
+        $dom->loadStr('<input name="foo" type="text" baz="fig">');
 
         $items = $dom->find('input[type!=foo]');
         $this->assertEquals(1, \count($items));
@@ -510,7 +510,7 @@ class DomTest extends TestCase
     public function testStartSquareSelector()
     {
         $dom = new Dom();
-        $dom->load('<input name="foo" type="text" baz="fig">');
+        $dom->loadStr('<input name="foo" type="text" baz="fig">');
 
         $items = $dom->find('input[name^=f]');
         $this->assertEquals(1, \count($items));
@@ -519,7 +519,7 @@ class DomTest extends TestCase
     public function testEndSquareSelector()
     {
         $dom = new Dom();
-        $dom->load('<input name="foo" type="text" baz="fig">');
+        $dom->loadStr('<input name="foo" type="text" baz="fig">');
 
         $items = $dom->find('input[baz$=g]');
         $this->assertEquals(1, \count($items));
@@ -528,7 +528,7 @@ class DomTest extends TestCase
     public function testStarSquareSelector()
     {
         $dom = new Dom();
-        $dom->load('<input name="foo" type="text" baz="fig">');
+        $dom->loadStr('<input name="foo" type="text" baz="fig">');
 
         $items = $dom->find('input[baz*=*]');
         $this->assertEquals(1, \count($items));
@@ -537,7 +537,7 @@ class DomTest extends TestCase
     public function testStarFullRegexSquareSelector()
     {
         $dom = new Dom();
-        $dom->load('<input name="foo" type="text" baz="fig">');
+        $dom->loadStr('<input name="foo" type="text" baz="fig">');
 
         $items = $dom->find('input[baz*=/\w+/]');
         $this->assertEquals(1, \count($items));
@@ -546,7 +546,7 @@ class DomTest extends TestCase
     public function testFailedSquareSelector()
     {
         $dom = new Dom();
-        $dom->load('<input name="foo" type="text" baz="fig">');
+        $dom->loadStr('<input name="foo" type="text" baz="fig">');
 
         $items = $dom->find('input[baz%=g]');
         $this->assertEquals(1, \count($items));
@@ -555,7 +555,7 @@ class DomTest extends TestCase
     public function testLoadGetAttributeWithBackslash()
     {
         $dom = new Dom();
-        $dom->load('<div><a href="/test/"><img alt="\" src="/img/test.png" /><br /></a><a href="/demo/"><img alt="demo" src="/img/demo.png" /></a></div>');
+        $dom->loadStr('<div><a href="/test/"><img alt="\" src="/img/test.png" /><br /></a><a href="/demo/"><img alt="demo" src="/img/demo.png" /></a></div>');
         $imgs = $dom->find('img', 0);
         $this->assertEquals('/img/test.png', $imgs->getAttribute('src'));
     }
@@ -569,7 +569,7 @@ class DomTest extends TestCase
         $this->assertEquals(25, \count($children));
     }
 
-    public function testHtml5PageLoad()
+    public function testHtml5PageloadStr()
     {
         $dom = new Dom();
         $dom->loadFromFile('tests/data/files/html5.html');
@@ -582,7 +582,7 @@ class DomTest extends TestCase
     public function testFindAttributeInBothParentAndChild()
     {
         $dom = new Dom();
-        $dom->load('<parent attribute="something">
+        $dom->loadStr('<parent attribute="something">
     <child attribute="anything"></child>
 </parent>');
 
@@ -593,7 +593,7 @@ class DomTest extends TestCase
 
     public function testLessThanCharacterInJavascript()
     {
-        $results = (new Dom())->load('<html><head><script type="text/javascript">
+        $results = (new Dom())->loadStr('<html><head><script type="text/javascript">
             console.log(1 < 3);
         </script></head><body><div id="panel"></div></body></html>',
             [
@@ -607,12 +607,12 @@ class DomTest extends TestCase
     {
         // Create a dom which will be used as a parent/container for a paragraph
         $dom1 = new \PHPHtmlParser\Dom;
-        $dom1->load('<div>A container div</div>'); // Resets the counter (doesn't matter here as the counter was 0 even without resetting)
+        $dom1->loadStr('<div>A container div</div>'); // Resets the counter (doesn't matter here as the counter was 0 even without resetting)
         $div = $dom1->firstChild();
 
         // Create a paragraph outside of the first dom
         $dom2 = new \PHPHtmlParser\Dom;
-        $dom2->load('<p>Our new paragraph.</p>'); // Resets the counter
+        $dom2->loadStr('<p>Our new paragraph.</p>'); // Resets the counter
         $paragraph = $dom2->firstChild();
 
         $div->addChild($paragraph);
@@ -623,7 +623,7 @@ class DomTest extends TestCase
     public function testFindDescendantsOfMatch()
     {
         $dom = new Dom();
-        $dom->load('<p>
+        $dom->loadStr('<p>
         <b>
             test
             <b>testing</b>
@@ -641,7 +641,7 @@ class DomTest extends TestCase
     public function testCompatibleWithWordPressShortcode()
     {
         $dom = new Dom();
-        $dom->load('<p>
+        $dom->loadStr('<p>
 [wprs_alert type="success" content="this is a short code" /]
 </p>');
 

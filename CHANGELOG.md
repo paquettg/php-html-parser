@@ -25,7 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Curl interface and curl implementation has been removed.
 - Removed support for the depth first search option.
-- findById() method removed from Dom object.
+- `findById()` method removed from Dom object.
+- Removed `load()` method in Dom object.
 
 ## 2.2.0
 
