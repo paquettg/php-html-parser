@@ -634,8 +634,19 @@ class DomTest extends TestCase
         <i><b>another</b></i>
     </p>');
 
-        /** @var Dom\AbstractNode $meta */
         $nodes = $dom->find('b');
         $this->assertCount(5, $nodes);
+    }
+
+    public function testCompatibleWithWordPressShortcode()
+    {
+        $dom = new Dom();
+        $dom->load('<p>
+[wprs_alert type="success" content="this is a short code" /]
+</p>');
+
+        $node = $dom->find('p', 0);
+        $this->assertEquals(' [wprs_alert type="success" content="this is a short code" /] ', $node->innerHtml);
+
     }
 }
