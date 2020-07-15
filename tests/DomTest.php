@@ -649,4 +649,12 @@ class DomTest extends TestCase
         $this->assertEquals(' [wprs_alert type="success" content="this is a short code" /] ', $node->innerHtml);
 
     }
+
+    public function testBrokenHtml()
+    {
+        $dom = new Dom();
+        $dom->loadStr('<the thing broke itV');
+
+        $this->assertEquals('<the thing broke itv></the>', $dom->outerHtml);
+    }
 }

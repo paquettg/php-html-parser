@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Exceptions\ContentLengthException;
 use PHPHtmlParser\Exceptions\LogicalException;
 
 /**
@@ -74,12 +75,25 @@ class Content
      * Moves the current position forward.
      *
      * @chainable
+     * @throws ContentLengthException
      */
     public function fastForward(int $count): Content
     {
+        if (!$this->canFastForward()) {
+            // trying to go over the content length, throw exception
+            throw new ContentLengthException('Attempt to fastForward pass the length of the content.');
+        }
         $this->pos += $count;
 
         return $this;
+    }
+
+    /**
+     * Checks if we can move the position forward.
+     */
+    public function canFastForward(): bool
+    {
+        return \strlen($this->content) > $this->pos;
     }
 
     /**
@@ -197,14 +211,15 @@ class Content
     /**
      * Skip a given set of characters.
      *
-     * @return Content|string
+     * @throws LogicalException
      */
-    public function skip(string $string, bool $copy = false)
+    public function skip(string $string, bool $copy = false): string
     {
         $len = \strspn($this->content, $string, $this->pos);
-
-        // make it chainable if they don't want a copy
-        $return = $this;
+        if ($len === false) {
+            throw new LogicalException('Strspn returned false with position ' . $this->pos . '.');
+        }
+        $return = '';
         if ($copy) {
             $return = \substr($this->content, $this->pos, $len);
             if ($return === false) {

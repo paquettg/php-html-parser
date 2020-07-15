@@ -12,6 +12,7 @@ use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
+use PHPHtmlParser\Exceptions\ContentLengthException;
 use PHPHtmlParser\Exceptions\CurlException;
 use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
@@ -646,7 +647,13 @@ class Dom
         }
 
         // check if this is a closing tag
-        if ($this->content->fastForward(1)->char() == '/') {
+        try {
+            $this->content->fastForward(1);
+        } catch (ContentLengthException $exception) {
+            // we are at the end of the file
+            return $return;
+        }
+        if ($this->content->char() == '/') {
             // end tag
             $tag = $this->content->fastForward(1)
                 ->copyByToken('slash', true);
@@ -683,7 +690,12 @@ class Dom
         ) {
             $space = $this->content->skipByToken('blank', true);
             if (empty($space)) {
-                $this->content->fastForward(1);
+                try {
+                    $this->content->fastForward(1);
+                } catch (ContentLengthException $exception) {
+                    // reached the end of the content
+                    break;
+                }
                 continue;
             }
 
@@ -764,7 +776,9 @@ class Dom
             }
         }
 
-        $this->content->fastForward(1);
+        if ($this->content->canFastForward()) {
+            $this->content->fastForward(1);
+        }
 
         $return['status'] = true;
         $return['node'] = $node;
