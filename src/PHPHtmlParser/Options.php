@@ -88,6 +88,38 @@ class Options
      */
     private $htmlSpecialCharsDecode = false;
 
+    /**
+     * A list of tags which will always be self closing.
+     *
+     * @var array
+     */
+    private $selfClosing = [
+        'area',
+        'base',
+        'basefont',
+        'br',
+        'col',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
+        'spacer',
+        'track',
+        'wbr',
+    ];
+
+    /**
+     * A list of tags where there should be no /> at the end (html5 style).
+     *
+     * @var array
+     */
+    private $noSlash = [];
+
     public function isWhitespaceTextNode(): bool
     {
         return $this->whitespaceTextNode;
@@ -208,6 +240,106 @@ class Options
         return $this;
     }
 
+    public function getSelfClosing(): array
+    {
+        return $this->selfClosing;
+    }
+
+    public function setSelfClosing(array $selfClosing): Options
+    {
+        $this->selfClosing = $selfClosing;
+
+        return $this;
+    }
+
+    /**
+     * Adds the tag to the list of tags that will always be self closing.
+     */
+    public function addSelfClosingTag(string $tag): Options
+    {
+        $this->selfClosing[] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Adds the tags to the list of tags that will always be self closing.
+     *
+     * @param string[] $tags
+     */
+    public function addSelfClosingTags(array $tags): Options
+    {
+        foreach ($tags as $tag) {
+            $this->selfClosing[] = $tag;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes the tag from the list of tags that will always be self closing.
+     */
+    public function removeSelfClosingTag(string $tag): Options
+    {
+        $tags = [$tag];
+        $this->selfClosing = \array_diff($this->selfClosing, $tags);
+
+        return $this;
+    }
+
+    /**
+     * Sets the list of self closing tags to empty.
+     */
+    public function clearSelfClosingTags(): Options
+    {
+        $this->selfClosing = [];
+
+        return $this;
+    }
+
+    public function getNoSlash(): array
+    {
+        return $this->noSlash;
+    }
+
+    public function setNoSlash(array $noSlash): Options
+    {
+        $this->noSlash = $noSlash;
+
+        return $this;
+    }
+
+    /**
+     * Adds a tag to the list of self closing tags that should not have a trailing slash.
+     */
+    public function addNoSlashTag(string $tag): Options
+    {
+        $this->noSlash[] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Removes a tag from the list of no-slash tags.
+     */
+    public function removeNoSlashTag(string $tag): Options
+    {
+        $tags = [$tag];
+        $this->noSlash = \array_diff($this->noSlash, $tags);
+
+        return $this;
+    }
+
+    /**
+     * Empties the list of no-slash tags.
+     */
+    public function clearNoSlashTags(): Options
+    {
+        $this->noSlash = [];
+
+        return $this;
+    }
+
     public function setFromOptions(Options $options): void
     {
         $this->setCleanupInput($options->isCleanupInput());
@@ -220,5 +352,7 @@ class Options
         $this->setRemoveStyles($options->isRemoveStyles());
         $this->setStrict($options->isStrict());
         $this->setWhitespaceTextNode($options->isWhitespaceTextNode());
+        $this->setSelfClosing($options->getSelfClosing());
+        $this->setNoSlash($options->getNoSlash());
     }
 }

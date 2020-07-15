@@ -17,12 +17,12 @@ final class AttributeDTO
     /**
      * @var bool
      */
-    private $doubleQuote = true;
+    private $doubleQuote;
 
     public function __construct(array $values)
     {
         $this->value = $values['value'];
-        $this->doubleQuote = $values['doubleQuote'];
+        $this->doubleQuote = $values['doubleQuote'] ?? true;
     }
 
     public function getValue(): ?string

@@ -104,50 +104,6 @@ class DomTest extends TestCase
         $this->assertEquals('<br /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
-    public function testLoadClosingTagOnSelfClosingNoSlash()
-    {
-        $dom = new Dom();
-        $dom->addNoSlashTag('br');
-
-        $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
-        $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
-    }
-
-    public function testLoadClosingTagAddSelfClosingTag()
-    {
-        $dom = new Dom();
-        $dom->addSelfClosingTag('mytag');
-        $dom->loadStr('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></mytag></div>');
-        $this->assertEquals('<mytag /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
-    }
-
-    public function testLoadClosingTagAddSelfClosingTagArray()
-    {
-        $dom = new Dom();
-        $dom->addSelfClosingTag([
-            'mytag',
-            'othertag',
-        ]);
-        $dom->loadStr('<div class="all"><mytag><p>Hey bro, <a href="google.com" data-quote="\"">click here</a><othertag></div>');
-        $this->assertEquals('<mytag /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a><othertag /></p>', $dom->find('div', 0)->innerHtml);
-    }
-
-    public function testLoadClosingTagRemoveSelfClosingTag()
-    {
-        $dom = new Dom();
-        $dom->removeSelfClosingTag('br');
-        $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
-        $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></br>', $dom->find('div', 0)->innerHtml);
-    }
-
-    public function testLoadClosingTagClearSelfClosingTag()
-    {
-        $dom = new Dom();
-        $dom->clearSelfClosingTags();
-        $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
-        $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p></br>', $dom->find('div', 0)->innerHtml);
-    }
-
     public function testLoadNoValueAttribute()
     {
         $dom = new Dom();
@@ -239,7 +195,7 @@ class DomTest extends TestCase
     {
         $dom = new Dom();
         $dom->loadFromFile('tests/data/files/big.html',
-            (new Options)->setPreserveLineBreaks(true));
+            (new Options())->setPreserveLineBreaks(true));
         $post = $dom->find('.post-row', 0);
         $this->assertEquals(
             "<p>Журчанье воды<br />\nЧерно-белые тени<br />\nВновь на фонтане</p>",

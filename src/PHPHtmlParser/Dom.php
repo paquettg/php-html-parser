@@ -10,6 +10,7 @@ use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
+use PHPHtmlParser\DTO\TagDTO;
 use PHPHtmlParser\Enum\StringToken;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
@@ -85,45 +86,16 @@ class Dom
     private $options;
 
     /**
-     * A list of tags which will always be self closing.
-     *
-     * @var array
-     */
-    private $selfClosing = [
-        'area',
-        'base',
-        'basefont',
-        'br',
-        'col',
-        'embed',
-        'hr',
-        'img',
-        'input',
-        'keygen',
-        'link',
-        'meta',
-        'param',
-        'source',
-        'spacer',
-        'track',
-        'wbr',
-    ];
-
-    /**
-     * A list of tags where there should be no /> at the end (html5 style).
-     *
-     * @var array
-     */
-    private $noSlash = [];
-
-    /**
      * Returns the inner html of the root node.
      *
      * @throws ChildNotFoundException
      * @throws UnknownChildTypeException
+     * @throws NotLoadedException
      */
     public function __toString(): string
     {
+        $this->isLoaded();
+
         return $this->root->innerHtml();
     }
 
@@ -132,10 +104,14 @@ class Dom
      *
      * @param string $name
      *
+     * @throws NotLoadedException
+     *
      * @return mixed
      */
     public function __get($name)
     {
+        $this->isLoaded();
+
         return $this->root->$name;
     }
 
@@ -240,100 +216,6 @@ class Dom
         $this->isLoaded();
 
         return $this->root->find($selector, $nth);
-    }
-
-    /**
-     * Adds the tag (or tags in an array) to the list of tags that will always
-     * be self closing.
-     *
-     * @param string|array $tag
-     * @chainable
-     */
-    public function addSelfClosingTag($tag): Dom
-    {
-        if (!\is_array($tag)) {
-            $tag = [$tag];
-        }
-        foreach ($tag as $value) {
-            $this->selfClosing[] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Removes the tag (or tags in an array) from the list of tags that will
-     * always be self closing.
-     *
-     * @param string|array $tag
-     * @chainable
-     */
-    public function removeSelfClosingTag($tag): Dom
-    {
-        if (!\is_array($tag)) {
-            $tag = [$tag];
-        }
-        $this->selfClosing = \array_diff($this->selfClosing, $tag);
-
-        return $this;
-    }
-
-    /**
-     * Sets the list of self closing tags to empty.
-     *
-     * @chainable
-     */
-    public function clearSelfClosingTags(): Dom
-    {
-        $this->selfClosing = [];
-
-        return $this;
-    }
-
-    /**
-     * Adds a tag to the list of self closing tags that should not have a trailing slash.
-     *
-     * @param $tag
-     * @chainable
-     */
-    public function addNoSlashTag($tag): Dom
-    {
-        if (!\is_array($tag)) {
-            $tag = [$tag];
-        }
-        foreach ($tag as $value) {
-            $this->noSlash[] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Removes a tag from the list of no-slash tags.
-     *
-     * @param $tag
-     * @chainable
-     */
-    public function removeNoSlashTag($tag): Dom
-    {
-        if (!\is_array($tag)) {
-            $tag = [$tag];
-        }
-        $this->noSlash = \array_diff($this->noSlash, $tag);
-
-        return $this;
-    }
-
-    /**
-     * Empties the list of no-slash tags.
-     *
-     * @chainable
-     */
-    public function clearNoSlashTags(): Dom
-    {
-        $this->noSlash = [];
-
-        return $this;
     }
 
     /**
@@ -574,18 +456,18 @@ class Dom
                 $str = $this->content->copyUntil('<');
             }
             if ($str == '') {
-                $info = $this->parseTag();
-                if (!$info['status']) {
+                $tagDTO = $this->parseTag();
+                if (!$tagDTO->isStatus()) {
                     // we are done here
                     $activeNode = null;
                     continue;
                 }
 
                 // check if it was a closing tag
-                if ($info['closing']) {
+                if ($tagDTO->isClosing()) {
                     $foundOpeningTag = true;
                     $originalNode = $activeNode;
-                    while ($activeNode->getTag()->name() != $info['tag']) {
+                    while ($activeNode->getTag()->name() != $tagDTO->getTag()) {
                         $activeNode = $activeNode->getParent();
                         if ($activeNode === null) {
                             // we could not find opening tag
@@ -600,12 +482,12 @@ class Dom
                     continue;
                 }
 
-                if (!isset($info['node'])) {
+                if ($tagDTO->getNode() === null) {
                     continue;
                 }
 
                 /** @var AbstractNode $node */
-                $node = $info['node'];
+                $node = $tagDTO->getNode();
                 $activeNode->addChild($node);
 
                 // check if node is self closing
@@ -628,7 +510,7 @@ class Dom
      *
      * @throws StrictException
      */
-    private function parseTag(): array
+    private function parseTag(): TagDTO
     {
         $return = [
             'status'  => false,
@@ -637,7 +519,7 @@ class Dom
         ];
         if ($this->content->char() != '<') {
             // we are not at the beginning of a tag
-            return $return;
+            return new TagDTO();
         }
 
         // check if this is a closing tag
@@ -645,7 +527,7 @@ class Dom
             $this->content->fastForward(1);
         } catch (ContentLengthException $exception) {
             // we are at the end of the file
-            return $return;
+            return new TagDTO();
         }
         if ($this->content->char() == '/') {
             // end tag
@@ -657,22 +539,22 @@ class Dom
 
             // check if this closing tag counts
             $tag = \strtolower($tag);
-            if (\in_array($tag, $this->selfClosing, true)) {
+            if (\in_array($tag, $this->options->getSelfClosing(), true)) {
                 $return['status'] = true;
 
-                return $return;
+                return new TagDTO($return);
             }
             $return['status'] = true;
             $return['closing'] = true;
             $return['tag'] = \strtolower($tag);
 
-            return $return;
+            return new TagDTO($return);
         }
 
         $tag = \strtolower($this->content->copyByToken(StringToken::SLASH(), true));
         if (\trim($tag) == '') {
             // no tag found, invalid < found
-            return $return;
+            return new TagDTO();
         }
         $node = new HtmlNode($tag);
         $node->setHtmlSpecialCharsDecode($this->options->isHtmlSpecialCharsDecode());
@@ -754,7 +636,7 @@ class Dom
             // self closing tag
             $node->getTag()->selfClosing();
             $this->content->fastForward(1);
-        } elseif (\in_array($tag, $this->selfClosing, true)) {
+        } elseif (\in_array($tag, $this->options->getSelfClosing(), true)) {
             // Should be a self closing tag, check if we are strict
             if ($this->options->isStrict()) {
                 $character = $this->content->getPosition();
@@ -765,7 +647,7 @@ class Dom
             $node->getTag()->selfClosing();
 
             // Should this tag use a trailing slash?
-            if (\in_array($tag, $this->noSlash, true)) {
+            if (\in_array($tag, $this->options->getNoSlash(), true)) {
                 $node->getTag()->noTrailingSlash();
             }
         }
@@ -777,7 +659,7 @@ class Dom
         $return['status'] = true;
         $return['node'] = $node;
 
-        return $return;
+        return new TagDTO($return);
     }
 
     /**
