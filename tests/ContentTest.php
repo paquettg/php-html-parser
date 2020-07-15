@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PHPHtmlParser\Content;
+use PHPHtmlParser\Enum\StringToken;
 use PHPUnit\Framework\TestCase;
 
 class ContentTest extends TestCase
@@ -70,7 +71,7 @@ class ContentTest extends TestCase
     {
         $content = new Content('<a href="google.com">');
         $content->fastForward(3);
-        $this->assertEquals('href="google.com"', $content->copyByToken('attr', true));
+        $this->assertEquals('href="google.com"', $content->copyByToken(StringToken::ATTR(), true));
     }
 
     public function testSkip()
@@ -90,7 +91,7 @@ class ContentTest extends TestCase
     {
         $content = new Content(' b c');
         $content->fastForward(1);
-        $content->skipByToken('blank');
+        $content->skipByToken(StringToken::BLANK());
         $this->assertEquals('b', $content->char());
     }
 }

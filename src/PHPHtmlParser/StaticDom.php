@@ -8,7 +8,6 @@ use GuzzleHttp\Psr7\Request;
 use Http\Adapter\Guzzle6\Client;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
-use PHPHtmlParser\Exceptions\CurlException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\Exceptions\StrictException;
 use Psr\Http\Client\ClientInterface;
@@ -65,12 +64,12 @@ final class StaticDom
      * @throws StrictException
      * @throws Exceptions\LogicalException
      */
-    public static function loadFromFile(string $file): Dom
+    public static function loadFromFile(string $file, ?Options $options = null): Dom
     {
         $dom = new Dom();
         self::$dom = $dom;
 
-        return $dom->loadFromFile($file);
+        return $dom->loadFromFile($file, $options);
     }
 
     /**
@@ -82,7 +81,7 @@ final class StaticDom
      * @throws StrictException
      * @throws \Psr\Http\Client\ClientExceptionInterface
      */
-    public static function loadFromUrl(string $url, array $options = [], ClientInterface $client = null, RequestInterface $request = null): Dom
+    public static function loadFromUrl(string $url, ?Options $options = null, ClientInterface $client = null, RequestInterface $request = null): Dom
     {
         $dom = new Dom();
         self::$dom = $dom;
@@ -97,7 +96,7 @@ final class StaticDom
         return $dom->loadFromUrl($url, $options, $client, $request);
     }
 
-    public static function loadStr(string $str, array $options = []): Dom
+    public static function loadStr(string $str, ?Options $options = null): Dom
     {
         $dom = new Dom();
         self::$dom = $dom;

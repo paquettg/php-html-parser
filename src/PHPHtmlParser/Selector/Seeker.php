@@ -17,7 +17,8 @@ class Seeker implements SeekerInterface
      * Attempts to find all children that match the rule
      * given.
      *
-     * @var InnerNode[] $nodes
+     * @var InnerNode[]
+     *
      * @throws ChildNotFoundException
      */
     public function seek(array $nodes, RuleDTO $rule, array $options): array

@@ -73,7 +73,7 @@ class StaticDomTest extends TestCase
             ->once()
             ->andReturn($responseMock);
 
-        Dom::loadFromUrl('http://google.com', [], $clientMock);
+        Dom::loadFromUrl('http://google.com', null, $clientMock);
         $this->assertEquals('VonBurgermeister', Dom::find('.post-row div .post-user font', 0)->text);
     }
 }

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
+use PHPHtmlParser\Options;
 use PHPUnit\Framework\TestCase;
 
 class CleanupTest extends TestCase
@@ -10,9 +11,7 @@ class CleanupTest extends TestCase
     public function testCleanupInputTrue()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'cleanupInput' => true,
-        ]);
+        $dom->setOptions((new Options())->setCleanupInput(true));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, \count($dom->find('style')));
         $this->assertEquals(0, \count($dom->find('script')));
@@ -21,9 +20,7 @@ class CleanupTest extends TestCase
     public function testCleanupInputFalse()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'cleanupInput' => false,
-        ]);
+        $dom->setOptions((new Options())->setCleanupInput(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(1, \count($dom->find('style')));
         $this->assertEquals(22, \count($dom->find('script')));
@@ -32,9 +29,7 @@ class CleanupTest extends TestCase
     public function testRemoveStylesTrue()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'removeStyles' => true,
-        ]);
+        $dom->setOptions((new Options())->setRemoveStyles(true));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, \count($dom->find('style')));
     }
@@ -42,9 +37,7 @@ class CleanupTest extends TestCase
     public function testRemoveStylesFalse()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'removeStyles' => false,
-        ]);
+        $dom->setOptions((new Options())->setRemoveStyles(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(1, \count($dom->find('style')));
         $this->assertEquals('text/css',
@@ -54,9 +47,7 @@ class CleanupTest extends TestCase
     public function testRemoveScriptsTrue()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'removeScripts' => true,
-        ]);
+        $dom->setOptions((new Options())->setRemoveScripts(true));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, \count($dom->find('script')));
     }
@@ -64,9 +55,7 @@ class CleanupTest extends TestCase
     public function testRemoveScriptsFalse()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'removeScripts' => false,
-        ]);
+        $dom->setOptions((new Options())->setRemoveScripts(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(22, \count($dom->find('script')));
         $this->assertEquals('text/javascript',
@@ -85,9 +74,7 @@ class CleanupTest extends TestCase
     public function testSmartyScriptsDisabled()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'removeSmartyScripts' => false,
-        ]);
+        $dom->setOptions((new Options())->setRemoveSmartyScripts(false));
         $dom->loadStr('
         aa={123}
         ');

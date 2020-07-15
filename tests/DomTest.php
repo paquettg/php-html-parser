@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
+use PHPHtmlParser\Options;
 use PHPUnit\Framework\TestCase;
 
 class DomTest extends TestCase
@@ -19,7 +20,7 @@ class DomTest extends TestCase
     {
         $html = "<script type=\"text/javascript\">/* <![CDATA[ */var et_core_api_spam_recaptcha = '';/* ]]> */</script>";
         $dom = new Dom();
-        $dom->setOptions(['cleanupInput' => false]);
+        $dom->setOptions((new Options())->setCleanupInput(false));
         $dom->loadStr($html);
         $this->assertSame($html, $dom->root->outerHtml());
     }
@@ -213,7 +214,7 @@ class DomTest extends TestCase
     public function testLoadFileWhitespace()
     {
         $dom = new Dom();
-        $dom->setOptions(['cleanupInput' => false]);
+        $dom->setOptions((new Options())->setCleanupInput(false));
         $dom->loadFromFile('tests/data/files/whitespace.html');
         $this->assertEquals(1, \count($dom->find('.class')));
         $this->assertEquals('<span><span class="class"></span></span>', (string) $dom);
@@ -237,7 +238,8 @@ class DomTest extends TestCase
     public function testLoadFileBigTwicePreserveOption()
     {
         $dom = new Dom();
-        $dom->loadFromFile('tests/data/files/big.html', ['preserveLineBreaks' => true]);
+        $dom->loadFromFile('tests/data/files/big.html',
+            (new Options)->setPreserveLineBreaks(true));
         $post = $dom->find('.post-row', 0);
         $this->assertEquals(
             "<p>Журчанье воды<br />\nЧерно-белые тени<br />\nВновь на фонтане</p>",
@@ -261,7 +263,7 @@ class DomTest extends TestCase
             ->andReturn($responseMock);
 
         $dom = new Dom();
-        $dom->loadFromUrl('http://google.com', [], $clientMock);
+        $dom->loadFromUrl('http://google.com', null, $clientMock);
         $this->assertEquals('VonBurgermeister', $dom->find('.post-row div .post-user font', 0)->text);
     }
 
@@ -397,9 +399,7 @@ class DomTest extends TestCase
     public function testWhitespaceInText()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'removeDoubleSpace' => false,
-        ]);
+        $dom->setOptions((new Options())->setRemoveDoubleSpace(false));
         $dom->loadStr('<pre>    Hello world</pre>');
         $this->assertEquals('<pre>    Hello world</pre>', (string) $dom);
     }
@@ -415,7 +415,7 @@ class DomTest extends TestCase
     public function testGetComplexAttributeHtmlSpecialCharsDecode()
     {
         $dom = new Dom();
-        $dom->setOptions(['htmlSpecialCharsDecode' => true]);
+        $dom->setOptions((new Options())->setHtmlSpecialCharsDecode(true));
         $dom->loadStr('<a href="?search=Fort+William&amp;session_type=face&amp;distance=100&amp;uqs=119846&amp;page=4" class="pagination-next">Next <span class="chevron">&gt;</span></a>');
         $a = $dom->find('a', 0);
         $this->assertEquals('Next <span class="chevron">></span>', $a->innerHtml);
@@ -563,7 +563,7 @@ class DomTest extends TestCase
     public function test25ChildrenFound()
     {
         $dom = new Dom();
-        $dom->setOptions(['whitespaceTextNode' => false]);
+        $dom->setOptions((new Options())->setWhitespaceTextNode(false));
         $dom->loadFromFile('tests/data/files/51children.html');
         $children = $dom->find('#red-line-g *');
         $this->assertEquals(25, \count($children));
@@ -596,22 +596,21 @@ class DomTest extends TestCase
         $results = (new Dom())->loadStr('<html><head><script type="text/javascript">
             console.log(1 < 3);
         </script></head><body><div id="panel"></div></body></html>',
-            [
-                'cleanupInput' => false,
-                'removeScripts' => false
-            ])->find('body');
+            (new Options())->setCleanupInput(false)
+                ->setRemoveScripts(false)
+            )->find('body');
         $this->assertCount(1, $results);
     }
 
     public function testUniqueIdForAllObjects()
     {
         // Create a dom which will be used as a parent/container for a paragraph
-        $dom1 = new \PHPHtmlParser\Dom;
+        $dom1 = new \PHPHtmlParser\Dom();
         $dom1->loadStr('<div>A container div</div>'); // Resets the counter (doesn't matter here as the counter was 0 even without resetting)
         $div = $dom1->firstChild();
 
         // Create a paragraph outside of the first dom
-        $dom2 = new \PHPHtmlParser\Dom;
+        $dom2 = new \PHPHtmlParser\Dom();
         $dom2->loadStr('<p>Our new paragraph.</p>'); // Resets the counter
         $paragraph = $dom2->firstChild();
 
@@ -647,7 +646,6 @@ class DomTest extends TestCase
 
         $node = $dom->find('p', 0);
         $this->assertEquals(' [wprs_alert type="success" content="this is a short code" /] ', $node->innerHtml);
-
     }
 
     public function testBrokenHtml()

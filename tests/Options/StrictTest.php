@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\StrictException;
+use PHPHtmlParser\Options;
 use PHPUnit\Framework\TestCase;
 
 class StrictTest extends TestCase
@@ -11,9 +12,7 @@ class StrictTest extends TestCase
     public function testConfigStrict()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'strict' => true,
-        ]);
+        $dom->setOptions((new Options())->setStrict(true));
         $dom->loadStr('<div><p id="hey">Hey you</p> <p id="ya">Ya you!</p></div>');
         $this->assertEquals(' ', $dom->getElementById('hey')->nextSibling()->text);
     }
@@ -21,9 +20,7 @@ class StrictTest extends TestCase
     public function testConfigStrictMissingSelfClosing()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'strict' => true,
-        ]);
+        $dom->setOptions((new Options())->setStrict(true));
         try {
             // should throw an exception
             $dom->loadStr('<div><p id="hey">Hey you</p><br><p id="ya">Ya you!</p></div>');
@@ -37,9 +34,7 @@ class StrictTest extends TestCase
     public function testConfigStrictMissingAttribute()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'strict' => true,
-        ]);
+        $dom->setOptions((new Options())->setStrict(true));
         try {
             // should throw an exception
             $dom->loadStr('<div><p id="hey" block>Hey you</p> <p id="ya">Ya you!</p></div>');
@@ -53,9 +48,7 @@ class StrictTest extends TestCase
     public function testConfigStrictBRTag()
     {
         $dom = new Dom();
-        $dom->setOptions([
-            'strict' => true,
-        ]);
+        $dom->setOptions((new Options())->setStrict(true));
         $dom->loadStr('<br />');
         $this->assertTrue(true);
     }

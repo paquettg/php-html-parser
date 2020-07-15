@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cleaned up the selector logic.
 - Fixed issue with greedy regex for charset detection.
 - Fixed bug causing infinite loops in some cases.
+- Refactored the way we handle options. Removed the magical option array.
 
 ### Removed
 - Curl interface and curl implementation has been removed.

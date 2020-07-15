@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
+use PHPHtmlParser\Enum\StringToken;
 use PHPHtmlParser\Exceptions\ContentLengthException;
 use PHPHtmlParser\Exceptions\LogicalException;
 
@@ -75,11 +76,12 @@ class Content
      * Moves the current position forward.
      *
      * @chainable
+     *
      * @throws ContentLengthException
      */
     public function fastForward(int $count): Content
     {
-        if (!$this->canFastForward()) {
+        if (!$this->canFastForward($count)) {
             // trying to go over the content length, throw exception
             throw new ContentLengthException('Attempt to fastForward pass the length of the content.');
         }
@@ -91,9 +93,9 @@ class Content
     /**
      * Checks if we can move the position forward.
      */
-    public function canFastForward(): bool
+    public function canFastForward(int $count): bool
     {
-        return \strlen($this->content) > $this->pos;
+        return \strlen($this->content) >= $this->pos + $count;
     }
 
     /**
@@ -175,8 +177,6 @@ class Content
     /**
      * Copies the content until the string is found and return it
      * unless the 'unless' is found in the substring.
-     *
-     * @return string
      */
     public function copyUntilUnless(string $string, string $unless): string
     {
@@ -197,13 +197,11 @@ class Content
     /**
      * Copies the content until it reaches the token string.,.
      *
-     * @return string
-     *
      * @uses $this->copyUntil()
      */
-    public function copyByToken(string $token, bool $char = false, bool $escape = false)
+    public function copyByToken(StringToken $stringToken, bool $char = false, bool $escape = false): string
     {
-        $string = $this->$token;
+        $string = $stringToken->getValue();
 
         return $this->copyUntil($string, $char, $escape);
     }
@@ -236,13 +234,11 @@ class Content
     /**
      * Skip a given token of pre-defined characters.
      *
-     * @return Content|string
-     *
      * @uses $this->skip()
      */
-    public function skipByToken(string $token, bool $copy = false)
+    public function skipByToken(StringToken $skipToken, bool $copy = false): string
     {
-        $string = $this->$token;
+        $string = $skipToken->getValue();
 
         return $this->skip($string, $copy);
     }

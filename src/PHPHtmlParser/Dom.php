@@ -10,10 +10,10 @@ use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
+use PHPHtmlParser\Enum\StringToken;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ContentLengthException;
-use PHPHtmlParser\Exceptions\CurlException;
 use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\Exceptions\StrictException;
@@ -72,9 +72,9 @@ class Dom
     /**
      * A global options array to be used by all load calls.
      *
-     * @var array
+     * @var ?Options
      */
-    private $globalOptions = [];
+    private $globalOptions;
 
     /**
      * A persistent option object to be used for all options in the
@@ -147,7 +147,7 @@ class Dom
      * @throws StrictException
      * @throws LogicalException
      */
-    public function loadFromFile(string $file, array $options = []): Dom
+    public function loadFromFile(string $file, ?Options $options = null): Dom
     {
         $content = @\file_get_contents($file);
         if ($content === false) {
@@ -168,7 +168,7 @@ class Dom
      * @throws StrictException
      * @throws \Psr\Http\Client\ClientExceptionInterface
      */
-    public function loadFromUrl(string $url, array $options = [], ?ClientInterface $client = null, ?RequestInterface $request = null): Dom
+    public function loadFromUrl(string $url, ?Options $options, ?ClientInterface $client = null, ?RequestInterface $request = null): Dom
     {
         if ($client === null) {
             $client = new Client();
@@ -191,11 +191,15 @@ class Dom
      * @throws CircularException
      * @throws StrictException
      */
-    public function loadStr(string $str, array $option = []): Dom
+    public function loadStr(string $str, ?Options $options = null): Dom
     {
         $this->options = new Options();
-        $this->options->setOptions($this->globalOptions)
-            ->setOptions($option);
+        if ($this->globalOptions !== null) {
+            $this->options->setFromOptions($this->globalOptions);
+        }
+        if ($options !== null) {
+            $this->options->setFromOptions($options);
+        }
 
         $this->rawSize = \strlen($str);
         $this->raw = $str;
@@ -216,7 +220,7 @@ class Dom
      *
      * @chainable
      */
-    public function setOptions(array $options): Dom
+    public function setOptions(Options $options): Dom
     {
         $this->globalOptions = $options;
 
@@ -235,9 +239,7 @@ class Dom
     {
         $this->isLoaded();
 
-        $result = $this->root->find($selector, $nth);
-
-        return $result;
+        return $this->root->find($selector, $nth);
     }
 
     /**
@@ -463,7 +465,7 @@ class Dom
      */
     private function clean(string $str): string
     {
-        if ($this->options->get('cleanupInput') != true) {
+        if ($this->options->isCleanupInput() != true) {
             // skip entire cleanup step
             return $str;
         }
@@ -488,7 +490,7 @@ class Dom
 
         // clean out the \n\r
         $replace = ' ';
-        if ($this->options->get('preserveLineBreaks')) {
+        if ($this->options->isPreserveLineBreaks()) {
             $replace = '&#10;';
         }
         $str = \str_replace(["\r\n", "\r", "\n"], $replace, $str);
@@ -515,7 +517,7 @@ class Dom
         }
 
         // strip out <script> tags
-        if ($this->options->get('removeScripts')) {
+        if ($this->options->isRemoveScripts()) {
             $str = \mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
             if ($str === false) {
                 throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to remove scripts 1.');
@@ -527,7 +529,7 @@ class Dom
         }
 
         // strip out <style> tags
-        if ($this->options->get('removeStyles')) {
+        if ($this->options->isRemoveStyles()) {
             $str = \mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
             if ($str === false) {
                 throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip out style tags 1.');
@@ -538,16 +540,8 @@ class Dom
             }
         }
 
-        // strip out server side scripts
-        if ($this->options->get('serverSideScripts')) {
-            $str = \mb_eregi_replace("(<\?)(.*?)(\?>)", '', $str);
-            if ($str === false) {
-                throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip out service side scripts.');
-            }
-        }
-
         // strip smarty scripts
-        if ($this->options->get('removeSmartyScripts')) {
+        if ($this->options->isRemoveSmartyScripts()) {
             $str = \mb_eregi_replace("(\{\w)(.*?)(\})", '', $str);
             if ($str === false) {
                 throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to remove smarty scripts.');
@@ -569,11 +563,11 @@ class Dom
     {
         // add the root node
         $this->root = new HtmlNode('root');
-        $this->root->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
+        $this->root->setHtmlSpecialCharsDecode($this->options->isHtmlSpecialCharsDecode());
         $activeNode = $this->root;
         while ($activeNode !== null) {
             if ($activeNode && $activeNode->tag->name() === 'script'
-                && $this->options->get('cleanupInput') != true
+                && $this->options->isCleanupInput() != true
             ) {
                 $str = $this->content->copyUntil('</');
             } else {
@@ -618,12 +612,12 @@ class Dom
                 if (!$node->getTag()->isSelfClosing()) {
                     $activeNode = $node;
                 }
-            } elseif ($this->options->whitespaceTextNode ||
+            } elseif ($this->options->isWhitespaceTextNode() ||
                 \trim($str) != ''
             ) {
                 // we found text we care about
-                $textNode = new TextNode($str, $this->options->removeDoubleSpace);
-                $textNode->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
+                $textNode = new TextNode($str, $this->options->isRemoveDoubleSpace());
+                $textNode->setHtmlSpecialCharsDecode($this->options->isHtmlSpecialCharsDecode());
                 $activeNode->addChild($textNode);
             }
         }
@@ -656,7 +650,7 @@ class Dom
         if ($this->content->char() == '/') {
             // end tag
             $tag = $this->content->fastForward(1)
-                ->copyByToken('slash', true);
+                ->copyByToken(StringToken::SLASH(), true);
             // move to end of tag
             $this->content->copyUntil('>');
             $this->content->fastForward(1);
@@ -675,20 +669,20 @@ class Dom
             return $return;
         }
 
-        $tag = \strtolower($this->content->copyByToken('slash', true));
+        $tag = \strtolower($this->content->copyByToken(StringToken::SLASH(), true));
         if (\trim($tag) == '') {
             // no tag found, invalid < found
             return $return;
         }
         $node = new HtmlNode($tag);
-        $node->setHtmlSpecialCharsDecode($this->options->htmlSpecialCharsDecode);
+        $node->setHtmlSpecialCharsDecode($this->options->isHtmlSpecialCharsDecode());
 
         // attributes
         while (
             $this->content->char() != '>' &&
             $this->content->char() != '/'
         ) {
-            $space = $this->content->skipByToken('blank', true);
+            $space = $this->content->skipByToken(StringToken::BLANK(), true);
             if (empty($space)) {
                 try {
                     $this->content->fastForward(1);
@@ -699,20 +693,20 @@ class Dom
                 continue;
             }
 
-            $name = $this->content->copyByToken('equal', true);
+            $name = $this->content->copyByToken(StringToken::EQUAL(), true);
             if ($name == '/') {
                 break;
             }
 
             if (empty($name)) {
-                $this->content->skipByToken('blank');
+                $this->content->skipByToken(StringToken::BLANK());
                 continue;
             }
 
-            $this->content->skipByToken('blank');
+            $this->content->skipByToken(StringToken::BLANK());
             if ($this->content->char() == '=') {
                 $this->content->fastForward(1)
-                    ->skipByToken('blank');
+                    ->skipByToken(StringToken::BLANK());
                 switch ($this->content->char()) {
                     case '"':
                         $this->content->fastForward(1);
@@ -720,7 +714,7 @@ class Dom
                         do {
                             $moreString = $this->content->copyUntilUnless('"', '=>');
                             $string .= $moreString;
-                        } while (strlen($moreString) > 0 && $this->content->getPosition() < $this->size);
+                        } while (\strlen($moreString) > 0 && $this->content->getPosition() < $this->size);
                         $attr['value'] = $string;
                         $this->content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string);
@@ -731,18 +725,18 @@ class Dom
                         do {
                             $moreString = $this->content->copyUntilUnless("'", '=>');
                             $string .= $moreString;
-                        } while (strlen($moreString) > 0 && $this->content->getPosition() < $this->size);
+                        } while (\strlen($moreString) > 0 && $this->content->getPosition() < $this->size);
                         $attr['value'] = $string;
                         $this->content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string, false);
                         break;
                     default:
-                        $node->getTag()->setAttribute($name, $this->content->copyByToken('attr', true));
+                        $node->getTag()->setAttribute($name, $this->content->copyByToken(StringToken::ATTR(), true));
                         break;
                 }
             } else {
                 // no value attribute
-                if ($this->options->strict) {
+                if ($this->options->isStrict()) {
                     // can't have this in strict html
                     $character = $this->content->getPosition();
                     throw new StrictException("Tag '$tag' has an attribute '$name' with out a value! (character #$character)");
@@ -754,7 +748,7 @@ class Dom
             }
         }
 
-        $this->content->skipByToken('blank');
+        $this->content->skipByToken(StringToken::BLANK());
         $tag = \strtolower($tag);
         if ($this->content->char() == '/') {
             // self closing tag
@@ -762,7 +756,7 @@ class Dom
             $this->content->fastForward(1);
         } elseif (\in_array($tag, $this->selfClosing, true)) {
             // Should be a self closing tag, check if we are strict
-            if ($this->options->strict) {
+            if ($this->options->isStrict()) {
                 $character = $this->content->getPosition();
                 throw new StrictException("Tag '$tag' is not self closing! (character #$character)");
             }
@@ -776,7 +770,7 @@ class Dom
             }
         }
 
-        if ($this->content->canFastForward()) {
+        if ($this->content->canFastForward(1)) {
             $this->content->fastForward(1);
         }
 
@@ -798,7 +792,7 @@ class Dom
         $encode->from($this->defaultCharset);
         $encode->to($this->defaultCharset);
 
-        $enforceEncoding = $this->options->enforceEncoding;
+        $enforceEncoding = $this->options->getEnforceEncoding();
         if ($enforceEncoding !== null) {
             //  they want to enforce the given encoding
             $encode->from($enforceEncoding);
