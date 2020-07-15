@@ -98,6 +98,7 @@ abstract class InnerNode extends ArrayNode
      *
      * @throws ChildNotFoundException
      * @throws CircularException
+     * @throws LogicalException
      */
     public function addChild(AbstractNode $child, int $before = -1): bool
     {
@@ -158,6 +159,10 @@ abstract class InnerNode extends ArrayNode
 
         // add the child
         $combination = \array_combine($keys, $children);
+        if ($combination === false) {
+            // The number of elements for each array isn't equal or if the arrays are empty.
+            throw new LogicalException('array combine failed during add child method call.');
+        }
         $this->children = $combination;
 
         // tell child I am the new parent
@@ -300,6 +305,8 @@ abstract class InnerNode extends ArrayNode
     /**
      * Removes the child with id $childId and replace it with the new child
      * $newChild.
+     *
+     * @throws LogicalException
      */
     public function replaceChild(int $childId, AbstractNode $newChild): void
     {
@@ -312,6 +319,10 @@ abstract class InnerNode extends ArrayNode
         $index = \array_search($childId, $keys, true);
         $keys[$index] = $newChild->id();
         $combination = \array_combine($keys, $this->children);
+        if ($combination === false) {
+            // The number of elements for each array isn't equal or if the arrays are empty.
+            throw new LogicalException('array combine failed during replace child method call.');
+        }
         $this->children = $combination;
         $this->children[$newChild->id()] = [
             'prev' => $oldChild['prev'],

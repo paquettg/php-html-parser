@@ -63,12 +63,12 @@ class Seeker implements SeekerInterface
                 }
 
                 $pass = $this->checkTag($rule, $child);
-                if ($pass && $rule->getKey() != null) {
+                if ($pass && $rule->getKey() !== null) {
                     $pass = $this->checkKey($rule, $child);
                 }
                 if ($pass &&
-                    $rule->getKey() != null &&
-                    $rule->getValue() != null &&
+                    $rule->getKey() !== null &&
+                    $rule->getValue() !== null &&
                     $rule->getValue() != '*'
                 ) {
                     $pass = $this->checkComparison($rule, $child);
@@ -238,8 +238,9 @@ class Seeker implements SeekerInterface
     ): bool {
         $check = false;
         if (
-            $rule->getValue() != null &&
-            \is_string($rule->getValue())
+            $rule->getValue() !== null &&
+            \is_string($rule->getValue()) &&
+            $nodeValue !== null
         ) {
             $check = $this->match($rule->getOperator(), $rule->getValue(), $nodeValue);
         }

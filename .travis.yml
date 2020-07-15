@@ -14,7 +14,7 @@ script:
   - mkdir -p build/logs
   - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
-after_script:
-  - travis_retry php vendor/bin/coveralls
+after_success:
+  - travis_retry php vendor/bin/php-coveralls -v
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml

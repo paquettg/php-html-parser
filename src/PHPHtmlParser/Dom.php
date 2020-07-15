@@ -6,6 +6,7 @@ namespace PHPHtmlParser;
 
 use GuzzleHttp\Psr7\Request;
 use Http\Adapter\Guzzle6\Client;
+use PHPHtmlParser\Contracts\DomInterface;
 use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Dom\HtmlNode;
@@ -27,7 +28,7 @@ use stringEncode\Encode;
 /**
  * Class Dom.
  */
-class Dom
+class Dom implements DomInterface
 {
     /**
      * Contains the root node of this dom tree.
@@ -450,7 +451,7 @@ class Dom
         $activeNode = $this->root;
         while ($activeNode !== null) {
             if ($activeNode && $activeNode->tag->name() === 'script'
-                && $this->options->isCleanupInput() != true
+                && $this->options->isCleanupInput() !== true
             ) {
                 $str = $this->content->copyUntil('</');
             } else {

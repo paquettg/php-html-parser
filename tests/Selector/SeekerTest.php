@@ -19,7 +19,7 @@ class SeekerTest extends TestCase
             'alterNext' => false,
         ]);
         $seeker = new Seeker();
-        $results = $seeker->seek([], $ruleDTO, [], false);
+        $results = $seeker->seek([], $ruleDTO, []);
         $this->assertCount(0, $results);
     }
 }

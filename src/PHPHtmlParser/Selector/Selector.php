@@ -48,8 +48,6 @@ class Selector implements SelectorInterface
 
     /**
      * Returns the selectors that where found in __construct.
-     *
-     * @return array
      */
     public function getParsedSelectorCollectionDTO(): ParsedSelectorCollectionDTO
     {
