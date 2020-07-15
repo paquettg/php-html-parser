@@ -29,7 +29,7 @@ class OptionsTest extends TestCase
         $options2 = new Options();
         $options2->setStrict(true);
         $options2->setWhitespaceTextNode(false);
-        $options->setFromOptions($options2);
+        $options = $options->setFromOptions($options2);
 
         $this->assertTrue($options->isStrict());
         $this->assertFalse($options->isWhitespaceTextNode());

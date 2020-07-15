@@ -9,6 +9,7 @@ use Http\Adapter\Guzzle6\Client;
 use PHPHtmlParser\Dom\AbstractNode;
 use PHPHtmlParser\Dom\Collection;
 use PHPHtmlParser\Dom\HtmlNode;
+use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\DTO\TagDTO;
 use PHPHtmlParser\Enum\StringToken;
@@ -171,10 +172,10 @@ class Dom
     {
         $this->options = new Options();
         if ($this->globalOptions !== null) {
-            $this->options->setFromOptions($this->globalOptions);
+            $this->options = $this->options->setFromOptions($this->globalOptions);
         }
         if ($options !== null) {
-            $this->options->setFromOptions($options);
+            $this->options = $this->options->setFromOptions($options);
         }
 
         $this->rawSize = \strlen($str);
@@ -194,7 +195,7 @@ class Dom
     /**
      * Sets a global options array to be used by all load calls.
      *
-     * @chainable
+     *
      */
     public function setOptions(Options $options): Dom
     {
@@ -512,11 +513,7 @@ class Dom
      */
     private function parseTag(): TagDTO
     {
-        $return = [
-            'status'  => false,
-            'closing' => false,
-            'node'    => null,
-        ];
+        $return = [];
         if ($this->content->char() != '<') {
             // we are not at the beginning of a tag
             return new TagDTO();
@@ -549,12 +546,20 @@ class Dom
             $return['tag'] = \strtolower($tag);
 
             return new TagDTO($return);
-        }
-
-        $tag = \strtolower($this->content->copyByToken(StringToken::SLASH(), true));
-        if (\trim($tag) == '') {
-            // no tag found, invalid < found
-            return new TagDTO();
+        } elseif ($this->content->char() == '?') {
+            // special setting tag
+            $tag = $this->content->fastForward(1)
+                ->copyByToken(StringToken::SLASH(), true);
+            $tag = (new Tag($tag))
+                ->setOpening('<?')
+                ->setClosing(' ?>')
+                ->selfClosing();
+        } else {
+            $tag = \strtolower($this->content->copyByToken(StringToken::SLASH(), true));
+            if (\trim($tag) == '') {
+                // no tag found, invalid < found
+                return new TagDTO();
+            }
         }
         $node = new HtmlNode($tag);
         $node->setHtmlSpecialCharsDecode($this->options->isHtmlSpecialCharsDecode());
@@ -631,23 +636,22 @@ class Dom
         }
 
         $this->content->skipByToken(StringToken::BLANK());
-        $tag = \strtolower($tag);
         if ($this->content->char() == '/') {
             // self closing tag
             $node->getTag()->selfClosing();
             $this->content->fastForward(1);
-        } elseif (\in_array($tag, $this->options->getSelfClosing(), true)) {
+        } elseif (\in_array($node->getTag()->name(), $this->options->getSelfClosing(), true)) {
             // Should be a self closing tag, check if we are strict
             if ($this->options->isStrict()) {
                 $character = $this->content->getPosition();
-                throw new StrictException("Tag '$tag' is not self closing! (character #$character)");
+                throw new StrictException("Tag '".$node->getTag()->name()."' is not self closing! (character #$character)");
             }
 
             // We force self closing on this tag.
             $node->getTag()->selfClosing();
 
             // Should this tag use a trailing slash?
-            if (\in_array($tag, $this->options->getNoSlash(), true)) {
+            if (\in_array($node->getTag()->name(), $this->options->getNoSlash(), true)) {
                 $node->getTag()->noTrailingSlash();
             }
         }

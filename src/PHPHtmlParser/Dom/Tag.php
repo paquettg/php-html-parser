@@ -59,6 +59,19 @@ class Tag
     private $HtmlSpecialCharsDecode = false;
 
     /**
+     * What the opening of this tag will be.
+     *
+     * @var string
+     */
+    private $opening = '<';
+
+    /**
+     * What the closing tag for self-closing elements should be.
+     * @var string
+     */
+    private $closing = ' />';
+
+    /**
      * Sets up the tag with a name.
      *
      * @param $name
@@ -79,25 +92,37 @@ class Tag
     /**
      * Sets the tag to be self closing.
      *
-     * @chainable
+     *
      */
     public function selfClosing(): Tag
     {
         $this->selfClosing = true;
 
-        return $this;
+        return clone $this;
+    }
+
+    public function setOpening(string $opening): Tag
+    {
+        $this->opening = $opening;
+        return clone $this;
+    }
+
+    public function setClosing(string $closing): Tag
+    {
+        $this->closing = $closing;
+        return clone $this;
     }
 
     /**
      * Sets the tag to not use a trailing slash.
      *
-     * @chainable
+     *
      */
     public function noTrailingSlash(): Tag
     {
         $this->trailingSlash = false;
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -131,7 +156,7 @@ class Tag
     {
         $this->noise = $noise;
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -148,7 +173,7 @@ class Tag
         }
         $this->attr[\strtolower($key)] = $attributeDTO;
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -296,7 +321,7 @@ class Tag
      */
     public function makeOpeningTag()
     {
-        $return = '<' . $this->name;
+        $return = $this->opening . $this->name;
 
         // add the attributes
         foreach (\array_keys($this->attr) as $key) {
@@ -317,7 +342,7 @@ class Tag
         }
 
         if ($this->selfClosing && $this->trailingSlash) {
-            return $return . ' />';
+            return $return . $this->closing;
         }
 
         return $return . '>';

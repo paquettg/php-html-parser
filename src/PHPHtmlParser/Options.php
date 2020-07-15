@@ -91,7 +91,7 @@ class Options
     /**
      * A list of tags which will always be self closing.
      *
-     * @var array
+     * @var string[]
      */
     private $selfClosing = [
         'area',
@@ -116,7 +116,7 @@ class Options
     /**
      * A list of tags where there should be no /> at the end (html5 style).
      *
-     * @var array
+     * @var string[]
      */
     private $noSlash = [];
 
@@ -129,7 +129,7 @@ class Options
     {
         $this->whitespaceTextNode = $whitespaceTextNode;
 
-        return $this;
+        return clone $this;
     }
 
     public function isStrict(): bool
@@ -141,7 +141,7 @@ class Options
     {
         $this->strict = $strict;
 
-        return $this;
+        return clone $this;
     }
 
     public function getEnforceEncoding(): ?string
@@ -153,7 +153,7 @@ class Options
     {
         $this->enforceEncoding = $enforceEncoding;
 
-        return $this;
+        return clone $this;
     }
 
     public function isCleanupInput(): bool
@@ -165,7 +165,7 @@ class Options
     {
         $this->cleanupInput = $cleanupInput;
 
-        return $this;
+        return clone $this;
     }
 
     public function isRemoveScripts(): bool
@@ -177,7 +177,7 @@ class Options
     {
         $this->removeScripts = $removeScripts;
 
-        return $this;
+        return clone $this;
     }
 
     public function isRemoveStyles(): bool
@@ -189,7 +189,7 @@ class Options
     {
         $this->removeStyles = $removeStyles;
 
-        return $this;
+        return clone $this;
     }
 
     public function isPreserveLineBreaks(): bool
@@ -201,7 +201,7 @@ class Options
     {
         $this->preserveLineBreaks = $preserveLineBreaks;
 
-        return $this;
+        return clone $this;
     }
 
     public function isRemoveDoubleSpace(): bool
@@ -213,7 +213,7 @@ class Options
     {
         $this->removeDoubleSpace = $removeDoubleSpace;
 
-        return $this;
+        return clone $this;
     }
 
     public function isRemoveSmartyScripts(): bool
@@ -225,7 +225,7 @@ class Options
     {
         $this->removeSmartyScripts = $removeSmartyScripts;
 
-        return $this;
+        return clone $this;
     }
 
     public function isHtmlSpecialCharsDecode(): bool
@@ -237,9 +237,12 @@ class Options
     {
         $this->htmlSpecialCharsDecode = $htmlSpecialCharsDecode;
 
-        return $this;
+        return clone $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getSelfClosing(): array
     {
         return $this->selfClosing;
@@ -249,7 +252,7 @@ class Options
     {
         $this->selfClosing = $selfClosing;
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -259,7 +262,7 @@ class Options
     {
         $this->selfClosing[] = $tag;
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -273,7 +276,7 @@ class Options
             $this->selfClosing[] = $tag;
         }
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -284,7 +287,7 @@ class Options
         $tags = [$tag];
         $this->selfClosing = \array_diff($this->selfClosing, $tags);
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -294,19 +297,25 @@ class Options
     {
         $this->selfClosing = [];
 
-        return $this;
+        return clone $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getNoSlash(): array
     {
         return $this->noSlash;
     }
 
+    /**
+     * @param string[] $noSlash
+     */
     public function setNoSlash(array $noSlash): Options
     {
         $this->noSlash = $noSlash;
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -316,7 +325,7 @@ class Options
     {
         $this->noSlash[] = $tag;
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -327,7 +336,7 @@ class Options
         $tags = [$tag];
         $this->noSlash = \array_diff($this->noSlash, $tags);
 
-        return $this;
+        return clone $this;
     }
 
     /**
@@ -337,22 +346,24 @@ class Options
     {
         $this->noSlash = [];
 
-        return $this;
+        return clone $this;
     }
 
-    public function setFromOptions(Options $options): void
+    public function setFromOptions(Options $options): Options
     {
-        $this->setCleanupInput($options->isCleanupInput());
-        $this->setEnforceEncoding($options->getEnforceEncoding());
-        $this->setHtmlSpecialCharsDecode($options->isHtmlSpecialCharsDecode());
-        $this->setPreserveLineBreaks($options->isPreserveLineBreaks());
-        $this->setRemoveDoubleSpace($options->isRemoveDoubleSpace());
-        $this->setRemoveScripts($options->isRemoveScripts());
-        $this->setRemoveSmartyScripts($options->isRemoveSmartyScripts());
-        $this->setRemoveStyles($options->isRemoveStyles());
-        $this->setStrict($options->isStrict());
-        $this->setWhitespaceTextNode($options->isWhitespaceTextNode());
-        $this->setSelfClosing($options->getSelfClosing());
-        $this->setNoSlash($options->getNoSlash());
+        $newOptions = $this->setCleanupInput($options->isCleanupInput())
+            ->setEnforceEncoding($options->getEnforceEncoding())
+            ->setHtmlSpecialCharsDecode($options->isHtmlSpecialCharsDecode())
+            ->setPreserveLineBreaks($options->isPreserveLineBreaks())
+            ->setRemoveDoubleSpace($options->isRemoveDoubleSpace())
+            ->setRemoveScripts($options->isRemoveScripts())
+            ->setRemoveSmartyScripts($options->isRemoveSmartyScripts())
+            ->setRemoveStyles($options->isRemoveStyles())
+            ->setStrict($options->isStrict())
+            ->setWhitespaceTextNode($options->isWhitespaceTextNode())
+            ->setSelfClosing($options->getSelfClosing())
+            ->setNoSlash($options->getNoSlash());
+
+        return $newOptions;
     }
 }

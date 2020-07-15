@@ -304,7 +304,7 @@ abstract class AbstractNode
      * Replaces the tag for this node.
      *
      * @param string|Tag $tag
-     * @chainable
+     *
      */
     public function setTag($tag): AbstractNode
     {
@@ -365,7 +365,7 @@ abstract class AbstractNode
      * A wrapper method that simply calls the setAttribute method
      * on the tag of this node.
      *
-     * @chainable
+     *
      */
     public function setAttribute(string $key, ?string $value, bool $doubleQuote = true): AbstractNode
     {

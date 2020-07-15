@@ -159,8 +159,8 @@ class NodeTagTest extends TestCase
             ],
         ];
 
-        $tag = new Tag('div');
-        $tag->selfClosing()
+        $tag = (new Tag('div'))
+            ->selfClosing()
             ->setAttributes($attr);
         $this->assertEquals('<div class="clear-fix" />', $tag->makeOpeningTag());
     }

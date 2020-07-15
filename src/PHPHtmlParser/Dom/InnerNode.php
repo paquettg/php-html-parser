@@ -205,7 +205,7 @@ abstract class InnerNode extends ArrayNode
     /**
      * Removes the child by id.
      *
-     * @chainable
+     *
      */
     public function removeChild(int $id): InnerNode
     {

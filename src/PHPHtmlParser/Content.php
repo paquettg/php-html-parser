@@ -75,7 +75,7 @@ class Content
     /**
      * Moves the current position forward.
      *
-     * @chainable
+     *
      *
      * @throws ContentLengthException
      */
@@ -101,7 +101,7 @@ class Content
     /**
      * Moves the current position backward.
      *
-     * @chainable
+     *
      */
     public function rewind(int $count): Content
     {
