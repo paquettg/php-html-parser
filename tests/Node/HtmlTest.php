@@ -316,6 +316,20 @@ class NodeHtmlTest extends TestCase {
         $this->assertEquals('link', $node->text);
     }
 
+    public function testInnerText()
+    {
+        $node = new HtmlNode('div');
+        $node->addChild(new TextNode('123 '));
+        $anode = new HtmlNode('a');
+        $anode->addChild(new TextNode('456789 '));
+        $span_node = new HtmlNode('span');
+        $span_node->addChild(new TextNode('101112'));
+
+        $node->addChild($anode);
+        $node->addChild($span_node);
+        $this->assertEquals($node->innerText(), '123 456789 101112');
+    }
+
     public function testTextLookInChildren()
     {
         $p = new HtmlNode('p');

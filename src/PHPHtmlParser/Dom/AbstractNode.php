@@ -99,6 +99,8 @@ abstract class AbstractNode
                 return $this->outerHtml();
             case 'innerhtml':
                 return $this->innerHtml();
+            case 'innertext':
+                return $this->innerText();
             case 'text':
                 return $this->text();
             case 'tag':

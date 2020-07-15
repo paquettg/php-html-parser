@@ -354,6 +354,16 @@ class DomTest extends TestCase {
         $this->assertEquals(2, $dom->countChildren());
     }
 
+    public function testInnerText()
+    {
+        $html = <<<EOF
+<body class="" style="" data-gr-c-s-loaded="true">123<a>456789</a><span>101112</span></body>
+EOF;
+        $dom = new Dom();
+        $dom->load($html);
+        $this->assertEquals($dom->innerText, "123456789101112");
+    }
+
     public function testGetChildrenArray()
     {
         $dom = new Dom;
