@@ -3,7 +3,7 @@
 declare(strict_types=1);
 require_once 'tests/data/MockNode.php';
 
-use PHPHtmlParser\Dom\MockNode as Node;
+use PHPHtmlParser\Dom\Node\MockNode as Node;
 use PHPUnit\Framework\TestCase;
 
 class NodeParentTest extends TestCase

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
-use PHPHtmlParser\Dom\AbstractNode;
-use PHPHtmlParser\Dom\InnerNode;
+use PHPHtmlParser\Dom\Node\AbstractNode;
+use PHPHtmlParser\Dom\Node\InnerNode;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PHPHtmlParser\Dom\Collection;
-use PHPHtmlParser\Dom\HtmlNode;
+use PHPHtmlParser\Dom\Node\Collection;
+use PHPHtmlParser\Dom\Node\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Selector\Parser;
 use PHPHtmlParser\Selector\Selector;

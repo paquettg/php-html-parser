@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\DTO;
 
-use PHPHtmlParser\Dom\HtmlNode;
+use PHPHtmlParser\Dom\Node\HtmlNode;
 
 final class TagDTO
 {

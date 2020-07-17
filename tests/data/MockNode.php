@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PHPHtmlParser\Dom;
+namespace PHPHtmlParser\Dom\Node;
 
 /**
  * This mock object is used solely for testing the abstract

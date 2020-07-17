@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPHtmlParser\Dom;
+namespace PHPHtmlParser\Dom\Node;
 
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
+use PHPHtmlParser\Dom\Tag;
 
 /**
  * Class HtmlNode.

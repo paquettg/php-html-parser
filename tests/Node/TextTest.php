@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
-use PHPHtmlParser\Dom\TextNode;
+use PHPHtmlParser\Dom\Node\TextNode;
 use PHPUnit\Framework\TestCase;
 use stringEncode\Encode;
 

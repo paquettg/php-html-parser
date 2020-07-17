@@ -7,10 +7,10 @@ namespace PHPHtmlParser\Selector;
 use PHPHtmlParser\Contracts\Selector\ParserInterface;
 use PHPHtmlParser\Contracts\Selector\SeekerInterface;
 use PHPHtmlParser\Contracts\Selector\SelectorInterface;
-use PHPHtmlParser\Discovery\ParserDiscovery;
+use PHPHtmlParser\Discovery\SelectorParserDiscovery;
 use PHPHtmlParser\Discovery\SeekerDiscovery;
-use PHPHtmlParser\Dom\AbstractNode;
-use PHPHtmlParser\Dom\Collection;
+use PHPHtmlParser\Dom\Node\AbstractNode;
+use PHPHtmlParser\Dom\Node\Collection;
 use PHPHtmlParser\DTO\Selector\ParsedSelectorCollectionDTO;
 use PHPHtmlParser\DTO\Selector\RuleDTO;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
@@ -36,7 +36,7 @@ class Selector implements SelectorInterface
     public function __construct(string $selector, ?ParserInterface $parser = null, ?SeekerInterface $seeker = null)
     {
         if ($parser == null) {
-            $parser = ParserDiscovery::find();
+            $parser = SelectorParserDiscovery::find();
         }
         if ($seeker == null) {
             $seeker = SeekerDiscovery::find();

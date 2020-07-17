@@ -28,7 +28,7 @@ You can find many examples of how to use the dom parser and any of its parts (wh
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node;
 
 $dom = new Dom;
 $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
@@ -46,7 +46,7 @@ You may also seamlessly load a file into the dom instead of a string, which is m
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node;
 
 $dom = new Dom;
 $dom->loadFromFile('tests/data/big.html');
@@ -79,7 +79,7 @@ Loading a url is very similar to the way you would load the html from a file.
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node;
 
 $dom = new Dom;
 $dom->loadFromUrl('http://google.com');
@@ -95,7 +95,7 @@ What makes the loadFromUrl method note worthy is the `PHPHtmlParser\CurlInterfac
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node;
 use App\Services\Connector;
 
 $dom = new Dom;
@@ -113,7 +113,7 @@ Loading a string directly, with out the checks in `load()` is also easily done.
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node;
 
 $dom = new Dom;
 $dom->loadStr('<html>String</html>', []);
@@ -130,7 +130,7 @@ You can also set parsing option that will effect the behavior of the parsing eng
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node;
 
 $dom = new Dom;
 $dom->setOptions([

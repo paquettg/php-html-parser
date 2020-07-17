@@ -7,7 +7,7 @@ namespace PHPHtmlParser\Discovery;
 use PHPHtmlParser\Contracts\Selector\ParserInterface;
 use PHPHtmlParser\Selector\Parser;
 
-class ParserDiscovery
+class SelectorParserDiscovery
 {
     /**
      * @var ParserInterface|null

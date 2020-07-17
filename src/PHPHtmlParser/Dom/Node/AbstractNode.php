@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PHPHtmlParser\Dom;
+namespace PHPHtmlParser\Dom\Node;
 
 use PHPHtmlParser\Contracts\Selector\SelectorInterface;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
+use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Finder;
 use PHPHtmlParser\Selector\Selector;
 use stringEncode\Encode;

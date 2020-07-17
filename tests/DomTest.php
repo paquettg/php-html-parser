@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
-use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPHtmlParser\Options;
 use PHPUnit\Framework\TestCase;
 
@@ -416,7 +415,7 @@ class DomTest extends TestCase
         $dom = new Dom();
         $dom->loadFromFile('tests/data/files/html5.html');
 
-        /** @var Dom\AbstractNode $meta */
+        /** @var Node\AbstractNode $meta */
         $div = $dom->find('div.d-inline-block', 0);
         $this->assertEquals('max-width: 29px', $div->getAttribute('style'));
     }
@@ -428,7 +427,7 @@ class DomTest extends TestCase
     <child attribute="anything"></child>
 </parent>');
 
-        /** @var Dom\AbstractNode $meta */
+        /** @var Node\AbstractNode $meta */
         $nodes = $dom->find('[attribute]');
         $this->assertCount(2, $nodes);
     }

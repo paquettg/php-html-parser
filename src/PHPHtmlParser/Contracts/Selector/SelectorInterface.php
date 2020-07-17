@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Contracts\Selector;
 
-use PHPHtmlParser\Dom\AbstractNode;
-use PHPHtmlParser\Dom\Collection;
+use PHPHtmlParser\Dom\Node\AbstractNode;
+use PHPHtmlParser\Dom\Node\Collection;
 use PHPHtmlParser\DTO\Selector\ParsedSelectorCollectionDTO;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 

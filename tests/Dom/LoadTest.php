@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
-use PHPHtmlParser\Exceptions\NotLoadedException;
 use PHPUnit\Framework\TestCase;
 
 class LoadTest extends TestCase

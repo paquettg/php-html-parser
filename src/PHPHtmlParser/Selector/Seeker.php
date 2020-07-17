@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace PHPHtmlParser\Selector;
 
 use PHPHtmlParser\Contracts\Selector\SeekerInterface;
-use PHPHtmlParser\Dom\AbstractNode;
-use PHPHtmlParser\Dom\InnerNode;
-use PHPHtmlParser\Dom\LeafNode;
+use PHPHtmlParser\Dom\Node\AbstractNode;
+use PHPHtmlParser\Dom\Node\InnerNode;
+use PHPHtmlParser\Dom\Node\LeafNode;
 use PHPHtmlParser\DTO\Selector\RuleDTO;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
