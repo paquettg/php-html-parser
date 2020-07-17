@@ -349,7 +349,7 @@ class Dom implements DomInterface
      */
     private function clean(string $str): string
     {
-        if ($this->options->isCleanupInput() != true) {
+        if (!$this->options->isCleanupInput()) {
             // skip entire cleanup step
             return $str;
         }
