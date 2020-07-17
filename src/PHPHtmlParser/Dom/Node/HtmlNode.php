@@ -28,6 +28,13 @@ class HtmlNode extends InnerNode
     protected $outerHtml;
 
     /**
+     * Remembers what the innerText was if it was scanned previously.
+     * 
+     * @var ?string
+     */
+    protected $innerText = null;
+
+    /**
      * Remembers what the text was if it was scanned previously.
      *
      * @var ?string
@@ -109,6 +116,21 @@ class HtmlNode extends InnerNode
         $this->innerHtml = $string;
 
         return $string;
+    }
+
+    /**
+     * Gets the inner text of this node.
+     * @return string
+     * @throws ChildNotFoundException
+     * @throws UnknownChildTypeException
+     */
+    public function innerText(): string
+    {
+        if (is_null($this->innerText)) {
+            $this->innerText = strip_tags($this->innerHtml());
+        }
+
+        return $this->innerText;
     }
 
     /**
