@@ -1,7 +1,7 @@
 PHP Html Parser
 ==========================
 
-Version 2.2.1
+Version 3.0.0
 
 [![Build Status](https://travis-ci.org/paquettg/php-html-parser.png)](https://travis-ci.org/paquettg/php-html-parser)
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
@@ -18,7 +18,7 @@ Install the latest version using composer.
 $ composer require paquettg/php-html-parser
 ```
 
-This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 7.1, 7.2, 7.3, and 7.4.
+This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 7.2, 7.3, and 7.4.
 
 Usage
 -----
@@ -28,7 +28,7 @@ You can find many examples of how to use the dom parser and any of its parts (wh
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom\Node;
+use PHPHtmlParser\Dom;
 
 $dom = new Dom;
 $dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
@@ -46,7 +46,7 @@ You may also seamlessly load a file into the dom instead of a string, which is m
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom\Node;
+use PHPHtmlParser\Dom;
 
 $dom = new Dom;
 $dom->loadFromFile('tests/data/big.html');
@@ -69,8 +69,6 @@ foreach ($contents as $content)
 
 This example loads the html from big.html, a real page found online, and gets all the content-border classes to process. It also shows a few things you can do with a node but it is not an exhaustive list of methods that a node has available.
 
-Alternativly, you can always use the `load()` method to load the file. It will attempt to find the file using `file_exists` and, if successful, will call `loadFromFile()` for you. The same applies to a URL and `loadFromUrl()` method.
-
 Loading Url
 ----------------
 
@@ -79,7 +77,7 @@ Loading a url is very similar to the way you would load the html from a file.
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom\Node;
+use PHPHtmlParser\Dom;
 
 $dom = new Dom;
 $dom->loadFromUrl('http://google.com');
@@ -90,37 +88,35 @@ $dom->loadFromUrl('http://google.com');
 $html = $dom->outerHtml; // same result as the first example
 ```
 
-What makes the loadFromUrl method note worthy is the `PHPHtmlParser\CurlInterface` parameter, an optional second parameter. By default, we use the `PHPHtmlParser\Curl` class to get the contents of the url. On the other hand, though, you can inject your own implementation of CurlInterface and we will attempt to load the url using what ever tool/settings you want, up to you.
+loadFromUrl will, by default, use an implementation of the `\Psr\Http\Client\ClientInterface` to do the HTTP request and a default implementation of `\Psr\Http\Message\RequestInterface` to create the body of the request. You can easely implement your own version of either the client or request to use a custom HTTP connection when using loadFromUrl.
 
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom\Node;
-use App\Services\Connector;
+use PHPHtmlParser\Dom;
+use App\Services\MyClient;
 
 $dom = new Dom;
-$dom->loadFromUrl('http://google.com', [], new Connector);
+$dom->loadFromUrl('http://google.com', null, new MyClient());
 $html = $dom->outerHtml;
 ```
 
-As long as the Connector object implements the `PHPHtmlParser\CurlInterface` interface properly it will use that object to get the content of the url instead of the default `PHPHtmlParser\Curl` class.
+As long as the client object implements the interface properly it will use that object to get the content of the url.
 
 Loading Strings
 ---------------
 
-Loading a string directly, with out the checks in `load()` is also easily done.
+Loading a string directly is also easily done.
 
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom\Node;
+use PHPHtmlParser\Dom;
 
 $dom = new Dom;
-$dom->loadStr('<html>String</html>', []);
+$dom->loadStr('<html>String</html>');
 $html = $dom->outerHtml;
 ```
-
-If the string is to long, depending on your file system, the `load()` method will throw a warning. If this happens you can just call the above method to bypass the `is_file()` check in the `load()` method.
 
 Options
 -------
@@ -130,21 +126,24 @@ You can also set parsing option that will effect the behavior of the parsing eng
 ```php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use PHPHtmlParser\Dom\Node;
+use PHPHtmlParser\Dom;
+use PHPHtmlParser\Options;
 
 $dom = new Dom;
-$dom->setOptions([
-	'strict' => true, // Set a global option to enable strict html parsing.
-]);
+$dom->setOptions(
+    // this is set as the global option level.
+    (new Options())
+        ->setStrict(true)
+);
 
-$dom->loadFromUrl('http://google.com', [
-	'whitespaceTextNode' => false, // Only applies to this load.
-]);
+$dom->loadFromUrl('http://google.com', 
+    (new Options())->setWhitespaceTextNode(false) // only applies to this load.
+);
 
 $dom->loadFromUrl('http://gmail.com'); // will not have whitespaceTextNode set to false.
 ```
 
-At the moment we support 8 options.
+At the moment we support 12 options.
 
 **Strict**
 
@@ -182,15 +181,17 @@ Set this to `false` if you want to preserve whitespace inside of text nodes. It 
 
 Set this to `false` if you want to preserve smarty script found in the html content. It is set to `true` by default.
 
-**depthFirstSearch**
-
-By default this is set to `false` for legacy support. Setting this to `true` will change the behavior of find to order elements by depth first. This will properly preserve the order of elements as they where in the HTML.
-
-This option is depricated and will be removed in version `3.0.0` with the new behavior being as if it was set to `true`.
-
 **htmlSpecialCharsDecode**
 
 By default this is set to `false`. Setting this to `true` will apply the php function `htmlspecialchars_decode` too all attribute values and text nodes.
+
+**selfClosing**
+
+This option contains an array of all self closing tags. These tags must be self closing and the parser will force them to be so if you have strict turned on. You can update this list with any additional tags that can be used as a self closing tag when using strict. You can also remove tags from this array or clear it out completly.
+
+**noSlash**
+
+This option contains an array of all tags that can not be self closing. The list starts off as empty but you can add elements as you wish.
 
 Static Facade
 -------------
@@ -200,7 +201,7 @@ You can also mount a static facade for the Dom object.
 ```PHP
 PHPHtmlParser\StaticDom::mount();
 
-Dom::load('tests/big.hmtl');
+Dom::loadFromFile('tests/big.hmtl');
 $objects = Dom::find('.content-border');
 
 ```
@@ -213,8 +214,10 @@ Modifying The Dom
 You can always modify the dom that was created from any loading method. To change the attribute of any node you can just call the `setAttribute` method.
 
 ```php
+use PHPHtmlParser\Dom;
+
 $dom = new Dom;
-$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
 $a = $dom->find('a')[0];
 $a->setAttribute('class', 'foo');
 echo $a->getAttribute('class'); // "foo"
@@ -223,8 +226,11 @@ echo $a->getAttribute('class'); // "foo"
 You may also get the `PHPHtmlParser\Dom\Tag` class directly and manipulate it as you see fit.
 
 ```php
+use PHPHtmlParser\Dom;
+
 $dom = new Dom;
-$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+/** @var Dom\Node\AbstractNode $a */
 $a   = $dom->find('a')[0];
 $tag = $a->getTag();
 $tag->setAttribute('class', 'foo');
@@ -234,8 +240,11 @@ echo $a->getAttribute('class'); // "foo"
 It is also possible to remove a node from the tree. Simply call the `delete` method on any node to remove it from the tree. It is important to note that you should unset the node after removing it from the `DOM``, it will still take memory as long as it is not unset.
 
 ```php
+use PHPHtmlParser\Dom;
+
 $dom = new Dom;
-$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+/** @var Dom\Node\AbstractNode $a */
 $a   = $dom->find('a')[0];
 $a->delete();
 unset($a);
@@ -245,8 +254,11 @@ echo $dom; // '<div class="all"><p>Hey bro, <br /> :)</p></div>');
 You can modify the text of `TextNode` objects easely. Please note that, if you set an encoding, the new text will be encoded using the existing encoding.
 
 ```php
+use PHPHtmlParser\Dom;
+
 $dom = new Dom;
-$dom->load('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+$dom->loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
+/** @var Dom\Node\InnerNode $a */
 $a   = $dom->find('a')[0];
 $a->firstChild()->setText('biz baz');
 echo $dom; // '<div class="all"><p>Hey bro, <a href="google.com">biz baz</a><br /> :)</p></div>'

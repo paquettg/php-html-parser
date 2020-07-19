@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class CleanerTest extends TestCase
 {
-    public function testLoadByURL()
+    public function testCleanEregiFailureFile()
     {
         $cleaner = new Cleaner();
         $string = $cleaner->clean(\file_get_contents('tests/data/files/mvEregiReplaceFailure.html'), new Options(), 'utf-8');
