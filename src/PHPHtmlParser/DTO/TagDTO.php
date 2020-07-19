@@ -36,17 +36,11 @@ final class TagDTO
         $this->tag = $values['tag'] ?? null;
     }
 
-    /**
-     * @return bool
-     */
     public function isStatus(): bool
     {
         return $this->status;
     }
 
-    /**
-     * @return bool
-     */
     public function isClosing(): bool
     {
         return $this->closing;

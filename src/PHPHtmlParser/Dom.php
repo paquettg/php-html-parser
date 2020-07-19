@@ -117,7 +117,7 @@ class Dom implements DomInterface
      * @throws StrictException
      * @throws ClientExceptionInterface
      */
-    public function loadFromUrl(string $url, ?Options $options, ?ClientInterface $client = null, ?RequestInterface $request = null): Dom
+    public function loadFromUrl(string $url, ?Options $options = null, ?ClientInterface $client = null, ?RequestInterface $request = null): Dom
     {
         if ($client === null) {
             $client = new Client();
@@ -152,11 +152,11 @@ class Dom implements DomInterface
             $localOptions = $localOptions->setFromOptions($options);
         }
 
-        $html = $this->domCleaner->clean($str, $localOptions);
+        $html = $this->domCleaner->clean($str, $localOptions, $this->defaultCharset);
 
         $this->content = new Content($html);
 
-        $this->root = $this->domParser->parse($localOptions, $this->content, strlen($str));
+        $this->root = $this->domParser->parse($localOptions, $this->content, \strlen($str));
         $this->domParser->detectCharset($localOptions, $this->defaultCharset, $this->root);
 
         return $this;
@@ -164,8 +164,6 @@ class Dom implements DomInterface
 
     /**
      * Sets a global options array to be used by all load calls.
-     *
-     *
      */
     public function setOptions(Options $options): Dom
     {
@@ -177,10 +175,10 @@ class Dom implements DomInterface
     /**
      * Find elements by css selector on the root node.
      *
-     * @return mixed|Collection|null
      * @throws NotLoadedException
-     *
      * @throws ChildNotFoundException
+     *
+     * @return mixed|Collection|null
      */
     public function find(string $selector, int $nth = null)
     {
@@ -195,10 +193,10 @@ class Dom implements DomInterface
      *
      * @param $id
      *
-     * @return mixed|Collection|null
      * @throws NotLoadedException
-     *
      * @throws ChildNotFoundException
+     *
+     * @return mixed|Collection|null
      */
     public function getElementById($id)
     {
@@ -211,10 +209,10 @@ class Dom implements DomInterface
      * Simple wrapper function that returns all elements by
      * tag name.
      *
-     * @return mixed|Collection|null
      * @throws NotLoadedException
-     *
      * @throws ChildNotFoundException
+     *
+     * @return mixed|Collection|null
      */
     public function getElementsByTag(string $name)
     {
@@ -227,10 +225,10 @@ class Dom implements DomInterface
      * Simple wrapper function that returns all elements by
      * class name.
      *
-     * @return mixed|Collection|null
      * @throws NotLoadedException
-     *
      * @throws ChildNotFoundException
+     *
+     * @return mixed|Collection|null
      */
     public function getElementsByClass(string $class)
     {

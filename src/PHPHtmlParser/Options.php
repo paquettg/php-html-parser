@@ -351,7 +351,7 @@ class Options
 
     public function setFromOptions(Options $options): Options
     {
-        $newOptions = $this->setCleanupInput($options->isCleanupInput())
+        return $this->setCleanupInput($options->isCleanupInput())
             ->setEnforceEncoding($options->getEnforceEncoding())
             ->setHtmlSpecialCharsDecode($options->isHtmlSpecialCharsDecode())
             ->setPreserveLineBreaks($options->isPreserveLineBreaks())
@@ -363,7 +363,5 @@ class Options
             ->setWhitespaceTextNode($options->isWhitespaceTextNode())
             ->setSelfClosing($options->getSelfClosing())
             ->setNoSlash($options->getNoSlash());
-
-        return $newOptions;
     }
 }

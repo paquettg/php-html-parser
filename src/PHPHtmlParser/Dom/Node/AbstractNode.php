@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace PHPHtmlParser\Dom\Node;
 
 use PHPHtmlParser\Contracts\Selector\SelectorInterface;
+use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
-use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Finder;
 use PHPHtmlParser\Selector\Selector;
 use stringEncode\Encode;
@@ -307,7 +307,6 @@ abstract class AbstractNode
      * Replaces the tag for this node.
      *
      * @param string|Tag $tag
-     *
      */
     public function setTag($tag): AbstractNode
     {
@@ -367,8 +366,6 @@ abstract class AbstractNode
     /**
      * A wrapper method that simply calls the setAttribute method
      * on the tag of this node.
-     *
-     *
      */
     public function setAttribute(string $key, ?string $value, bool $doubleQuote = true): AbstractNode
     {

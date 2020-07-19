@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Dom\Node;
 
+use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
-use PHPHtmlParser\Dom\Tag;
 
 /**
  * Class HtmlNode.
@@ -29,10 +29,10 @@ class HtmlNode extends InnerNode
 
     /**
      * Remembers what the innerText was if it was scanned previously.
-     * 
+     *
      * @var ?string
      */
-    protected $innerText = null;
+    protected $innerText;
 
     /**
      * Remembers what the text was if it was scanned previously.
@@ -120,14 +120,14 @@ class HtmlNode extends InnerNode
 
     /**
      * Gets the inner text of this node.
-     * @return string
+     *
      * @throws ChildNotFoundException
      * @throws UnknownChildTypeException
      */
     public function innerText(): string
     {
-        if (is_null($this->innerText)) {
-            $this->innerText = strip_tags($this->innerHtml());
+        if (\is_null($this->innerText)) {
+            $this->innerText = \strip_tags($this->innerHtml());
         }
 
         return $this->innerText;

@@ -75,8 +75,6 @@ class Content
     /**
      * Moves the current position forward.
      *
-     *
-     *
      * @throws ContentLengthException
      */
     public function fastForward(int $count): Content
@@ -100,8 +98,6 @@ class Content
 
     /**
      * Moves the current position backward.
-     *
-     *
      */
     public function rewind(int $count): Content
     {

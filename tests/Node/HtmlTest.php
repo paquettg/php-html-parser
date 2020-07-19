@@ -6,8 +6,8 @@ require_once 'tests/data/MockNode.php';
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Node\HtmlNode;
 use PHPHtmlParser\Dom\Node\MockNode;
-use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\Node\TextNode;
+use PHPHtmlParser\Dom\Tag;
 use PHPUnit\Framework\TestCase;
 
 class NodeHtmlTest extends TestCase

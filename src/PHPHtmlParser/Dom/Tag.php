@@ -67,6 +67,7 @@ class Tag
 
     /**
      * What the closing tag for self-closing elements should be.
+     *
      * @var string
      */
     private $closing = ' />';
@@ -91,8 +92,6 @@ class Tag
 
     /**
      * Sets the tag to be self closing.
-     *
-     *
      */
     public function selfClosing(): Tag
     {
@@ -104,19 +103,19 @@ class Tag
     public function setOpening(string $opening): Tag
     {
         $this->opening = $opening;
+
         return clone $this;
     }
 
     public function setClosing(string $closing): Tag
     {
         $this->closing = $closing;
+
         return clone $this;
     }
 
     /**
      * Sets the tag to not use a trailing slash.
-     *
-     *
      */
     public function noTrailingSlash(): Tag
     {

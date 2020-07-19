@@ -15,13 +15,14 @@ class Cleaner implements CleanerInterface
      *
      * @throws LogicalException
      */
-    public function clean(string $str, Options $options): string
+    public function clean(string $str, Options $options, string $defaultCharset): string
     {
         if (!$options->isCleanupInput()) {
             // skip entire cleanup step
             return $str;
         }
 
+        // check if the string is gziped
         $is_gzip = 0 === \mb_strpos($str, "\x1f" . "\x8b" . "\x08", 0, 'US-ASCII');
         if ($is_gzip) {
             $str = \gzdecode($str);
@@ -29,6 +30,9 @@ class Cleaner implements CleanerInterface
                 throw new LogicalException('gzdecode returned false. Error when trying to decode the string.');
             }
         }
+
+        // we must handle character encoding
+        $str = $this->setUpRegexEncoding($str, $options, $defaultCharset);
 
         // remove white space before closing tags
         $str = \mb_eregi_replace("'\s+>", "'>", $str);
@@ -103,6 +107,24 @@ class Cleaner implements CleanerInterface
         return $str;
     }
 
+    /**
+     * Sets up the mb_regex_encoding and converts the text to that encoding.
+     *
+     * @throws LogicalException
+     */
+    private function setUpRegexEncoding(string $str, Options $options, string $defaultCharset): string
+    {
+        $encoding = $defaultCharset;
+        $enforceEncoding = $options->getEnforceEncoding();
+        if ($enforceEncoding !== null) {
+            //  they want to enforce the given encoding
+            $encoding = $enforceEncoding;
+        }
 
+        if (!\mb_regex_encoding($encoding)) {
+            throw new LogicalException('Character encoding was not able to be changed to ' . $encoding . '.');
+        }
+
+        return \mb_convert_encoding($str, $encoding);
+    }
 }
-

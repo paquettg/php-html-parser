@@ -97,169 +97,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * Attempt to parse a tag out of the content.
-     *
-     * @throws StrictException
-     * @throws ContentLengthException
-     * @throws LogicalException
-     * @throws StrictException
-     */
-    private function parseTag(Options $options, Content $content, int $size): TagDTO
-    {
-        $return = [];
-        if ($content->char() != '<') {
-            // we are not at the beginning of a tag
-            return new TagDTO();
-        }
-
-        // check if this is a closing tag
-        try {
-            $content->fastForward(1);
-        } catch (ContentLengthException $exception) {
-            // we are at the end of the file
-            return new TagDTO();
-        }
-        if ($content->char() == '/') {
-            // end tag
-            $tag = $content->fastForward(1)
-                ->copyByToken(StringToken::SLASH(), true);
-            // move to end of tag
-            $content->copyUntil('>');
-            $content->fastForward(1);
-
-            // check if this closing tag counts
-            $tag = \strtolower($tag);
-            if (\in_array($tag, $options->getSelfClosing(), true)) {
-                $return['status'] = true;
-
-                return new TagDTO($return);
-            }
-            $return['status'] = true;
-            $return['closing'] = true;
-            $return['tag'] = \strtolower($tag);
-
-            return new TagDTO($return);
-        } elseif ($content->char() == '?') {
-            // special setting tag
-            $tag = $content->fastForward(1)
-                ->copyByToken(StringToken::SLASH(), true);
-            $tag = (new Tag($tag))
-                ->setOpening('<?')
-                ->setClosing(' ?>')
-                ->selfClosing();
-        } else {
-            $tag = \strtolower($content->copyByToken(StringToken::SLASH(), true));
-            if (\trim($tag) == '') {
-                // no tag found, invalid < found
-                return new TagDTO();
-            }
-        }
-        $node = new HtmlNode($tag);
-        $node->setHtmlSpecialCharsDecode($options->isHtmlSpecialCharsDecode());
-
-        // attributes
-        while (
-            $content->char() != '>' &&
-            $content->char() != '/'
-        ) {
-            $space = $content->skipByToken(StringToken::BLANK(), true);
-            if (empty($space)) {
-                try {
-                    $content->fastForward(1);
-                } catch (ContentLengthException $exception) {
-                    // reached the end of the content
-                    break;
-                }
-                continue;
-            }
-
-            $name = $content->copyByToken(StringToken::EQUAL(), true);
-            if ($name == '/') {
-                break;
-            }
-
-            if (empty($name)) {
-                $content->skipByToken(StringToken::BLANK());
-                continue;
-            }
-
-            $content->skipByToken(StringToken::BLANK());
-            if ($content->char() == '=') {
-                $content->fastForward(1)
-                    ->skipByToken(StringToken::BLANK());
-                switch ($content->char()) {
-                    case '"':
-                        $content->fastForward(1);
-                        $string = $content->copyUntil('"', true);
-                        do {
-                            $moreString = $content->copyUntilUnless('"', '=>');
-                            $string .= $moreString;
-                        } while (\strlen($moreString) > 0 && $content->getPosition() < $size);
-                        $attr['value'] = $string;
-                        $content->fastForward(1);
-                        $node->getTag()->setAttribute($name, $string);
-                        break;
-                    case "'":
-                        $content->fastForward(1);
-                        $string = $content->copyUntil("'", true);
-                        do {
-                            $moreString = $content->copyUntilUnless("'", '=>');
-                            $string .= $moreString;
-                        } while (\strlen($moreString) > 0 && $content->getPosition() < $size);
-                        $attr['value'] = $string;
-                        $content->fastForward(1);
-                        $node->getTag()->setAttribute($name, $string, false);
-                        break;
-                    default:
-                        $node->getTag()->setAttribute($name, $content->copyByToken(StringToken::ATTR(), true));
-                        break;
-                }
-            } else {
-                // no value attribute
-                if ($options->isStrict()) {
-                    // can't have this in strict html
-                    $character = $content->getPosition();
-                    throw new StrictException("Tag '$tag' has an attribute '$name' with out a value! (character #$character)");
-                }
-                $node->getTag()->setAttribute($name, null);
-                if ($content->char() != '>') {
-                    $content->rewind(1);
-                }
-            }
-        }
-
-        $content->skipByToken(StringToken::BLANK());
-        if ($content->char() == '/') {
-            // self closing tag
-            $node->getTag()->selfClosing();
-            $content->fastForward(1);
-        } elseif (\in_array($node->getTag()->name(), $options->getSelfClosing(), true)) {
-            // Should be a self closing tag, check if we are strict
-            if ($options->isStrict()) {
-                $character = $content->getPosition();
-                throw new StrictException("Tag '".$node->getTag()->name()."' is not self closing! (character #$character)");
-            }
-
-            // We force self closing on this tag.
-            $node->getTag()->selfClosing();
-
-            // Should this tag use a trailing slash?
-            if (\in_array($node->getTag()->name(), $options->getNoSlash(), true)) {
-                $node->getTag()->noTrailingSlash();
-            }
-        }
-
-        if ($content->canFastForward(1)) {
-            $content->fastForward(1);
-        }
-
-        $return['status'] = true;
-        $return['node'] = $node;
-
-        return new TagDTO($return);
-    }
-
-    /**
      * Attempts to detect the charset that the html was sent in.
      *
      * @throws ChildNotFoundException
@@ -314,6 +151,82 @@ class Parser implements ParserInterface
     }
 
     /**
+     * Attempt to parse a tag out of the content.
+     *
+     * @throws StrictException
+     * @throws ContentLengthException
+     * @throws LogicalException
+     * @throws StrictException
+     */
+    private function parseTag(Options $options, Content $content, int $size): TagDTO
+    {
+        $return = [];
+        if ($content->char() != '<') {
+            // we are not at the beginning of a tag
+            return new TagDTO();
+        }
+
+        // check if this is a closing tag
+        try {
+            $content->fastForward(1);
+        } catch (ContentLengthException $exception) {
+            // we are at the end of the file
+            return new TagDTO();
+        }
+        if ($content->char() == '/') {
+            return $this->makeEndTag($content, $options);
+        }
+        if ($content->char() == '?') {
+            // special setting tag
+            $tag = $content->fastForward(1)
+                ->copyByToken(StringToken::SLASH(), true);
+            $tag = (new Tag($tag))
+                ->setOpening('<?')
+                ->setClosing(' ?>')
+                ->selfClosing();
+        } else {
+            $tag = \strtolower($content->copyByToken(StringToken::SLASH(), true));
+            if (\trim($tag) == '') {
+                // no tag found, invalid < found
+                return new TagDTO();
+            }
+        }
+        $node = new HtmlNode($tag);
+        $node->setHtmlSpecialCharsDecode($options->isHtmlSpecialCharsDecode());
+        $this->setUpAttributes($content, $size, $node, $options, $tag);
+
+        $content->skipByToken(StringToken::BLANK());
+        if ($content->char() == '/') {
+            // self closing tag
+            $node->getTag()->selfClosing();
+            $content->fastForward(1);
+        } elseif (\in_array($node->getTag()->name(), $options->getSelfClosing(), true)) {
+            // Should be a self closing tag, check if we are strict
+            if ($options->isStrict()) {
+                $character = $content->getPosition();
+                throw new StrictException("Tag '" . $node->getTag()->name() . "' is not self closing! (character #$character)");
+            }
+
+            // We force self closing on this tag.
+            $node->getTag()->selfClosing();
+
+            // Should this tag use a trailing slash?
+            if (\in_array($node->getTag()->name(), $options->getNoSlash(), true)) {
+                $node->getTag()->noTrailingSlash();
+            }
+        }
+
+        if ($content->canFastForward(1)) {
+            $content->fastForward(1);
+        }
+
+        $return['status'] = true;
+        $return['node'] = $node;
+
+        return new TagDTO($return);
+    }
+
+    /**
      * @throws ChildNotFoundException
      */
     private function detectHTML5Charset(Encode $encode, AbstractNode $root): bool
@@ -328,5 +241,110 @@ class Parser implements ParserInterface
         $root->propagateEncoding($encode);
 
         return true;
+    }
+
+    /**
+     * @throws ContentLengthException
+     * @throws LogicalException
+     */
+    private function makeEndTag(Content $content, Options $options): TagDTO
+    {
+        $return = [];
+        $tag = $content->fastForward(1)
+            ->copyByToken(StringToken::SLASH(), true);
+        // move to end of tag
+        $content->copyUntil('>');
+        $content->fastForward(1);
+
+        // check if this closing tag counts
+        $tag = \strtolower($tag);
+        if (\in_array($tag, $options->getSelfClosing(), true)) {
+            $return['status'] = true;
+
+            return new TagDTO($return);
+        }
+        $return['status'] = true;
+        $return['closing'] = true;
+        $return['tag'] = \strtolower($tag);
+
+        return new TagDTO($return);
+    }
+
+    /**
+     * @param string|Tag $tag
+     *
+     * @throws ContentLengthException
+     * @throws LogicalException
+     * @throws StrictException
+     */
+    private function setUpAttributes(Content $content, int $size, HtmlNode $node, Options $options, $tag): void
+    {
+        while (
+            $content->char() != '>' &&
+            $content->char() != '/'
+        ) {
+            $space = $content->skipByToken(StringToken::BLANK(), true);
+            if (empty($space)) {
+                try {
+                    $content->fastForward(1);
+                } catch (ContentLengthException $exception) {
+                    // reached the end of the content
+                    break;
+                }
+                continue;
+            }
+
+            $name = $content->copyByToken(StringToken::EQUAL(), true);
+            if ($name == '/') {
+                break;
+            }
+
+            if (empty($name)) {
+                $content->skipByToken(StringToken::BLANK());
+                continue;
+            }
+
+            $content->skipByToken(StringToken::BLANK());
+            if ($content->char() == '=') {
+                $content->fastForward(1)
+                    ->skipByToken(StringToken::BLANK());
+                switch ($content->char()) {
+                    case '"':
+                        $content->fastForward(1);
+                        $string = $content->copyUntil('"', true);
+                        do {
+                            $moreString = $content->copyUntilUnless('"', '=>');
+                            $string .= $moreString;
+                        } while (\strlen($moreString) > 0 && $content->getPosition() < $size);
+                        $content->fastForward(1);
+                        $node->getTag()->setAttribute($name, $string);
+                        break;
+                    case "'":
+                        $content->fastForward(1);
+                        $string = $content->copyUntil("'", true);
+                        do {
+                            $moreString = $content->copyUntilUnless("'", '=>');
+                            $string .= $moreString;
+                        } while (\strlen($moreString) > 0 && $content->getPosition() < $size);
+                        $content->fastForward(1);
+                        $node->getTag()->setAttribute($name, $string, false);
+                        break;
+                    default:
+                        $node->getTag()->setAttribute($name, $content->copyByToken(StringToken::ATTR(), true));
+                        break;
+                }
+            } else {
+                // no value attribute
+                if ($options->isStrict()) {
+                    // can't have this in strict html
+                    $character = $content->getPosition();
+                    throw new StrictException("Tag '$tag' has an attribute '$name' with out a value! (character #$character)");
+                }
+                $node->getTag()->setAttribute($name, null);
+                if ($content->char() != '>') {
+                    $content->rewind(1);
+                }
+            }
+        }
     }
 }

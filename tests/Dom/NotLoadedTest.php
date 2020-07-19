@@ -30,5 +30,3 @@ class NotLoadedTest extends TestCase
         $div = $this->dom->find('div', 0);
     }
 }
-
-

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Dom;
 
-use PHPHtmlParser\Dom\Node\HtmlNode;
 use PHPHtmlParser\Dom\Node\AbstractNode;
+use PHPHtmlParser\Dom\Node\HtmlNode;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
 
@@ -96,5 +96,5 @@ trait RootAccessTrait
         return $this->root->hasChildren();
     }
 
-    abstract function isLoaded(): void;
+    abstract public function isLoaded(): void;
 }

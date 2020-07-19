@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Dom\Node;
 
-use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Dom\Tag;
+use PHPHtmlParser\Exceptions\LogicalException;
 
 /**
  * Class TextNode.

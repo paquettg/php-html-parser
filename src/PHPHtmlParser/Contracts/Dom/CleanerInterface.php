@@ -12,5 +12,5 @@ interface CleanerInterface
      *
      * @throws LogicalException
      */
-    public function clean(string $str, Options $options): string;
+    public function clean(string $str, Options $options, string $defaultCharset): string;
 }

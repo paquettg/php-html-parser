@@ -337,7 +337,7 @@ class DomTest extends TestCase
 EOF;
         $dom = new Dom();
         $dom->loadStr($html);
-        $this->assertEquals($dom->innerText, "123456789101112");
+        $this->assertEquals($dom->innerText, '123456789101112');
     }
 
     public function testMultipleSquareSelector()
@@ -516,7 +516,7 @@ EOF;
     }
 
     /**
-     * Test to cover issue found in ticket #221
+     * Test to cover issue found in ticket #221.
      */
     public function testRandomTagInMiddleOfText()
     {
