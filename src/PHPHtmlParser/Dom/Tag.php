@@ -163,10 +163,10 @@ class Tag
      */
     public function setAttribute(string $key, ?string $attributeValue, bool $doubleQuote = true): Tag
     {
-        $attributeDTO = new AttributeDTO([
-            'value'       => $attributeValue,
-            'doubleQuote' => $doubleQuote,
-        ]);
+        $attributeDTO = AttributeDTO::makeFromPrimitives(
+            $attributeValue,
+            $doubleQuote
+        );
         if ($this->HtmlSpecialCharsDecode) {
             $attributeDTO->htmlspecialcharsDecode();
         }

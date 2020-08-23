@@ -11,13 +11,24 @@ final class ParsedSelectorDTO
      */
     private $rules = [];
 
-    public function __construct(array $values)
+    /**
+     * @param RuleDTO[] $ruleDTOs
+     */
+    private function __construct(array $ruleDTOs)
     {
-        foreach ($values as $value) {
-            if ($value instanceof RuleDTO) {
-                $this->rules[] = $value;
+        foreach ($ruleDTOs as $ruleDTO) {
+            if ($ruleDTO instanceof RuleDTO) {
+                $this->rules[] = $ruleDTO;
             }
         }
+    }
+
+    /**
+     * @param RuleDTO[] $ruleDTOs
+     */
+    public static function makeFromRules(array $ruleDTOs): ParsedSelectorDTO
+    {
+        return new ParsedSelectorDTO($ruleDTOs);
     }
 
     /**

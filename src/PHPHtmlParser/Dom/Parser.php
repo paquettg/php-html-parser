@@ -160,10 +160,9 @@ class Parser implements ParserInterface
      */
     private function parseTag(Options $options, Content $content, int $size): TagDTO
     {
-        $return = [];
         if ($content->char() != '<') {
             // we are not at the beginning of a tag
-            return new TagDTO();
+            return TagDTO::makeFromPrimitives();
         }
 
         // check if this is a closing tag
@@ -171,7 +170,7 @@ class Parser implements ParserInterface
             $content->fastForward(1);
         } catch (ContentLengthException $exception) {
             // we are at the end of the file
-            return new TagDTO();
+            return TagDTO::makeFromPrimitives();
         }
         if ($content->char() == '/') {
             return $this->makeEndTag($content, $options);
@@ -188,7 +187,7 @@ class Parser implements ParserInterface
             $tag = \strtolower($content->copyByToken(StringToken::SLASH(), true));
             if (\trim($tag) == '') {
                 // no tag found, invalid < found
-                return new TagDTO();
+                return TagDTO::makeFromPrimitives();
             }
         }
         $node = new HtmlNode($tag);
@@ -220,10 +219,7 @@ class Parser implements ParserInterface
             $content->fastForward(1);
         }
 
-        $return['status'] = true;
-        $return['node'] = $node;
-
-        return new TagDTO($return);
+        return TagDTO::makeFromPrimitives(true, false, $node);
     }
 
     /**
@@ -249,7 +245,6 @@ class Parser implements ParserInterface
      */
     private function makeEndTag(Content $content, Options $options): TagDTO
     {
-        $return = [];
         $tag = $content->fastForward(1)
             ->copyByToken(StringToken::SLASH(), true);
         // move to end of tag
@@ -259,15 +254,10 @@ class Parser implements ParserInterface
         // check if this closing tag counts
         $tag = \strtolower($tag);
         if (\in_array($tag, $options->getSelfClosing(), true)) {
-            $return['status'] = true;
-
-            return new TagDTO($return);
+            return TagDTO::makeFromPrimitives(true);
         }
-        $return['status'] = true;
-        $return['closing'] = true;
-        $return['tag'] = \strtolower($tag);
 
-        return new TagDTO($return);
+        return TagDTO::makeFromPrimitives(true, true, null, \strtolower($tag));
     }
 
     /**

@@ -11,13 +11,24 @@ final class ParsedSelectorCollectionDTO
      */
     private $parsedSelectorDTO = [];
 
-    public function __construct(array $values)
+    /**
+     * @param ParsedSelectorDTO[] $parsedSelectorDTOs
+     */
+    private function __construct(array $parsedSelectorDTOs)
     {
-        foreach ($values as $value) {
-            if ($value instanceof ParsedSelectorDTO) {
-                $this->parsedSelectorDTO[] = $value;
+        foreach ($parsedSelectorDTOs as $parsedSelectorDTO) {
+            if ($parsedSelectorDTO instanceof ParsedSelectorDTO) {
+                $this->parsedSelectorDTO[] = $parsedSelectorDTO;
             }
         }
+    }
+
+    /**
+     * @param ParsedSelectorDTO[] $parsedSelectorDTOs
+     */
+    public static function makeCollection(array $parsedSelectorDTOs): ParsedSelectorCollectionDTO
+    {
+        return new ParsedSelectorCollectionDTO($parsedSelectorDTOs);
     }
 
     /**

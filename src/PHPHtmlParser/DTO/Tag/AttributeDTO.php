@@ -19,10 +19,18 @@ final class AttributeDTO
      */
     private $doubleQuote;
 
-    public function __construct(array $values)
+    private function __construct(array $values)
     {
         $this->value = $values['value'];
         $this->doubleQuote = $values['doubleQuote'] ?? true;
+    }
+
+    public static function makeFromPrimitives(?string $value, bool $doubleQuote = true): AttributeDTO
+    {
+        return new AttributeDTO([
+            'value'       => $value,
+            'doubleQuote' => $doubleQuote,
+        ]);
     }
 
     public function getValue(): ?string

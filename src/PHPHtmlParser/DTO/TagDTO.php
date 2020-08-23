@@ -28,12 +28,22 @@ final class TagDTO
      */
     private $tag;
 
-    public function __construct(array $values = [])
+    private function __construct(array $values = [])
     {
         $this->status = $values['status'] ?? false;
         $this->closing = $values['closing'] ?? false;
         $this->node = $values['node'] ?? null;
         $this->tag = $values['tag'] ?? null;
+    }
+
+    public static function makeFromPrimitives(bool $status = false, bool $closing = false, ?HtmlNode $node = null, ?string $tag = null): TagDTO
+    {
+        return new TagDTO([
+            'status'  => $status,
+            'closing' => $closing,
+            'node'    => $node,
+            'tag'     => $tag,
+        ]);
     }
 
     public function isStatus(): bool

@@ -36,7 +36,7 @@ final class RuleDTO
      */
     private $alterNext;
 
-    public function __construct(array $values)
+    private function __construct(array $values)
     {
         $this->tag = $values['tag'];
         $this->operator = $values['operator'];
@@ -47,16 +47,26 @@ final class RuleDTO
     }
 
     /**
-     * @return string
+     * @param string|array|null $key
+     * @param string|array|null $value
      */
+    public static function makeFromPrimitives(string $tag, string $operator, $key, $value, bool $noKey, bool $alterNext): RuleDTO
+    {
+        return new RuleDTO([
+            'tag'       => $tag,
+            'operator'  => $operator,
+            'key'       => $key,
+            'value'     => $value,
+            'noKey'     => $noKey,
+            'alterNext' => $alterNext,
+        ]);
+    }
+
     public function getTag(): string
     {
         return $this->tag;
     }
 
-    /**
-     * @return string
-     */
     public function getOperator(): string
     {
         return $this->operator;
@@ -78,17 +88,11 @@ final class RuleDTO
         return $this->value;
     }
 
-    /**
-     * @return bool
-     */
     public function isNoKey(): bool
     {
         return $this->noKey;
     }
 
-    /**
-     * @return bool
-     */
     public function isAlterNext(): bool
     {
         return $this->alterNext;

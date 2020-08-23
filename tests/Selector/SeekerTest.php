@@ -10,14 +10,14 @@ class SeekerTest extends TestCase
 {
     public function testSeekReturnEmptyArray()
     {
-        $ruleDTO = new RuleDTO([
-            'tag'       => 'tag',
-            'key'       => 1,
-            'value'     => null,
-            'operator'  => null,
-            'noKey'     => false,
-            'alterNext' => false,
-        ]);
+        $ruleDTO = RuleDTO::makeFromPrimitives(
+            'tag',
+            '=',
+            null,
+            null,
+            false,
+            false
+        );
         $seeker = new Seeker();
         $results = $seeker->seek([], $ruleDTO, []);
         $this->assertCount(0, $results);

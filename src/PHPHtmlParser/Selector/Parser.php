@@ -92,25 +92,25 @@ class Parser implements ParserInterface
                 $noKey = true;
             }
 
-            $rules[] = new RuleDTO([
-                'tag'       => $tag,
-                'key'       => $key,
-                'value'     => $value,
-                'operator'  => $operator,
-                'noKey'     => $noKey,
-                'alterNext' => $alterNext,
-            ]);
+            $rules[] = RuleDTO::makeFromPrimitives(
+                $tag,
+                $operator,
+                $key,
+                $value,
+                $noKey,
+                $alterNext
+            );
             if (isset($match[7]) && \is_string($match[7]) && \trim($match[7]) == ',') {
-                $selectors[] = new ParsedSelectorDTO($rules);
+                $selectors[] = ParsedSelectorDTO::makeFromRules($rules);
                 $rules = [];
             }
         }
 
         // save last results
         if (\count($rules) > 0) {
-            $selectors[] = new ParsedSelectorDTO($rules);
+            $selectors[] = ParsedSelectorDTO::makeFromRules($rules);
         }
 
-        return new ParsedSelectorCollectionDTO($selectors);
+        return ParsedSelectorCollectionDTO::makeCollection($selectors);
     }
 }
