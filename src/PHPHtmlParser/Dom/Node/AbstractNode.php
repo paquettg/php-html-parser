@@ -154,9 +154,9 @@ abstract class AbstractNode
     /**
      * Returns the parent of node.
      *
-     * @return AbstractNode
+     * @return InnerNode
      */
-    public function getParent()
+    public function getParent(): ?InnerNode
     {
         return $this->parent;
     }
