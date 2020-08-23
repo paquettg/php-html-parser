@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Dom\Node;
 
+use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\LogicalException;
@@ -11,6 +12,13 @@ use stringEncode\Encode;
 
 /**
  * Inner node of the html tree, might have children.
+ *
+ * @property-read string    $outerhtml
+ * @property-read string    $innerhtml
+ * @property-read string    $innerText
+ * @property-read string    $text
+ * @property-read Tag       $tag
+ * @property-read InnerNode $parent
  */
 abstract class InnerNode extends ArrayNode
 {

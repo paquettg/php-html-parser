@@ -17,13 +17,12 @@ use stringEncode\Encode;
 /**
  * Dom node object.
  *
- * @property string    $outerhtml
- * @property string    $innerhtml
- * @property string    $text
- * @property int       $prev
- * @property int       $next
- * @property Tag       $tag
- * @property InnerNode $parent
+ * @property-read string    $outerhtml
+ * @property-read string    $innerhtml
+ * @property-read string    $innerText
+ * @property-read string    $text
+ * @property-read Tag       $tag
+ * @property-read InnerNode $parent
  */
 abstract class AbstractNode
 {

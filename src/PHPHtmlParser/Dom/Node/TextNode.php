@@ -9,6 +9,13 @@ use PHPHtmlParser\Exceptions\LogicalException;
 
 /**
  * Class TextNode.
+ *
+ * @property-read string    $outerhtml
+ * @property-read string    $innerhtml
+ * @property-read string    $innerText
+ * @property-read string    $text
+ * @property-read Tag       $tag
+ * @property-read InnerNode $parent
  */
 class TextNode extends LeafNode
 {

@@ -334,7 +334,7 @@ class NodeHtmlTest extends TestCase
 
         $node->addChild($anode);
         $node->addChild($span_node);
-        $this->assertEquals($node->innerText(), '123 456789 101112');
+        $this->assertEquals($node->innerText, '123 456789 101112');
     }
 
     public function testTextLookInChildrenAndNoChildren()

@@ -7,10 +7,18 @@ namespace PHPHtmlParser\Dom\Node;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use PHPHtmlParser\Dom\Tag;
 
 /**
  * Dom node object which will allow users to use it as
  * an array.
+ *
+ * @property-read string    $outerhtml
+ * @property-read string    $innerhtml
+ * @property-read string    $innerText
+ * @property-read string    $text
+ * @property-read Tag       $tag
+ * @property-read InnerNode $parent
  */
 abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Countable
 {

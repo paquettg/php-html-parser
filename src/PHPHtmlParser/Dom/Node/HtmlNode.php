@@ -10,6 +10,13 @@ use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 
 /**
  * Class HtmlNode.
+ *
+ * @property-read string    $outerhtml
+ * @property-read string    $innerhtml
+ * @property-read string    $innerText
+ * @property-read string    $text
+ * @property-read Tag       $tag
+ * @property-read InnerNode $parent
  */
 class HtmlNode extends InnerNode
 {
