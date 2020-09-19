@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.0
+
+- Updated to include Tidelift subscription option.
+- Removed php-coverall.
+- Removed Guzzle 6 Adapter.
+- Added support for Guzzle 7.
+
 ## 3.0.1
 
 ### Changed
@@ -36,6 +43,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `findById()` method removed from Dom object.
 - Removed `load()` method in Dom object.
 - Removed support for php 7.1.
+
+## 2.2.1
+
+### Added
+- Added php_cs.
+- Added support for PSR7 requests.
+- Added the attribute type dto.
 
 ## 2.2.0
 

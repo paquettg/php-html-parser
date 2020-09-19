@@ -1,7 +1,7 @@
 PHP Html Parser
 ==========================
 
-Version 3.0.1
+Version 3.0.2
 
 [![Build Status](https://travis-ci.org/paquettg/php-html-parser.png)](https://travis-ci.org/paquettg/php-html-parser)
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
@@ -20,7 +20,7 @@ $ composer require paquettg/php-html-parser
 
 This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 7.2, 7.3, and 7.4.
 
-Usage
+Basic Usage
 -----
 
 You can find many examples of how to use the dom parser and any of its parts (which you will most likely never touch) in the tests directory. The tests are done using PHPUnit and are very small, a few lines each, and are a great place to start. Given that, I'll still be showing a few examples of how the package should be used. The following example is a very simplistic usage of the package.
@@ -37,6 +37,13 @@ echo $a->text; // "click here"
 ```
 
 The above will output "click here". Simple no? There are many ways to get the same result from the dome, such as `$dom->getElementsbyTag('a')[0]` or `$dom->find('a', 0)` which can all be found in the tests or in the code itself.
+
+Support PHP Html Parser Financially
+--------------
+
+Get supported Monolog and help fund the project with the [Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-paquettg-php-html-parser?utm_source=packagist-paquettg-php-html-parser&utm_medium=referral&utm_campaign=enterprise).
+
+Tidelift delivers commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use.
 
 Loading Files
 ------------------
