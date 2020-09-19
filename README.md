@@ -23,7 +23,7 @@ This package can be found on [packagist](https://packagist.org/packages/paquettg
 Basic Usage
 -----
 
-You can find many examples of how to use the dom parser and any of its parts (which you will most likely never touch) in the tests directory. The tests are done using PHPUnit and are very small, a few lines each, and are a great place to start. Given that, I'll still be showing a few examples of how the package should be used. The following example is a very simplistic usage of the package.
+You can find many examples of how to use the DOM parser and any of its parts (which you will most likely never touch) in the tests directory. The tests are done using PHPUnit and are very small, a few lines each, and are a great place to start. Given that, I'll still be showing a few examples of how the package should be used. The following example is a very simplistic usage of the package.
 
 ```php
 // Assuming you installed from Composer:
@@ -36,7 +36,7 @@ $a = $dom->find('a')[0];
 echo $a->text; // "click here"
 ```
 
-The above will output "click here". Simple no? There are many ways to get the same result from the dome, such as `$dom->getElementsbyTag('a')[0]` or `$dom->find('a', 0)` which can all be found in the tests or in the code itself.
+The above will output "click here". Simple, no? There are many ways to get the same result from the DOM, such as `$dom->getElementsbyTag('a')[0]` or `$dom->find('a', 0)`, which can all be found in the tests or in the code itself.
 
 Support PHP Html Parser Financially
 --------------
@@ -48,7 +48,7 @@ Tidelift delivers commercial support and maintenance for the open source depende
 Loading Files
 ------------------
 
-You may also seamlessly load a file into the dom instead of a string, which is much more convenient and is how I except most developers will be loading the html. The following example is taken from our test and uses the "big.html" file found there.
+You may also seamlessly load a file into the DOM instead of a string, which is much more convenient and is how I expect most developers will be loading the HTML. The following example is taken from our test and uses the "big.html" file found there.
 
 ```php
 // Assuming you installed from Composer:
@@ -74,12 +74,12 @@ foreach ($contents as $content)
 }
 ```
 
-This example loads the html from big.html, a real page found online, and gets all the content-border classes to process. It also shows a few things you can do with a node but it is not an exhaustive list of methods that a node has available.
+This example loads the html from big.html, a real page found online, and gets all the content-border classes to process. It also shows a few things you can do with a node but it is not an exhaustive list of the methods that a node has available.
 
-Loading Url
+Loading URLs
 ----------------
 
-Loading a url is very similar to the way you would load the html from a file. 
+Loading a URL is very similar to the way you would load the HTML from a file. 
 
 ```php
 // Assuming you installed from Composer:
@@ -95,7 +95,7 @@ $dom->loadFromUrl('http://google.com');
 $html = $dom->outerHtml; // same result as the first example
 ```
 
-loadFromUrl will, by default, use an implementation of the `\Psr\Http\Client\ClientInterface` to do the HTTP request and a default implementation of `\Psr\Http\Message\RequestInterface` to create the body of the request. You can easely implement your own version of either the client or request to use a custom HTTP connection when using loadFromUrl.
+loadFromUrl will, by default, use an implementation of the `\Psr\Http\Client\ClientInterface` to do the HTTP request and a default implementation of `\Psr\Http\Message\RequestInterface` to create the body of the request. You can easily implement your own version of either the client or request to use a custom HTTP connection when using loadFromUrl.
 
 ```php
 // Assuming you installed from Composer:
@@ -108,7 +108,7 @@ $dom->loadFromUrl('http://google.com', null, new MyClient());
 $html = $dom->outerHtml;
 ```
 
-As long as the client object implements the interface properly it will use that object to get the content of the url.
+As long as the client object implements the interface properly, it will use that object to get the content of the url.
 
 Loading Strings
 ---------------
