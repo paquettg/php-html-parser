@@ -525,4 +525,11 @@ EOF;
 
         $this->assertEquals('<p>Hello, this is just a test in which <55 names with some other text> should be interpreted as text</55></p>', $dom->outerHtml);
     }
+
+    public function testHttpCall()
+    {
+        $dom = new Dom();
+        $dom->loadFromUrl('http://google.com');
+        $this->assertNotEmpty($dom->outerHtml);
+    }
 }

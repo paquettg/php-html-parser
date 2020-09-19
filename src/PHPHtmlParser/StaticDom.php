@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PHPHtmlParser;
 
 use GuzzleHttp\Psr7\Request;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\NotLoadedException;

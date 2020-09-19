@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PHPHtmlParser;
 
 use GuzzleHttp\Psr7\Request;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use PHPHtmlParser\Contracts\Dom\CleanerInterface;
 use PHPHtmlParser\Contracts\Dom\ParserInterface;
 use PHPHtmlParser\Contracts\DomInterface;
