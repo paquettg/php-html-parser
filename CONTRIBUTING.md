@@ -1,4 +1,4 @@
-# PHPHtmlParser Contribution Guide
+# PHPHtmlParser Amazing Contribution Guide
 
 This page contains guidelines for contributing to the PHPHtmlParser package. Please review these guidelines before submitting any puLl requests to the package.
 
