@@ -258,7 +258,7 @@ unset($a);
 echo $dom; // '<div class="all"><p>Hey bro, <br /> :)</p></div>');
 ```
 
-You can modify the text of `TextNode` objects easely. Please note that, if you set an encoding, the new text will be encoded using the existing encoding.
+You can modify the text of `TextNode` objects easily. Please note that, if you set an encoding, the new text will be encoded using the existing encoding.
 
 ```php
 use PHPHtmlParser\Dom;
