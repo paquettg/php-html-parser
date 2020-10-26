@@ -333,8 +333,13 @@ class Tag
 
         // add the attributes
         foreach (array_keys($this->attr) as $key) {
-            $info = $this->getAttribute($key);
-            $val  = $info['value'];
+            if (is_string($key)) {
+                $info = $this->getAttribute($key);
+                $val  = $info['value'];
+            }
+            else {
+                $val = null;
+            }
             if (is_null($val)) {
                 $return .= ' '.$key;
             } elseif ($info['doubleQuote']) {
