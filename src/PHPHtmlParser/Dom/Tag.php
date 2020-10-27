@@ -91,6 +91,16 @@ class Tag
     }
 
     /**
+     * Sets the name of this tag.
+     */
+    public function setName(string $name): string
+    {
+        $this->name = $name;
+
+        return clone $this;
+    }
+
+    /**
      * Sets the tag to be self closing.
      */
     public function selfClosing(): Tag
