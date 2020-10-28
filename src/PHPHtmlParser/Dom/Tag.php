@@ -93,7 +93,7 @@ class Tag
     /**
      * Sets the name of this tag.
      */
-    public function setName(string $name): string
+    public function setName(string $name): Tag
     {
         $this->name = $name;
 
