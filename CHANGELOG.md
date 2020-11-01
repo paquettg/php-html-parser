@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 3.1.1
 
 ### Changed
-- Fixed issue with numbers in comments
+- Fixed issue with numbers in comments.
+- Updated minimume php version to correct version.
 
 ## 3.1.0
 
