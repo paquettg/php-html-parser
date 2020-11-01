@@ -75,14 +75,4 @@ class NodeTextTest extends TestCase
         $node->setText('biz baz');
         $this->assertEquals('biz baz', $node->text());
     }
-
-    public function testCommentWithNumbers() {
-      $dom = new Dom;
-      $options = new Options();
-      $options->setCleanupInput(false);
-      $dom->setOptions($options);
-      $dom->loadStr('<!-- test comment with number 2 -->');
-      $output = $dom->outerHtml;
-      $this->assertContains('<!-- test comment with number 2 -->', $output);
-    }
 }

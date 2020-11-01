@@ -73,6 +73,22 @@ class Content
     }
 
     /**
+     * Gets a string from the current character position.
+     *
+     * @param int $length
+     * @return string
+     */
+    public function string(int $length = 1): string
+    {
+        $string = '';
+        $position = $this->pos;
+        do {
+            $string .= $this->char($position++);
+        } while ($position < $this->pos + $length);
+        return $string;
+    }
+
+    /**
      * Moves the current position forward.
      *
      * @throws ContentLengthException

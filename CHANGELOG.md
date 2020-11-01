@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Fixed issue with numbers in comments.
 - Updated minimume php version to correct version.
+- Comment tags are now self-closing when cleanup input is set to false.
 
 ## 3.1.0
 
