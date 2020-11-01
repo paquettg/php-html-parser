@@ -1,8 +1,6 @@
 PHP Html Parser
 ==========================
 
-Version 3.1.0
-
 [![Build Status](https://travis-ci.org/paquettg/php-html-parser.png)](https://travis-ci.org/paquettg/php-html-parser)
 [![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/paquettg/php-html-parser/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/paquettg/php-html-parser/?branch=master)
@@ -258,7 +256,7 @@ unset($a);
 echo $dom; // '<div class="all"><p>Hey bro, <br /> :)</p></div>');
 ```
 
-You can modify the text of `TextNode` objects easely. Please note that, if you set an encoding, the new text will be encoded using the existing encoding.
+You can modify the text of `TextNode` objects easily. Please note that, if you set an encoding, the new text will be encoded using the existing encoding.
 
 ```php
 use PHPHtmlParser\Dom;
