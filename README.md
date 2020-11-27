@@ -150,51 +150,51 @@ $dom->loadFromUrl('http://gmail.com'); // will not have whitespaceTextNode set t
 
 At the moment we support 12 options.
 
-**Strict**
+**setStrict**
 
-Strict, by default false, will throw a `StrickException` if it find that the html is not strictly compliant (all tags must have a closing tag, no attribute with out a value, etc.).
+`setStrict`, by default `false`, will throw a `StrickException` if it find that the html is not strictly compliant (all tags must have a closing tag, no attribute with out a value, etc.).
 
-**whitespaceTextNode**
+**setWhitespaceTextNode**
 
-The whitespaceTextNode, by default true, option tells the parser to save textnodes even if the content of the node is empty (only whitespace). Setting it to false will ignore all whitespace only text node found in the document.
+The `setWhitespaceTextNode`, by default `true`, option tells the parser to save textnodes even if the content of the node is empty (only whitespace). Setting it to `false` will ignore all whitespace only text node found in the document.
 
-**enforceEncoding**
+**setEnforceEncoding**
 
-The enforceEncoding, by default null, option will enforce an character set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
+The `setEnforceEncoding`, by default `null`, option will enforce an character set to be used for reading the content and returning the content in that encoding. Setting it to `null` will trigger an attempt to figure out the encoding from within the content of the string given instead.
 
-**cleanupInput**
+**setCleanupInput**
 
-Set this to `false` to skip the entire clean up phase of the parser. If this is set to true the next 3 options will be ignored. Defaults to `true`.
+Set `setCleanupInput` to `false` to skip the entire clean up phase of the parser. If this is set to true the next 3 options will be ignored. Defaults to `true`.
 
-**removeScripts**
+**setRemoveScripts**
 
-Set this to `false` to skip removing the script tags from the document body. This might have adverse effects. Defaults to `true`.
+Set `setRemoveScripts` to `false` to skip removing the script tags from the document body. This might have adverse effects. Defaults to `true`.
 
-**removeStyles**
+**setRemoveStyles**
 
-Set this to `false` to skip removing of style tags from the document body. This might have adverse effects. Defaults to `true`.
+Set `setRemoveStyles` to `false` to skip removing of style tags from the document body. This might have adverse effects. Defaults to `true`.
 
-**preserveLineBreaks**
+**setPreserveLineBreaks**
 
-Preserves Line Breaks if set to `true`. If set to `false` line breaks are cleaned up as part of the input clean up process. Defaults to `false`.
+`setPreserveLineBreaks` preserves line Breaks if set to `true`. If set to `false` line breaks are cleaned up as part of the input clean up process. Defaults to `false`.
 
-**removeDoubleSpace**
+**setRemoveDoubleSpace**
 
-Set this to `false` if you want to preserve whitespace inside of text nodes. It is set to `true` by default.
+Set `setRemoveDoubleSpace` to `false` if you want to preserve whitespace inside of text nodes. It is set to `true` by default.
 
-**removeSmartyScripts**
+**setRemoveSmartyScripts**
 
-Set this to `false` if you want to preserve smarty script found in the html content. It is set to `true` by default.
+Set `setRemoveSmartyScripts` to `false` if you want to preserve smarty script found in the html content. It is set to `true` by default.
 
-**htmlSpecialCharsDecode**
+**setHtmlSpecialCharsDecode**
 
-By default this is set to `false`. Setting this to `true` will apply the php function `htmlspecialchars_decode` too all attribute values and text nodes.
+By default `setHtmlSpecialCharsDecode` is set to `false`. Setting this to `true` will apply the php function `htmlspecialchars_decode` too all attribute values and text nodes.
 
-**selfClosing**
+**setSelfClosing**
 
 This option contains an array of all self closing tags. These tags must be self closing and the parser will force them to be so if you have strict turned on. You can update this list with any additional tags that can be used as a self closing tag when using strict. You can also remove tags from this array or clear it out completly.
 
-**noSlash**
+**setNoSlash**
 
 This option contains an array of all tags that can not be self closing. The list starts off as empty but you can add elements as you wish.
 
