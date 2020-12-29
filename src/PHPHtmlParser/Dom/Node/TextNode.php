@@ -53,6 +53,9 @@ class TextNode extends LeafNode
             if ($replacedText === false) {
                 throw new LogicalException('mb_ereg_replace returns false when attempting to clean white space from "' . $text . '".');
             }
+            if ($replacedText === null) {
+                throw new LogicalException('mb_ereg_replace encountered an invalid encoding for "' . $text . '".');
+            }
             $text = $replacedText;
         }
 
