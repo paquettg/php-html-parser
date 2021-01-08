@@ -19,7 +19,7 @@
         "ext-curl": "*",
         "paquettg/string-encode": "~1.0.0",
         "php-http/httplug": "^2.1",
-        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/guzzle": "^7.0|^6.0",
         "guzzlehttp/psr7": "^1.6",
         "myclabs/php-enum": "^1.7"
     },
