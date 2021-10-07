@@ -12,7 +12,7 @@ class CleanerDiscovery
     /**
      * @var Cleaner|null
      */
-    private static $parser = null;
+    private static $parser;
 
     public static function find(): CleanerInterface
     {

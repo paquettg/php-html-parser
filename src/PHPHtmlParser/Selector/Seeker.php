@@ -298,11 +298,15 @@ class Seeker implements SeekerInterface
             case '!=':
                 return $value !== $pattern;
             case '^=':
-                return \preg_match('/^' . \preg_quote($pattern, '/') . '/',
-                        $value) == 1;
+                return \preg_match(
+                    '/^' . \preg_quote($pattern, '/') . '/',
+                    $value
+                ) == 1;
             case '$=':
-                return \preg_match('/' . \preg_quote($pattern, '/') . '$/',
-                        $value) == 1;
+                return \preg_match(
+                    '/' . \preg_quote($pattern, '/') . '$/',
+                    $value
+                ) == 1;
             case '*=':
                 if ($pattern[0] == '/') {
                     return \preg_match($pattern, $value) == 1;

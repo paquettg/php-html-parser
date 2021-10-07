@@ -17,14 +17,14 @@ class NodeHtmlTest extends TestCase
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -46,7 +46,7 @@ class NodeHtmlTest extends TestCase
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
@@ -102,14 +102,14 @@ class NodeHtmlTest extends TestCase
         $parent = new HtmlNode('div');
         $parent->tag->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $childa = new HtmlNode('a');
         $childa->getTag()->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -128,14 +128,14 @@ class NodeHtmlTest extends TestCase
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -157,14 +157,14 @@ class NodeHtmlTest extends TestCase
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -187,7 +187,7 @@ class NodeHtmlTest extends TestCase
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -201,14 +201,14 @@ class NodeHtmlTest extends TestCase
         $parent = new HtmlNode('div');
         $parent->getTag()->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $childa = new HtmlNode('a');
         $childa->getTag()->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -244,14 +244,14 @@ class NodeHtmlTest extends TestCase
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -355,11 +355,11 @@ class NodeHtmlTest extends TestCase
         $node = new HtmlNode('a');
         $node->getTag()->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
             'class' => [
-                'value'       => 'outerlink rounded',
+                'value' => 'outerlink rounded',
                 'doubleQuote' => true,
             ],
         ]);
@@ -372,11 +372,11 @@ class NodeHtmlTest extends TestCase
         $node = new HtmlNode('a');
         $node->getTag()->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
             'class' => [
-                'value'       => 'outerlink rounded',
+                'value' => 'outerlink rounded',
                 'doubleQuote' => true,
             ],
         ]);
@@ -389,11 +389,11 @@ class NodeHtmlTest extends TestCase
         $node = new HtmlNode('a');
         $node->getTag()->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
             'class' => [
-                'value'       => 'outerlink rounded',
+                'value' => 'outerlink rounded',
                 'doubleQuote' => true,
             ],
         ]);
@@ -442,14 +442,14 @@ class NodeHtmlTest extends TestCase
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -471,14 +471,14 @@ class NodeHtmlTest extends TestCase
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);

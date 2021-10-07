@@ -74,9 +74,6 @@ class Content
 
     /**
      * Gets a string from the current character position.
-     *
-     * @param int $length
-     * @return string
      */
     public function string(int $length = 1): string
     {
@@ -85,6 +82,7 @@ class Content
         do {
             $string .= $this->char($position++);
         } while ($position < $this->pos + $length);
+
         return $string;
     }
 

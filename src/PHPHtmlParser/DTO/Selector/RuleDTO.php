@@ -53,11 +53,11 @@ final class RuleDTO
     public static function makeFromPrimitives(string $tag, string $operator, $key, $value, bool $noKey, bool $alterNext): RuleDTO
     {
         return new RuleDTO([
-            'tag'       => $tag,
-            'operator'  => $operator,
-            'key'       => $key,
-            'value'     => $value,
-            'noKey'     => $noKey,
+            'tag' => $tag,
+            'operator' => $operator,
+            'key' => $key,
+            'value' => $value,
+            'noKey' => $noKey,
             'alterNext' => $alterNext,
         ]);
     }

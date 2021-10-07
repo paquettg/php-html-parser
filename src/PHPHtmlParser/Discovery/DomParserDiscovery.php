@@ -12,7 +12,7 @@ class DomParserDiscovery
     /**
      * @var ParserInterface|null
      */
-    private static $parser = null;
+    private static $parser;
 
     public static function find(): ParserInterface
     {

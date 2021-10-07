@@ -12,7 +12,7 @@ class SeekerDiscovery
     /**
      * @var SeekerInterface|null
      */
-    private static $seeker = null;
+    private static $seeker;
 
     public static function find(): SeekerInterface
     {

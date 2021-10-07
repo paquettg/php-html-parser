@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\NotLoadedException;
@@ -18,7 +18,7 @@ use Psr\Http\Message\RequestInterface;
  */
 final class StaticDom
 {
-    private static $dom = null;
+    private static $dom;
 
     /**
      * Attempts to call the given method on the most recent created dom

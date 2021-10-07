@@ -59,7 +59,7 @@ class SelectorTest extends TestCase
         $child2 = new HtmlNode(new Tag('p'));
         $child2->getTag()->setAttributes([
             'id' => [
-                'value'       => 'content',
+                'value' => 'content',
                 'doubleQuote' => true,
             ],
         ]);
@@ -78,7 +78,7 @@ class SelectorTest extends TestCase
         $child3 = new HtmlNode('a');
         $child3->getTag()->setAttributes([
             'class' => [
-                'value'       => 'link',
+                'value' => 'link',
                 'doubleQuote' => true,
             ],
         ]);
@@ -98,7 +98,7 @@ class SelectorTest extends TestCase
         $child3 = new HtmlNode(new Tag('a'));
         $child3->getTag()->setAttributes([
             'class' => [
-                'value'       => 'link outer',
+                'value' => 'link outer',
                 'doubleQuote' => false,
             ],
         ]);
@@ -150,7 +150,7 @@ class SelectorTest extends TestCase
         $child3 = new HtmlNode(new Tag('a'));
         $child3->getTag()->setAttributes([
             'class' => [
-                'value'       => 'link outer',
+                'value' => 'link outer',
                 'doubleQuote' => false,
             ],
         ]);

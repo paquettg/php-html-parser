@@ -18,7 +18,7 @@ class NodeTagTest extends TestCase
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ];
@@ -56,7 +56,7 @@ class NodeTagTest extends TestCase
     public function testSetAttributesNoDoubleArray()
     {
         $attr = [
-            'href'  => 'http://google.com',
+            'href' => 'http://google.com',
             'class' => 'funtimes',
         ];
 
@@ -70,11 +70,11 @@ class NodeTagTest extends TestCase
         $tag = new Tag('a');
         $tag->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
             'class' => [
-                'value'       => null,
+                'value' => null,
                 'doubleQuote' => true,
             ],
         ]);
@@ -83,7 +83,7 @@ class NodeTagTest extends TestCase
         $this->assertEquals('http://google.com', $tag->getAttribute('href')->getValue());
 
         $attr = [
-            'href'  => 'https://www.google.com',
+            'href' => 'https://www.google.com',
             'class' => 'funtimes',
         ];
 
@@ -102,7 +102,7 @@ class NodeTagTest extends TestCase
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ];
@@ -123,7 +123,7 @@ class NodeTagTest extends TestCase
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => true,
             ],
         ];
@@ -137,7 +137,7 @@ class NodeTagTest extends TestCase
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => true,
             ],
         ];
@@ -152,7 +152,7 @@ class NodeTagTest extends TestCase
     {
         $attr = [
             'class' => [
-                'value'       => 'clear-fix',
+                'value' => 'clear-fix',
                 'doubleQuote' => true,
             ],
         ];

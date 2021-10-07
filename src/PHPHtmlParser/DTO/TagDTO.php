@@ -39,10 +39,10 @@ final class TagDTO
     public static function makeFromPrimitives(bool $status = false, bool $closing = false, ?HtmlNode $node = null, ?string $tag = null): TagDTO
     {
         return new TagDTO([
-            'status'  => $status,
+            'status' => $status,
             'closing' => $closing,
-            'node'    => $node,
-            'tag'     => $tag,
+            'node' => $node,
+            'tag' => $tag,
         ]);
     }
 
@@ -56,17 +56,11 @@ final class TagDTO
         return $this->closing;
     }
 
-    /**
-     * @return mixed
-     */
     public function getNode(): ?HtmlNode
     {
         return $this->node;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTag(): ?string
     {
         return $this->tag;

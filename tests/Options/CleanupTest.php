@@ -40,8 +40,10 @@ class CleanupTest extends TestCase
         $dom->setOptions((new Options())->setRemoveStyles(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(1, \count($dom->find('style')));
-        $this->assertEquals('text/css',
-            $dom->find('style')->getAttribute('type'));
+        $this->assertEquals(
+            'text/css',
+            $dom->find('style')->getAttribute('type')
+        );
     }
 
     public function testRemoveScriptsTrue()
@@ -58,8 +60,10 @@ class CleanupTest extends TestCase
         $dom->setOptions((new Options())->setRemoveScripts(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(22, \count($dom->find('script')));
-        $this->assertEquals('text/javascript',
-            $dom->find('script')->getAttribute('type'));
+        $this->assertEquals(
+            'text/javascript',
+            $dom->find('script')->getAttribute('type')
+        );
     }
 
     public function testSmartyScripts()
