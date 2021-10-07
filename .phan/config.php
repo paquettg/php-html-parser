@@ -43,7 +43,7 @@ return [
     // Note that the **only** effect of choosing `'5.6'` is to infer that functions removed in php 7.0 exist.
     // (See `backward_compatibility_checks` for additional options)
     // Automatically inferred from composer.json requirement for "php" of ">=7.1"
-    'target_php_version' => '7.1',
+    'target_php_version' => '7.3',
 
     // If enabled, missing properties will be created when
     // they are first seen. If false, we'll report an
@@ -367,12 +367,11 @@ return [
     // your application should be included in this list.
     'directory_list' => [
         'src/PHPHtmlParser',
-        'vendor/infection/infection/src',
-        'vendor/mockery/mockery/library',
+        'vendor/myclabs/php-enum/src',
         'vendor/paquettg/string-encode/src',
-        'vendor/phan/phan/src/Phan',
-        'vendor/php-coveralls/php-coveralls/src',
-        'vendor/phpunit/phpunit/src',
+        'vendor/guzzlehttp/psr7/src',
+        'vendor/guzzlehttp/guzzle/src',
+        'vendor/psr/http-client/src',
     ],
 
     // A list of individual files to include in analysis
