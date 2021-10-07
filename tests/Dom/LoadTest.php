@@ -12,14 +12,14 @@ class LoadTest extends TestCase
      */
     private $dom;
 
-    public function setUp()
+    public function setUp(): void
     {
         $dom = new Dom();
         $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" id="78" data-quote="\"">click here</a></br></div><br class="both" />');
         $this->dom = $dom;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

@@ -13,13 +13,13 @@ class NotLoadedTest extends TestCase
      */
     private $dom;
 
-    public function setUp()
+    public function setUp(): void
     {
         $dom = new Dom();
         $this->dom = $dom;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

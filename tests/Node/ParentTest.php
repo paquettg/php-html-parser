@@ -89,10 +89,9 @@ class NodeParentTest extends TestCase
 
     public function testHasNextChildNotExists()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\ChildNotFoundException::class);
         $parent = new Node();
         $child = new Node();
-
-        $this->expectException(\PHPHtmlParser\Exceptions\ChildNotFoundException::class);
         $parent->hasNextChild($child->id());
     }
 
@@ -246,33 +245,27 @@ class NodeParentTest extends TestCase
         $this->assertFalse($parent->isChild($child->id()));
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\CircularException
-     */
     public function testSetParentDescendantException()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\CircularException::class);
         $parent = new Node();
         $child = new Node();
         $parent->addChild($child);
         $parent->setParent($child);
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\CircularException
-     */
     public function testAddChildAncestorException()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\CircularException::class);
         $parent = new Node();
         $child = new Node();
         $parent->addChild($child);
         $child->addChild($parent);
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\CircularException
-     */
     public function testAddItselfAsChild()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\CircularException::class);
         $parent = new Node();
         $parent->addChild($parent);
     }

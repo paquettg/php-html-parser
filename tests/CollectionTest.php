@@ -32,11 +32,9 @@ class CollectionTest extends TestCase
         $this->assertEquals(2, $count);
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\EmptyCollectionException
-     */
     public function testCallNoNodes()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\EmptyCollectionException::class);
         $collection = new Collection();
         $collection->innerHtml();
     }
@@ -80,11 +78,9 @@ class CollectionTest extends TestCase
         $this->assertEquals($child3->innerHtml, $selector->find($root)->innerHtml);
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\EmptyCollectionException
-     */
     public function testGetNoNodes()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\EmptyCollectionException::class);
         $collection = new Collection();
         $collection->innerHtml;
     }

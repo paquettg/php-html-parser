@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 class StaticDomTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         StaticDom::mount();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         StaticDom::unload();
     }
@@ -44,11 +44,9 @@ class StaticDomTest extends TestCase
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\NotLoadedException
-     */
     public function testFindNoloadStr()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\NotLoadedException::class);
         Dom::find('.post-user font', 0);
     }
 

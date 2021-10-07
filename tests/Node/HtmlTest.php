@@ -66,22 +66,20 @@ class NodeHtmlTest extends TestCase
         $this->assertEquals($inner, $parent->innerHtml());
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\UnknownChildTypeException
-     */
     public function testInnerHtmlUnkownChild()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\UnknownChildTypeException::class);
         $div = new Tag('div');
         $div->setAttributes([
             'class' => [
-                'value'       => 'all',
+                'value' => 'all',
                 'doubleQuote' => true,
             ],
         ]);
         $a = new Tag('a');
         $a->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ]);
@@ -501,11 +499,9 @@ class NodeHtmlTest extends TestCase
         $this->assertEquals(2, $children);
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\ParentNotFoundException
-     */
     public function testAncestorByTagFailure()
     {
+        $this->expectException(\PHPHtmlParser\Exceptions\ParentNotFoundException::class);
         $a = new Tag('a');
         $node = new HtmlNode($a);
         $node->ancestorByTag('div');

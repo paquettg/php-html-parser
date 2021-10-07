@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Node\TextNode;
-use PHPHtmlParser\Options;
 use PHPUnit\Framework\TestCase;
-use stringEncode\Encode;
+use StringEncoder\Encoder;
 
 class NodeTextTest extends TestCase
 {
@@ -66,9 +65,9 @@ class NodeTextTest extends TestCase
 
     public function testSetTextEncoded()
     {
-        $encode = new Encode();
-        $encode->from('UTF-8');
-        $encode->to('UTF-8');
+        $encode = new Encoder();
+        $encode->setSourceEncoding('UTF-8');
+        $encode->setTargetEncoding('UTF-8');
 
         $node = new TextNode('foo bar');
         $node->propagateEncoding($encode);
