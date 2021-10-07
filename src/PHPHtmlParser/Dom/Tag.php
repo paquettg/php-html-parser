@@ -6,7 +6,7 @@ namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\DTO\Tag\AttributeDTO;
 use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
-use stringEncode\Encode;
+use StringEncoder\Encoder;
 
 /**
  * Class Tag.
@@ -49,7 +49,7 @@ class Tag
     /**
      * The encoding class to... encode the tags.
      *
-     * @var Encode|null
+     * @var Encoder|null
      */
     protected $encode;
 
@@ -135,7 +135,7 @@ class Tag
     /**
      * Sets the encoding type to be used.
      */
-    public function setEncoding(Encode $encode): void
+    public function setEncoding(Encoder $encode): void
     {
         $this->encode = $encode;
     }
@@ -326,13 +326,15 @@ class Tag
         foreach (\array_keys($this->attr) as $key) {
             try {
                 $attributeDTO = $this->getAttribute($key);
+                $val = $attributeDTO->getValue();
             } catch (AttributeNotFoundException $e) {
+				unset($e);
                 // attribute that was in the array not found in the array... let's continue.
                 continue;
             } catch (\TypeError $e) {
-              $val = null;
+				unset($e);
+                $val = null;
             }
-            $val = $attributeDTO->getValue();
             if (\is_null($val)) {
                 $return .= ' ' . $key;
             } elseif ($attributeDTO->isDoubleQuote()) {

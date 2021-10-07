@@ -52,6 +52,8 @@ class TextNode extends LeafNode
             $replacedText = \mb_ereg_replace('\s+', ' ', $text);
             if ($replacedText === false) {
                 throw new LogicalException('mb_ereg_replace returns false when attempting to clean white space from "' . $text . '".');
+            } elseif ($replacedText === null) {
+                throw new LogicalException('mb_ereg_replace encountered an invalid encoding for "' . $text . '".');
             }
             $text = $replacedText;
         }
@@ -89,7 +91,9 @@ class TextNode extends LeafNode
                 // we already know the converted value
                 return $this->convertedText;
             }
-            $text = $this->encode->convert($text);
+            $converter = $this->encode->convert();
+            $converter->convert($text);
+            $text = $converter->toString();
 
             // remember the conversion
             $this->convertedText = $text;
@@ -109,10 +113,11 @@ class TextNode extends LeafNode
     {
         $this->text = $text;
         if (!\is_null($this->encode)) {
-            $text = $this->encode->convert($text);
+            $converter = $this->encode->convert();
+            $converter->convert($text);
 
             // remember the conversion
-            $this->convertedText = $text;
+            $this->convertedText = $converter->toString();
         }
     }
 

@@ -12,7 +12,7 @@ use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
 use PHPHtmlParser\Finder;
 use PHPHtmlParser\Selector\Selector;
-use stringEncode\Encode;
+use StringEncoder\Encoder;
 
 /**
  * Dom node object.
@@ -206,7 +206,7 @@ abstract class AbstractNode
      *
      * @return void
      */
-    public function propagateEncoding(Encode $encode)
+    public function propagateEncoding(Encoder $encode)
     {
         $this->encode = $encode;
         $this->tag->setEncoding($encode);
