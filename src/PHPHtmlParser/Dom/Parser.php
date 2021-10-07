@@ -37,7 +37,7 @@ class Parser implements ParserInterface
         $root->setHtmlSpecialCharsDecode($options->isHtmlSpecialCharsDecode());
         $activeNode = $root;
         while ($activeNode !== null) {
-            if ($activeNode && is_object( $activeNode->tag ) && $activeNode->tag->name() === 'script'
+            if ($activeNode && \is_object($activeNode->tag) && $activeNode->tag->name() === 'script'
                 && $options->isCleanupInput() !== true
             ) {
                 $str = $content->copyUntil('</');

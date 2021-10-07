@@ -328,11 +328,11 @@ class Tag
                 $attributeDTO = $this->getAttribute($key);
                 $val = $attributeDTO->getValue();
             } catch (AttributeNotFoundException $e) {
-				unset($e);
+                unset($e);
                 // attribute that was in the array not found in the array... let's continue.
                 continue;
             } catch (\TypeError $e) {
-				unset($e);
+                unset($e);
                 $val = null;
             }
             if (\is_null($val)) {

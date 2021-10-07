@@ -52,7 +52,8 @@ class TextNode extends LeafNode
             $replacedText = \mb_ereg_replace('\s+', ' ', $text);
             if ($replacedText === false) {
                 throw new LogicalException('mb_ereg_replace returns false when attempting to clean white space from "' . $text . '".');
-            } elseif ($replacedText === null) {
+            }
+            if ($replacedText === null) {
                 throw new LogicalException('mb_ereg_replace encountered an invalid encoding for "' . $text . '".');
             }
             $text = $replacedText;
