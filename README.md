@@ -206,7 +206,7 @@ You can also mount a static facade for the Dom object.
 ```PHP
 PHPHtmlParser\StaticDom::mount();
 
-Dom::loadFromFile('tests/big.hmtl');
+Dom::loadFromFile('tests/big.html');
 $objects = Dom::find('.content-border');
 
 ```
