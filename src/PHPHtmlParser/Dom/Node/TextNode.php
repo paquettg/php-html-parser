@@ -94,10 +94,10 @@ class TextNode extends LeafNode
             // remember the conversion
             $this->convertedText = $text;
 
-            return $text;
+            return (string)$text;
         }
 
-        return $text;
+        return (string)$text;
     }
 
     /**
