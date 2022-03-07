@@ -97,7 +97,7 @@ class Content
     {
         if (!$this->canFastForward($count)) {
             // trying to go over the content length, throw exception
-            throw new ContentLengthException('Attempt to fastForward pass the length of the content.');
+            //throw new ContentLengthException('Attempt to fastForward pass the length of the content.');
         }
         $this->pos += $count;
 

@@ -74,7 +74,7 @@ class Cleaner implements CleanerInterface
 
         // strip out <script> tags
         if ($options->isRemoveScripts()) {
-            $str = \mb_eregi_replace("<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
+            $str = \mb_eregi_replace("<\s*script[^>|\s]*[^/]>(.*?)<\s*/\s*script\s*>", '', $str);
             if ($str === false) {
                 throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to remove scripts 1.');
             }
@@ -86,7 +86,7 @@ class Cleaner implements CleanerInterface
 
         // strip out <style> tags
         if ($options->isRemoveStyles()) {
-            $str = \mb_eregi_replace("<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
+            $str = \mb_eregi_replace("<\s*style[^>|\s]*[^/]>(.*?)<\s*/\s*style\s*>", '', $str);
             if ($str === false) {
                 throw new LogicalException('mb_eregi_replace returned false instead of a string. Error when attempting to strip out style tags 1.');
             }
