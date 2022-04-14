@@ -183,6 +183,14 @@ class Parser implements ParserInterface
                 ->setOpening('<?')
                 ->setClosing(' ?>')
                 ->selfClosing();
+        } elseif($content->string(3) == '!--') {
+            // comment tag
+            $tag = $content->fastForward(3)
+                ->copyByToken(StringToken::CLOSECOMMENT(), true);
+            $tag = (new Tag($tag))
+                ->setOpening('<!--')
+                ->setClosing('-->')
+                ->selfClosing();
         } else {
             $tag = \strtolower($content->copyByToken(StringToken::SLASH(), true));
             if (\trim($tag) == '') {
