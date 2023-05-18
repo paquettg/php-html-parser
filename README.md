@@ -1,3 +1,7 @@
+# This fork
+
+The original repo is not maintained anymore. This fork is intended to keep codebase up-to-date with current PHP versions.
+
 PHP Html Parser
 ==========================
 
