@@ -31,7 +31,7 @@
         "friendsofphp/php-cs-fixer": "^2.16"
     },
     "autoload": {
-        "psr-4": { 
+        "psr-4": {
         	"PHPHtmlParser\\": "src/PHPHtmlParser"
        	}
     }
