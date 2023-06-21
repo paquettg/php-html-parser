@@ -11,6 +11,11 @@
             "email": "paquettg@gmail.com",
             "homepage": "http://gillespaquette.ca"
         }
+{
+            "name": "Gudin Thomas",
+            "email": "gudinthomas@gmail.com",
+            "homepage": "https://thomasgudin.com"
+        }
     ],
     "require": {
         "php": ">=8.2",
