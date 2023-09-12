@@ -18,14 +18,14 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.0",
         "ext-mbstring": "*",
         "ext-zlib": "*",
         "ext-curl": "*",
         "paquettg/string-encode": "~1.0.0",
         "php-http/httplug": "^2.1",
         "guzzlehttp/guzzle": "^7.0",
-        "guzzlehttp/psr7": "^1.6",
+        "guzzlehttp/psr7": "~2.0",
         "myclabs/php-enum": "^1.7"
     },
     "require-dev": {
