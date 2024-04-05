@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\DTO\Tag;
 
-use stringEncode\Encode;
-use stringEncode\Exception;
+use StringEncoder\Contracts\EncoderInterface;
+use StringEncoder\Exceptions\InvalidEncodingException;
+
 
 final class AttributeDTO
 {
@@ -51,10 +52,10 @@ final class AttributeDTO
     }
 
     /**
-     * @throws Exception
+     * @throws InvalidEncodingException
      */
-    public function encodeValue(Encode $encode)
+    public function encodeValue(EncoderInterface $encode)
     {
-        $this->value = $encode->convert($this->value);
+        $this->value = $encode->convert()->fromString($this->value)->toString();
     }
 }

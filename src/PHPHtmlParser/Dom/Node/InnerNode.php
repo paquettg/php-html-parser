@@ -8,7 +8,8 @@ use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\LogicalException;
-use stringEncode\Encode;
+use StringEncoder\Contracts\EncoderInterface;
+
 
 /**
  * Inner node of the html tree, might have children.
@@ -33,7 +34,7 @@ abstract class InnerNode extends ArrayNode
      * Sets the encoding class to this node and propagates it
      * to all its children.
      */
-    public function propagateEncoding(Encode $encode): void
+    public function propagateEncoding(EncoderInterface $encode): void
     {
         $this->encode = $encode;
         $this->tag->setEncoding($encode);

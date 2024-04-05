@@ -89,7 +89,7 @@ class TextNode extends LeafNode
                 // we already know the converted value
                 return $this->convertedText;
             }
-            $text = $this->encode->convert($text);
+            $text = $this->encode->convert()->fromString($text)->toString();
 
             // remember the conversion
             $this->convertedText = $text;
@@ -109,7 +109,7 @@ class TextNode extends LeafNode
     {
         $this->text = $text;
         if (!\is_null($this->encode)) {
-            $text = $this->encode->convert($text);
+            $text = $this->encode->convert()->fromString($text)->toString();
 
             // remember the conversion
             $this->convertedText = $text;

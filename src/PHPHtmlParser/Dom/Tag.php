@@ -6,7 +6,9 @@ namespace PHPHtmlParser\Dom;
 
 use PHPHtmlParser\DTO\Tag\AttributeDTO;
 use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
-use stringEncode\Encode;
+use StringEncoder\Contracts\EncoderInterface;
+use StringEncoder\Exceptions\InvalidEncodingException;
+
 
 /**
  * Class Tag.
@@ -49,7 +51,7 @@ class Tag
     /**
      * The encoding class to... encode the tags.
      *
-     * @var Encode|null
+     * @var EncoderInterface|null
      */
     protected $encode;
 
@@ -135,7 +137,7 @@ class Tag
     /**
      * Sets the encoding type to be used.
      */
-    public function setEncoding(Encode $encode): void
+    public function setEncoding(EncoderInterface $encode): void
     {
         $this->encode = $encode;
     }
@@ -263,7 +265,7 @@ class Tag
     /**
      * Returns all attributes of this tag.
      *
-     * @throws \stringEncode\Exception
+     * @throws InvalidEncodingException
      *
      * @return AttributeDTO[]
      */
@@ -286,7 +288,7 @@ class Tag
      * Returns an attribute by the key.
      *
      * @throws AttributeNotFoundException
-     * @throws \stringEncode\Exception
+     * @throws InvalidEncodingException
      */
     public function getAttribute(string $key): AttributeDTO
     {
@@ -332,12 +334,14 @@ class Tag
             } catch (\TypeError $e) {
               $val = null;
             }
-            $val = $attributeDTO->getValue();
+
             if (\is_null($val)) {
                 $return .= ' ' . $key;
             } elseif ($attributeDTO->isDoubleQuote()) {
+				$val = $attributeDTO->getValue();
                 $return .= ' ' . $key . '="' . $val . '"';
             } else {
+				$val = $attributeDTO->getValue();
                 $return .= ' ' . $key . '=\'' . $val . '\'';
             }
         }

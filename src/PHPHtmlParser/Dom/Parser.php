@@ -17,7 +17,9 @@ use PHPHtmlParser\Exceptions\ContentLengthException;
 use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Options;
-use stringEncode\Encode;
+use StringEncoder\Contracts\EncoderInterface;
+use StringEncoder\Encoder;
+
 
 class Parser implements ParserInterface
 {
@@ -104,15 +106,15 @@ class Parser implements ParserInterface
     public function detectCharset(Options $options, string $defaultCharset, AbstractNode $root): bool
     {
         // set the default
-        $encode = new Encode();
-        $encode->from($defaultCharset);
-        $encode->to($defaultCharset);
+        $encode = new Encoder();
+		$encode->setSourceEncoding($defaultCharset);
+		$encode->setTargetEncoding($defaultCharset);
 
         $enforceEncoding = $options->getEnforceEncoding();
         if ($enforceEncoding !== null) {
             //  they want to enforce the given encoding
-            $encode->from($enforceEncoding);
-            $encode->to($enforceEncoding);
+			$encode->setSourceEncoding($enforceEncoding);
+			$encode->setTargetEncoding($enforceEncoding);
 
             return false;
         }
@@ -138,7 +140,7 @@ class Parser implements ParserInterface
         }
         $matches = [];
         if (\preg_match('/charset=([^;]+)/', $content, $matches)) {
-            $encode->from(\trim($matches[1]));
+            $encode->setSourceEncoding(\trim($matches[1]));
             $root->propagateEncoding($encode);
 
             return true;
@@ -233,7 +235,7 @@ class Parser implements ParserInterface
     /**
      * @throws ChildNotFoundException
      */
-    private function detectHTML5Charset(Encode $encode, AbstractNode $root): bool
+    private function detectHTML5Charset(EncoderInterface $encode, AbstractNode $root): bool
     {
         /** @var AbstractNode|null $meta */
         $meta = $root->find('meta[charset]', 0);
@@ -241,7 +243,7 @@ class Parser implements ParserInterface
             return false;
         }
 
-        $encode->from(\trim($meta->getAttribute('charset')));
+        $encode->setSourceEncoding(\trim($meta->getAttribute('charset')));
         $root->propagateEncoding($encode);
 
         return true;
