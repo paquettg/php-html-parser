@@ -81,7 +81,7 @@ abstract class InnerNode extends ArrayNode
                 $childrenIds[] = $child->id;
                 $child = $this->nextChild($child->id());
                 if (\in_array($child->id, $childrenIds, true)) {
-                    throw new CircularException('Circular sibling referance found. Child with id ' . $child->id() . ' found twice.');
+                    throw new CircularException('Circular sibling reference found on child with id ' . $child->id() . ' found twice.');
                 }
             } while (true);
         } catch (ChildNotFoundException $e) {
