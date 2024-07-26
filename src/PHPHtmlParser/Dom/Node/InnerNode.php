@@ -100,6 +100,25 @@ abstract class InnerNode extends ArrayNode
         return \count($this->children);
     }
 
+    public function childNodes(): array
+    {
+        return $this->children;
+    }
+
+    public function childElements(): array
+    {
+        return array_values(array_filter($this->getChildren(), function ($el) {
+            return !$el->isTextNode();
+        }));
+    }
+
+    public function childElementsOfType(string $tag): array
+    {
+        return array_values(array_filter($this->getChildren(), function ($el) use ($tag) {
+            return $el instanceof HtmlNode && $el->getTag()->name() == $tag;
+        }));
+    }
+
     /**
      * Adds a child node to this node and returns the id of the child for this
      * parent.

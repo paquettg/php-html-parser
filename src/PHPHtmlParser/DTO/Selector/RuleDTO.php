@@ -36,6 +36,11 @@ final class RuleDTO
      */
     private $alterNext;
 
+    /**
+     * @var bool
+     */
+    private $isNthOfType;
+
     private function __construct(array $values)
     {
         $this->tag = $values['tag'];
@@ -44,21 +49,23 @@ final class RuleDTO
         $this->value = $values['value'];
         $this->noKey = $values['noKey'];
         $this->alterNext = $values['alterNext'];
+        $this->isNthOfType = $values['isNthOfType'];
     }
 
     /**
      * @param string|array|null $key
      * @param string|array|null $value
      */
-    public static function makeFromPrimitives(string $tag, string $operator, $key, $value, bool $noKey, bool $alterNext): RuleDTO
+    public static function makeFromPrimitives(string $tag, string $operator, $key, $value, bool $noKey, bool $alterNext, bool $isNthOfType = false): RuleDTO
     {
         return new RuleDTO([
-            'tag'       => $tag,
-            'operator'  => $operator,
-            'key'       => $key,
-            'value'     => $value,
-            'noKey'     => $noKey,
-            'alterNext' => $alterNext,
+            'tag'         => $tag,
+            'operator'    => $operator,
+            'key'         => $key,
+            'value'       => $value,
+            'noKey'       => $noKey,
+            'alterNext'   => $alterNext,
+            'isNthOfType' => $isNthOfType
         ]);
     }
 
@@ -96,5 +103,10 @@ final class RuleDTO
     public function isAlterNext(): bool
     {
         return $this->alterNext;
+    }
+
+    public function isNthOfType(): bool
+    {
+        return $this->isNthOfType;
     }
 }
