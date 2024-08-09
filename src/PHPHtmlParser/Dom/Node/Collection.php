@@ -130,7 +130,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      *
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->collection[$offset] ?? null;
     }
