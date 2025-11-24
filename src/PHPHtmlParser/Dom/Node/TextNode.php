@@ -53,7 +53,7 @@ class TextNode extends LeafNode
             if ($replacedText === false) {
                 throw new LogicalException('mb_ereg_replace returns false when attempting to clean white space from "' . $text . '".');
             }
-            $text = $replacedText;
+            $text = $replacedText ?: '';
         }
 
         // restore line breaks
